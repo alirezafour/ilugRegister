@@ -522,3 +522,10 @@ void MainWindow::searchNameSlot()
 {
     searchName();
 }
+
+//this Slot for use searchfamily Function
+//************************
+void MainWindow::searchFamilySlot()
+{
+    searchFamily();
+}
