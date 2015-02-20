@@ -279,3 +279,23 @@ bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
         db_export.closeFile();
         return true;
 }
+
+//this function for searching name in database and show to table in search tab
+//****************************
+bool MainWindow::searchName()
+{
+    QString name;
+    name = QString("\'\%"+ui->Name_Line3_SearchTab->text()+"\%\'");
+    QString filter;
+    filter = QString("firstname LIKE "+ name);
+
+    QSqlTableModel *model = new QSqlTableModel(this, db);
+    model->setTable("person");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    model->setFilter(filter);
+    ui->Table_view_SearchTab->setModel(model);
+    ui->Table_view_SearchTab->resizeColumnsToContents();
+    ui->Table_view_SearchTab->resizeRowsToContents();
+    return true;
+}
