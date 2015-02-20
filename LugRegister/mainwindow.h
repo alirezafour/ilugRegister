@@ -9,7 +9,6 @@
 #include <QtSql>
 #include <QDate>
 
-
 namespace Ui {
 class MainWindow;
 }
@@ -21,8 +20,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
 private:
+    QSqlDatabase db;
+    QDate curentDate;
+    QString curentDate_Str;
+
     Ui::MainWindow *ui;
 };
 
