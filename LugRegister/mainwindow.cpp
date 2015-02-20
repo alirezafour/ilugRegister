@@ -413,3 +413,13 @@ void MainWindow::deleteSlot()
     ui->Code_Line->selectAll();
     ui->Code_Line->setFocus();
 }
+
+//this Slot for select Data from Databade by Click to Select Button
+//*****************
+void MainWindow::selectPersonSlot()
+{
+    ViewTable("person", *ui->Table_view);
+    ui->db_status->setText("Data Selected!");
+    ui->Code_Line->selectAll();
+    ui->Code_Line->setFocus();
+}
