@@ -123,3 +123,32 @@ bool MainWindow::FindCode()
         ui->Code_Line->setFocus();
     return true;
 }
+
+//Add data to Database Function
+//**************
+bool MainWindow::AddData()
+{
+
+    QSqlQuery query;
+    int AddCode = 0;
+    AddCode = ui->Code_Line2_Registertab->text().toInt();
+    QString AddName =ui->Name_Line2_Registertab->text();
+    QString AddFamily = ui->Family_Line2_Registertab->text();
+
+    if(AddCode==0 || AddName=="" || AddFamily=="") return false;
+
+
+    query.prepare("INSERT INTO person (Code, firstname, lastname) "
+                      "VALUES (:Code, :firstname, :lastname)");
+        query.bindValue(":Code", AddCode);
+        query.bindValue(":firstname", AddName);
+        query.bindValue(":lastname", AddFamily);
+        query.exec();
+
+
+    filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
+    ui->statusBar->showMessage("Data Added!",3000);
+    ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
+    ui->Code_Line2_Registertab->setFocus();
+    return true;
+}
