@@ -299,3 +299,23 @@ bool MainWindow::searchName()
     ui->Table_view_SearchTab->resizeRowsToContents();
     return true;
 }
+
+//this function for searchin family in database and show to table in search tab
+//***********************************
+bool MainWindow::searchFamily()
+{
+    QString family;
+    family = QString("\'\%"+ui->Family_Line3_SearchTab->text()+"\%\'");
+    QString filter;
+    filter = QString("lastname LIKE "+ family);
+
+    QSqlTableModel *model = new QSqlTableModel(this, db);
+    model->setTable("person");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    model->setFilter(filter);
+    ui->Table_view_SearchTab->setModel(model);
+    ui->Table_view_SearchTab->resizeColumnsToContents();
+    ui->Table_view_SearchTab->resizeRowsToContents();
+    return true;
+}
