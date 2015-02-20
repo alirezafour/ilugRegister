@@ -401,3 +401,15 @@ void MainWindow::addDataSlot()
     else
         ui->db_status->setText("Data Added to Database");
 }
+
+//this Slot for delete Data from Databade by Click to Delete Button
+//*****************
+void MainWindow::deleteSlot()
+{
+    if(!DeleteData())
+        QMessageBox::critical(0, "Error to Delete data", "ERROR!!! Delete Data Failed");
+    else
+        ui->db_status->setText("Data Deleted!");
+    ui->Code_Line->selectAll();
+    ui->Code_Line->setFocus();
+}
