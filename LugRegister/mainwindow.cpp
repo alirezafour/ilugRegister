@@ -462,3 +462,27 @@ void MainWindow::selectByDate()
     filterView("attendant", "Date", str, *ui->Table_view_5);
     ui->statusBar->showMessage("Data Selected!",3000);
 }
+
+//this Slot for Add Image
+//************************
+void MainWindow::browsingImage()
+{
+    if(ui->Code_Line2_Registertab->text()=="")
+    {
+        QMessageBox::information(this,"Empty Code Line Edit.", "Enter Code First Please.");
+        return;
+    }
+    QStringList mimeTypeFilters;
+    foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
+        mimeTypeFilters.append(mimeTypeName);
+    mimeTypeFilters.sort();
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    QFileDialog dialog(this, tr("Open File"),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.first());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setMimeTypeFilters(mimeTypeFilters);
+    dialog.selectMimeTypeFilter("image/jpeg");
+
+    while (dialog.exec() == QDialog::Accepted && !BrowsingImage(dialog.selectedFiles().first())) {}
+    ui->statusBar->showMessage("Image Added!",3000);
+}
