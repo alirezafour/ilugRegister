@@ -319,3 +319,18 @@ bool MainWindow::searchFamily()
     ui->Table_view_SearchTab->resizeRowsToContents();
     return true;
 }
+
+//this Function for loa image and show in Main tab
+//**************************
+bool MainWindow::loadImage(const QString &fileName)
+{
+    QSize size;
+    size.setHeight(150);
+    size.setWidth(150);
+    QImage image(fileName);
+    if (image.isNull()) return false;
+    image = image.scaled(size, Qt::KeepAspectRatio);
+    ui->ImageLabel_Maintab->setPixmap(QPixmap::fromImage(image));
+    ui->ImageLabel_Maintab->setFixedSize(size);
+    return true;
+}
