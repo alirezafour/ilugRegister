@@ -262,3 +262,20 @@ bool MainWindow::exportToTextFileToday(QString dateExport)
     db_export.closeFile();
     return true;
 }
+
+bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
+{
+        QSqlQuery query;
+        database_Export db_export;
+        if(!(db_export.openFile("Export/DucoWiki " + curentDate_Str + ".txt"))) return false;
+
+        query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
+        while(query.next())
+        {
+            QString name = query.value(0).toString();
+            QString family = query.value(1).toString();
+            db_export.docuExport(name , family);
+        }
+        db_export.closeFile();
+        return true;
+}
