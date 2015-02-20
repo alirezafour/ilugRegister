@@ -431,3 +431,16 @@ void MainWindow::selectDateSlot()
     ViewTable("attendant", *ui->Table_view_5);
     ui->db_status->setText("Data Selected!");
 }
+
+//this Slot for update Data to Databade by Click to Update Button
+//*****************
+void MainWindow::updateSlot()
+{
+    if(!UpdateData())
+        QMessageBox::critical(0, "Error to Update data", "ERROR!!! Update Data Failed");
+    else
+        ui->db_status->setText("Data Updated!");
+    ui->Code_Line->selectAll();
+    ui->Code_Line->setFocus();
+
+}
