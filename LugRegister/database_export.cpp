@@ -22,3 +22,13 @@ bool database_Export::closeFile()
     file.close();
     return true;
 }
+
+bool database_Export::insertToFile(QString name, QString Family)
+{
+    QString textLine;
+    textLine = QString(name + " " + Family);
+    QTextStream fileOut(&file);
+    fileOut<< endl;
+    fileOut<< textLine;
+    return true;
+}
