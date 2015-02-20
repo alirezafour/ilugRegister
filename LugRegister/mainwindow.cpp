@@ -226,3 +226,22 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
     return true;
 }
+
+//this function for export date in date line to text file
+//******************************
+bool MainWindow::exportToTextFile(QString dateExport)
+{
+    QSqlQuery query;
+    database_Export db_export;
+    if(!(db_export.openFile("Export/"+ui->Date_Line->text() + ".txt"))) return false;
+
+    query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
+    while(query.next())
+    {
+        QString name = query.value(0).toString();
+        QString family = query.value(1).toString();
+        db_export.insertToFile(name , family);
+    }
+    db_export.closeFile();
+    return true;
+}
