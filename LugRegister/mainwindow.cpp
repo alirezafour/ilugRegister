@@ -353,3 +353,18 @@ void MainWindow::ViewTable(QString table,QTableView &tableview)
 
     ui->statusBar->showMessage("Data Selected!",3000);
 }
+
+//this Function for viewed by rule
+//********************
+void MainWindow::filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview)
+{
+    QSqlTableModel *model = new QSqlTableModel(this, db);
+        model->setTable(table);
+        model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        model->select();
+        model->setFilter(Column + " ==" + RecordFilter);
+        tableview.setModel(model);
+       tableview.setWindowTitle(table);
+       tableview.resizeColumnsToContents();
+       tableview.resizeRowsToContents();
+}
