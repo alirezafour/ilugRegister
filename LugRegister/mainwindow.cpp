@@ -28,5 +28,27 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    db.close();
     delete ui;
+}
+
+
+//Connect To Database Function
+//*******************
+bool MainWindow::createConnection()
+{
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("lug.db");
+    db.setUserName("ilug");
+    db.setPassword("ilug");
+
+    if (!db.open()) {
+        QMessageBox::critical(0, qApp->tr("Cannot open database"),
+            qApp->tr("Unable to establish a database connection.\n"), QMessageBox::Cancel);
+        return false;
+    }
+    ViewTable("person", *ui->Table_view);
+    ui->statusBar->showMessage("Database Connected!",3000);
+    ui->Code_Line->setFocus();
+    return true;
 }
