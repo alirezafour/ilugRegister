@@ -52,3 +52,74 @@ bool MainWindow::createConnection()
     ui->Code_Line->setFocus();
     return true;
 }
+
+//Find data From Database by Code Function
+//**************
+bool MainWindow::FindCode()
+{   
+    ui->Code_Line->selectAll();     //select all Code in Code Line
+
+    if(ui->Code_Line->text().isEmpty())
+    {
+        QMessageBox::critical(0, "Enter Code", "Please First type Code \n Type Code First");
+        ui->Code_Line->setFocus();
+        return false;
+    }
+
+    QSqlQuery query;    //query for person
+    QSqlQuery query2;   //query for attendant
+    QSqlQuery query3;   //query for dueDay
+    QString attendantDay;   //  what si in the table attendant?
+    QString dueDayDate; // what is in the table dueDay?
+    QString dateInsert("\"" + curentDate_Str + "\""); // add " to curent day
+
+    query.exec("SELECT firstname, lastname, sessionCounter FROM person WHERE Code == "+ ui->Code_Line->text());
+    query2.exec("SELECT Date FROM attendant WHERE Code ==" + ui->Code_Line->text());
+    query3.exec("SELECT Date FROM dueDay WHERE Date ==" + dateInsert);
+    while(query3.next())
+    {
+        dueDayDate = QString(query3.value(0).toString());
+    }
+    if(!(curentDate_Str == dueDayDate))
+    {
+        query3.prepare("INSERT INTO dueDay (Date)"
+                    "VALUES (:Date)");
+        query3.bindValue(":Date", curentDate_Str);
+        query3.exec();
+    }
+    while (query2.next())
+    {
+        attendantDay = QString(query2.value(0).toString());
+    }
+        ui->Name_Line->setText("");
+        ui->Family_Line->setText("");
+
+        while(query.next())
+        {
+            QString name = query.value(0).toString();
+            QString family = query.value(1).toString();
+            int sessionCounter = query.value(2).toInt();
+            if(!(curentDate_Str == attendantDay))
+            {
+                sessionCounter++;
+                QString Sc = QString::number(sessionCounter);
+                query2.exec("UPDATE person SET sessionCounter = "+ Sc + " WHERE Code == "+ ui->Code_Line->text());
+
+                // Insert to attendant Table a record
+                query.prepare("INSERT INTO attendant (Code, firstname, lastname, Date) "
+                                  "VALUES (:Code, :firstname, :lastname, :Date)");
+                    query.bindValue(":Code", ui->Code_Line->text());
+                    query.bindValue(":firstname", name);
+                    query.bindValue(":lastname", family);
+                    query.bindValue(":Date", curentDate_Str);
+                    query.exec();
+            }
+            ui->Name_Line->setText(name);
+            ui->Family_Line->setText(family);
+        }
+        if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
+            loadImage("Image/empty.jpg");
+        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+        ui->Code_Line->setFocus();
+    return true;
+}
