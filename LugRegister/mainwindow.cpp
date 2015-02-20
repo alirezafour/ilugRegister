@@ -334,3 +334,22 @@ bool MainWindow::loadImage(const QString &fileName)
     ui->ImageLabel_Maintab->setFixedSize(size);
     return true;
 }
+
+
+
+//this Function for view all Data from table
+//*******************
+void MainWindow::ViewTable(QString table,QTableView &tableview)
+{
+
+    QSqlTableModel *model = new QSqlTableModel(this, db);
+        model->setTable(table);
+        model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        model->select();
+        tableview.setModel(model);
+        tableview.setWindowTitle(table);
+        tableview.resizeColumnsToContents();
+        tableview.resizeRowsToContents();
+
+    ui->statusBar->showMessage("Data Selected!",3000);
+}
