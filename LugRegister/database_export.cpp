@@ -32,3 +32,14 @@ bool database_Export::insertToFile(QString name, QString Family)
     fileOut<< textLine;
     return true;
 }
+
+bool database_Export::docuExport(QString name, QString Family)
+{
+    QString textLine;
+    textLine = QString("[[صفحات شخصی:" + name + " " + Family + ":]]-");
+    QTextStream fileOut(&file);
+    fileOut<< endl;
+    fileOut<< textLine;
+    return true;
+}
+
