@@ -391,3 +391,13 @@ void MainWindow::findSlot()
 {
     FindCode();
 }
+
+//this Slot for add Data to Databade by Click to Add Button
+//*****************
+void MainWindow::addDataSlot()
+{
+    if(!AddData())
+        QMessageBox::critical(0, "Error to add data", "ERROR!!! add Data Failed");
+    else
+        ui->db_status->setText("Data Added to Database");
+}
