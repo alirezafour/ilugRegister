@@ -444,3 +444,12 @@ void MainWindow::updateSlot()
     ui->Code_Line->setFocus();
 
 }
+
+//this function for searching and finding code in attendent table in database and show to table in Select tab
+//***********************
+void MainWindow::findCodeFromAttendant()
+{
+    filterView("attendant", "Code", ui->Code_Line3_Selecttab->text(), *ui->Table_view_5);
+    ui->Code_Line3_Selecttab->selectAll();
+    ui->Code_Line3_Selecttab->setFocus();
+}
