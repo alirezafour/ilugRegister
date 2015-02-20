@@ -423,3 +423,11 @@ void MainWindow::selectPersonSlot()
     ui->Code_Line->selectAll();
     ui->Code_Line->setFocus();
 }
+
+//this Slot for Select Data From attendant Table
+//**********************
+void MainWindow::selectDateSlot()
+{
+    ViewTable("attendant", *ui->Table_view_5);
+    ui->db_status->setText("Data Selected!");
+}
