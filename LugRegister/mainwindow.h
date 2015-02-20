@@ -25,6 +25,21 @@ private:
     QDate curentDate;
     QString curentDate_Str;
 
+    void ViewTable(QString table, QTableView &tableview);
+    void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
+    bool createConnection(); //database Connection Function
+    bool FindCode();       //Select data From Data base (Find Code)
+    bool AddData();          //Add data To database
+    bool DeleteData();
+    bool UpdateData();
+    bool loadImage(const QString &);
+    bool BrowsingImage(const QString &);
+    bool exportToTextFile(QString dateExport);
+    bool exportToTextFileToday(QString dateExport);
+    bool exportToDucoWikiFileToday(QString dataExport);
+    bool searchName();
+    bool searchFamily();
+
     Ui::MainWindow *ui;
 };
 
