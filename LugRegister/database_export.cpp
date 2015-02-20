@@ -16,3 +16,9 @@ bool database_Export::openFile(QString location)
     else
         return false;
 }
+
+bool database_Export::closeFile()
+{
+    file.close();
+    return true;
+}
