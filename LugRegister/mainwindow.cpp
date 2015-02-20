@@ -486,3 +486,14 @@ void MainWindow::browsingImage()
     while (dialog.exec() == QDialog::Accepted && !BrowsingImage(dialog.selectedFiles().first())) {}
     ui->statusBar->showMessage("Image Added!",3000);
 }
+
+//this slot for use exportToTextFile function and alarm for success or not
+//************************
+void MainWindow::ExportToFileSlot()
+{
+    QString str("\"" + ui->Date_Line->text() + "\"");
+    if(!(exportToTextFile(str)))
+        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+    else
+        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+}
