@@ -368,3 +368,19 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
        tableview.resizeColumnsToContents();
        tableview.resizeRowsToContents();
 }
+
+
+//this Slot for Connect to Database by Click the Connect button
+//******************
+void MainWindow::ConnectionSlot()
+{
+    if(!createConnection())
+    {
+        QMessageBox::critical(0, "Error to Connect", "ERROR!!! Conection Failed");
+        ui->db_status->setText("Connect to Database Failed.");
+    }
+    else
+    {
+        ui->db_status->setText("Connect to database Successful.");
+    }
+}
