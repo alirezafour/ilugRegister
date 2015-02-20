@@ -152,3 +152,52 @@ bool MainWindow::AddData()
     ui->Code_Line2_Registertab->setFocus();
     return true;
 }
+
+//this Function for Delete Data From person Table and folow Delete From attendant by Code
+//*******************
+bool MainWindow::DeleteData()
+{
+    if(ui->Code_Line->text().isEmpty()) return false;
+
+    QSqlQuery query;
+    query.exec("DELETE FROM person WHERE Code ==" + ui->Code_Line->text());
+    query.exec("DELETE FROM attendant WHERE Code ==" + ui->Code_Line->text());
+    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    ui->statusBar->showMessage("Data Deleted!",3000);
+    ui->Code_Line->selectAll();  //select all Code in Code Line
+    ui->Code_Line->setFocus();
+    return true;
+}
+
+//this Function for Update data in Main tab
+//*******************
+bool MainWindow::UpdateData()
+{
+    QSqlQuery query;
+    int Code = 0;
+    Code = ui->Code_Line->text().toInt();
+    QString Name = ui->Name_Line->text();
+    QString Family = ui->Family_Line->text();
+
+    if(Code==0 || Name=="" || Family=="") return false;
+
+    query.prepare("UPDATE person SET firstname = :firstname, lastname = :lastname WHERE Code == :Code ");
+        query.bindValue(":firstname", Name);
+        query.bindValue(":lastname", Family);
+        query.bindValue(":Code", Code);
+        query.exec();
+    query.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname WHERE Code == :Code ");
+        query.bindValue(":firstname", Name);
+        query.bindValue(":lastname", Family);
+        query.bindValue(":Code", Code);
+        query.exec();
+
+    loadImage("Image/" + ui->Code_Line->text() +".jpg");
+
+    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    ui->statusBar->showMessage("Data Updated!",3000);
+    ui->Code_Line->selectAll();  //select all Code in Code Line
+    ui->Code_Line->setFocus();
+    return true;
+
+}
