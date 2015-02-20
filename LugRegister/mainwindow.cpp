@@ -201,3 +201,28 @@ bool MainWindow::UpdateData()
     return true;
 
 }
+
+//this Function for load Image and show in Register tab
+//***********************
+bool MainWindow::BrowsingImage(const QString &fileName)
+{
+    QSize size;
+    size.setHeight(150);
+    size.setWidth(150);
+    QImage image(fileName);
+    if (image.isNull())
+    {
+        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                                 tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
+        setWindowFilePath(QString());
+        ui->imageLabel_RegisterTab->setPixmap(QPixmap());
+        ui->imageLabel_RegisterTab->setFixedSize(size);
+        return false;
+    }
+    image = image.scaled(size, Qt::KeepAspectRatio);
+    ui->imageLabel_RegisterTab->setPixmap(QPixmap::fromImage(image));
+    ui->imageLabel_RegisterTab->setFixedSize(size);
+
+    image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
+    return true;
+}
