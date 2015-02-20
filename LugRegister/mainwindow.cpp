@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     curentDate_Str = curentDate.toString(Qt::ISODate);
     ui->todayDay_lbl->setText(curentDate_Str);
     ui->todayDay_lbl_SelectTab->setText(curentDate_Str);
+
+    //  Picture User Config
+    loadImage("Image/empty.jpg");
+    BrowsingImage("Image/empty.jpg");
+
 }
 
 MainWindow::~MainWindow()
