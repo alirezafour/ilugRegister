@@ -497,3 +497,12 @@ void MainWindow::ExportToFileSlot()
     else
         QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
 }
+
+void MainWindow::ExportToFileTodaySlot()
+{
+    QString str("\"" + curentDate_Str + "\"");
+    if(!(exportToTextFileToday(str)))
+        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+    else
+        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+}
