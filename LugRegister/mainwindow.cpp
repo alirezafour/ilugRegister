@@ -384,3 +384,10 @@ void MainWindow::ConnectionSlot()
         ui->db_status->setText("Connect to database Successful.");
     }
 }
+
+//this Slot for Select Data From Database by Click the Search Button or Enter in Code text line
+//*****************
+void MainWindow::findSlot()
+{
+    FindCode();
+}
