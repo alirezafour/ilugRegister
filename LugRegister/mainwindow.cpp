@@ -515,3 +515,10 @@ void MainWindow::ExportToDucoWikiFileTodaySlot()
     else
         QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
 }
+
+//yhis Slot for use searchName Function
+//*************************
+void MainWindow::searchNameSlot()
+{
+    searchName();
+}
