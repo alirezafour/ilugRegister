@@ -453,3 +453,12 @@ void MainWindow::findCodeFromAttendant()
     ui->Code_Line3_Selecttab->selectAll();
     ui->Code_Line3_Selecttab->setFocus();
 }
+
+//this function for searching and show on table by Date in Select tab
+//********************
+void MainWindow::selectByDate()
+{
+    QString str("\"" + ui->Date_Line->text() + "\"");
+    filterView("attendant", "Date", str, *ui->Table_view_5);
+    ui->statusBar->showMessage("Data Selected!",3000);
+}
