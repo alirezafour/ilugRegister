@@ -20,6 +20,24 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private slots:
+    void ConnectionSlot();
+    void findSlot();
+    void addDataSlot();
+    void deleteSlot();
+    void selectPersonSlot();
+    void selectDateSlot();
+    void updateSlot();
+    void findCodeFromAttendant();
+    void selectByDate();
+    void browsingImage();
+    void ExportToFileSlot();
+    void ExportToFileTodaySlot();
+    void ExportToDucoWikiFileTodaySlot();
+    void searchNameSlot();
+    void searchFamilySlot();
+
 private:
     QSqlDatabase db;
     QDate curentDate;
