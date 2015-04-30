@@ -84,6 +84,8 @@ public:
     QLineEdit *Name_Line2_Registertab;
     QLabel *Family_Label2;
     QLineEdit *Family_Line2_Registertab;
+    QLineEdit *Email_Line2_Register;
+    QLabel *label;
     QVBoxLayout *verticalLayout_5;
     QSpacerItem *verticalSpacer_3;
     QHBoxLayout *horizontalLayout_5;
@@ -108,9 +110,9 @@ public:
     QLineEdit *Date_Line;
     QSpacerItem *horizontalSpacer_8;
     QGridLayout *gridLayout_6;
-    QSpacerItem *verticalSpacer_4;
     QLabel *CurrentDay_label;
     QLabel *todayDay_lbl_SelectTab;
+    QSpacerItem *verticalSpacer_4;
     QHBoxLayout *horizontalLayout_10;
     QHBoxLayout *horizontalLayout_4;
     QPushButton *selectCode_dateTable_button;
@@ -409,6 +411,16 @@ public:
 
         formLayout_2->setWidget(2, QFormLayout::FieldRole, Family_Line2_Registertab);
 
+        Email_Line2_Register = new QLineEdit(tab_2);
+        Email_Line2_Register->setObjectName(QStringLiteral("Email_Line2_Register"));
+
+        formLayout_2->setWidget(3, QFormLayout::FieldRole, Email_Line2_Register);
+
+        label = new QLabel(tab_2);
+        label->setObjectName(QStringLiteral("label"));
+
+        formLayout_2->setWidget(3, QFormLayout::LabelRole, label);
+
 
         verticalLayout_6->addLayout(formLayout_2);
 
@@ -548,10 +560,6 @@ public:
         gridLayout_6 = new QGridLayout();
         gridLayout_6->setSpacing(6);
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
-        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_6->addItem(verticalSpacer_4, 1, 0, 1, 1);
-
         CurrentDay_label = new QLabel(tab_3);
         CurrentDay_label->setObjectName(QStringLiteral("CurrentDay_label"));
 
@@ -561,6 +569,10 @@ public:
         todayDay_lbl_SelectTab->setObjectName(QStringLiteral("todayDay_lbl_SelectTab"));
 
         gridLayout_6->addWidget(todayDay_lbl_SelectTab, 0, 1, 1, 1);
+
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_6->addItem(verticalSpacer_4, 1, 0, 1, 1);
 
 
         gridLayout_7->addLayout(gridLayout_6, 0, 2, 1, 1);
@@ -836,6 +848,7 @@ public:
         Code_Label2->setText(QApplication::translate("MainWindow", "Code :", 0));
         Name_Label2->setText(QApplication::translate("MainWindow", "Name :", 0));
         Family_Label2->setText(QApplication::translate("MainWindow", "Family :", 0));
+        label->setText(QApplication::translate("MainWindow", "E-Mail :", 0));
         AddButton_Registertab->setText(QApplication::translate("MainWindow", "&Add", 0));
         addPicture_Button->setText(QApplication::translate("MainWindow", "Browse Picture", 0));
         imageLabel_RegisterTab->setText(QApplication::translate("MainWindow", "Load Pic", 0));

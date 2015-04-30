@@ -102,7 +102,7 @@ bool MainWindow::FindCode()
     QString dueDayDate; // what is in the table dueDay?
     QString dateInsert("\"" + curentDate_Str + "\""); // add " to curent day
 
-    query.exec("SELECT firstname, lastname, sessionCounter FROM person WHERE Code == "+ ui->Code_Line->text());
+    query.exec("SELECT firstname, lastname, sessionCounter, email FROM person WHERE Code == "+ ui->Code_Line->text());
     query2.exec("SELECT Date FROM attendant WHERE Code ==" + ui->Code_Line->text());
     query3.exec("SELECT Date FROM dueDay WHERE Date ==" + dateInsert);
     while(query3.next())
@@ -163,15 +163,17 @@ bool MainWindow::AddData()
     AddCode = ui->Code_Line2_Registertab->text().toInt();
     QString AddName =ui->Name_Line2_Registertab->text();
     QString AddFamily = ui->Family_Line2_Registertab->text();
+    QString AddEmail = ui->Email_Line2_Register->text();
 
     if(AddCode==0 || AddName=="" || AddFamily=="") return false;
 
 
-    query.prepare("INSERT INTO person (Code, firstname, lastname) "
-                      "VALUES (:Code, :firstname, :lastname)");
+    query.prepare("INSERT INTO person (Code, firstname, lastname, email) "
+                      "VALUES (:Code, :firstname, :lastname, :email)");
         query.bindValue(":Code", AddCode);
         query.bindValue(":firstname", AddName);
         query.bindValue(":lastname", AddFamily);
+        query.bindValue(":email", AddEmail);
         query.exec();
 
 
