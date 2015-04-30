@@ -24,6 +24,36 @@ MainWindow::MainWindow(QWidget *parent) :
     loadImage("Image/empty.jpg");
     BrowsingImage("Image/empty.jpg");
 
+    // [Conncet buttons to Slots]
+    connect(ui->SearchButton, SIGNAL(clicked()), SLOT(findSlot()));
+    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(addDataSlot()));
+    connect(ui->SelectButton, SIGNAL(clicked()), SLOT(selectPersonSlot()));
+    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deleteSlot()));
+    connect(ui->updateButton, SIGNAL(clicked()), SLOT(updateSlot()));
+    connect(ui->addPicture_Button, SIGNAL(clicked()), SLOT(browsingImage()));
+    connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
+    connect(ui->selectDate_dateTable_button, SIGNAL(clicked()), SLOT(selectByDate()));
+    connect(ui->selectAll_Button, SIGNAL(clicked()), SLOT(selectDateSlot()));
+    connect(ui->ExportButton, SIGNAL(clicked()), SLOT(ExportToFileSlot()));
+    connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
+    connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
+
+    //  [Connect LineEdits to Slots]
+    connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
+    connect(ui->Code_Line3_Selecttab, SIGNAL(returnPressed()), SLOT(findCodeFromAttendant()));
+    connect(ui->Date_Line, SIGNAL(returnPressed()), SLOT(selectByDate()));
+    connect(ui->Name_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchNameSlot()));
+    connect(ui->Family_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchFamilySlot()));
+    connect(ui->Name_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchNameSlot()));
+    connect(ui->Family_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchFamilySlot()));
+
+    // [ Connect actions to Slots]
+    connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
+    connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(ConnectionSlot()));
+    connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(ExportToFileTodaySlot()));
+    connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(ExportToDucoWikiFileTodaySlot()));
+
+    ui->Code_Line->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -31,7 +61,6 @@ MainWindow::~MainWindow()
     db.close();
     delete ui;
 }
-
 
 //Connect To Database Function
 //*******************
@@ -529,3 +558,9 @@ void MainWindow::searchFamilySlot()
 {
     searchFamily();
 }
+
+
+
+
+
+
