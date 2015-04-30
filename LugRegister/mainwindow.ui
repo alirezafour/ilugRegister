@@ -231,7 +231,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>&amp;Select</string>
+                 <string>Show &amp;All</string>
                 </property>
                </widget>
               </item>
@@ -1038,7 +1038,7 @@
   </action>
   <action name="action_Aboat">
    <property name="text">
-    <string>&amp;Aboat</string>
+    <string>empty</string>
    </property>
   </action>
   <action name="actionExport_Today">

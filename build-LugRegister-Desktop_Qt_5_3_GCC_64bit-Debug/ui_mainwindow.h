@@ -831,7 +831,7 @@ public:
         action_Connect->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0));
         actionE_xit->setText(QApplication::translate("MainWindow", "E&xit", 0));
         actionE_xit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0));
-        action_Aboat->setText(QApplication::translate("MainWindow", "&Aboat", 0));
+        action_Aboat->setText(QApplication::translate("MainWindow", "empty", 0));
         actionExport_Today->setText(QApplication::translate("MainWindow", "Ex&port Today", 0));
         action_DucoWiki_Export_Today->setText(QApplication::translate("MainWindow", "&DucoWiki Export Today", 0));
         Code_Label->setText(QApplication::translate("MainWindow", "Code :", 0));
@@ -842,7 +842,7 @@ public:
         db_status->setText(QApplication::translate("MainWindow", "Database Not Connect", 0));
         deleteButton->setText(QApplication::translate("MainWindow", "&Delete", 0));
         updateButton->setText(QApplication::translate("MainWindow", "&Update", 0));
-        SelectButton->setText(QApplication::translate("MainWindow", "&Select", 0));
+        SelectButton->setText(QApplication::translate("MainWindow", "Show &All", 0));
         SearchButton->setText(QApplication::translate("MainWindow", "S&earch", 0));
         baseTabWidget->setTabText(baseTabWidget->indexOf(tab), QApplication::translate("MainWindow", "&Main", 0));
         Code_Label2->setText(QApplication::translate("MainWindow", "Code :", 0));
