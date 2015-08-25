@@ -1,21 +1,15 @@
-
 README
 
 This README would normally document whatever steps are necessary to get your application up and running.
+
 What is this repository for?
 
-    Quick summary
-    Version 0.0.1
-    Learn Markdown
+    this repository for isfahan lug
+    this application for register and check Presence and absence people
 
 How do I get set up?
 
-    Summary of set up
-    Configuration
-    Dependencies
-    Database configuration
-    How to run tests
-    Deployment instructions
+    first you need to install Qt 5 or more and gcc
 
 Contribution guidelines
 
@@ -27,4 +21,3 @@ Who do I talk to?
 
     Repo owner or admin
     Other community or team contact
-
