@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp\
-    database_export.cpp
+    database_export.cpp \
+    configfile.cpp
 
 HEADERS  += mainwindow.h\
-    database_export.h
+    database_export.h \
+    configfile.h
 
 FORMS    += mainwindow.ui

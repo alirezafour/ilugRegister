@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->ExportButton, SIGNAL(clicked()), SLOT(ExportToFileSlot()));
     connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
+    connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
 
     //  [Connect LineEdits to Slots]
     connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
@@ -331,7 +332,7 @@ bool MainWindow::searchName()
     return true;
 }
 
-//this function for searchin family in database and show to table in search tab
+//this function for searching family in database and show to table in search tab
 //***********************************
 bool MainWindow::searchFamily()
 {
@@ -559,6 +560,11 @@ void MainWindow::searchNameSlot()
 void MainWindow::searchFamilySlot()
 {
     searchFamily();
+}
+
+void MainWindow::generateCode()
+{
+    ui->Code_Line2_Registertab->setText("100");
 }
 
 

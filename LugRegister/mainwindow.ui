@@ -374,6 +374,13 @@
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
+                 <widget class="QCheckBox" name="FirstTime_Checkbox_Register">
+                  <property name="text">
+                   <string>First time</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="verticalSpacer_3">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
@@ -906,37 +913,8 @@
       </widget>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
-        <string>Page</string>
+        <string>Re&amp;port</string>
        </attribute>
-       <widget class="QLabel" name="Code_Label3_new1">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>30</y>
-          <width>44</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Code :</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="Code_Line3_new1">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>30</y>
-          <width>146</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
        <widget class="QTableView" name="Table_view_new1">
         <property name="geometry">
          <rect>
@@ -968,7 +946,7 @@
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_new1">
+       <widget class="QPushButton" name="Ok_Button_ReportTab">
         <property name="geometry">
          <rect>
           <x>50</x>
@@ -980,6 +958,35 @@
         <property name="text">
          <string>OK</string>
         </property>
+       </widget>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>172</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QLabel" name="Code_Label3_new1">
+           <property name="text">
+            <string>Code :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="Code_Line3_Report">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>

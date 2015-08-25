@@ -47,10 +47,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../LugRegister/main.cpp \
 		../LugRegister/mainwindow.cpp \
-		../LugRegister/database_export.cpp moc_mainwindow.cpp
+		../LugRegister/database_export.cpp \
+		../LugRegister/configfile.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		database_export.o \
+		configfile.o \
 		moc_mainwindow.o
 DIST          = ../../../Qt5.3.2/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.2/5.3/gcc_64/mkspecs/common/shell-unix.conf \
@@ -161,7 +163,8 @@ DIST          = ../../../Qt5.3.2/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.2/5.3/gcc_64/mkspecs/features/lex.prf \
 		../LugRegister/LugRegister.pro ../LugRegister/main.cpp \
 		../LugRegister/mainwindow.cpp \
-		../LugRegister/database_export.cpp
+		../LugRegister/database_export.cpp \
+		../LugRegister/configfile.cpp
 QMAKE_TARGET  = LugRegister
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = LugRegister
@@ -426,7 +429,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/LugRegister1.0.0 || mkdir -p .tmp/LugRegister1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/mainwindow.h ../LugRegister/database_export.h .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/main.cpp ../LugRegister/mainwindow.cpp ../LugRegister/database_export.cpp .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/mainwindow.ui .tmp/LugRegister1.0.0/ && (cd `dirname .tmp/LugRegister1.0.0` && $(TAR) LugRegister1.0.0.tar LugRegister1.0.0 && $(COMPRESS) LugRegister1.0.0.tar) && $(MOVE) `dirname .tmp/LugRegister1.0.0`/LugRegister1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/LugRegister1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/mainwindow.h ../LugRegister/database_export.h ../LugRegister/configfile.h .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/main.cpp ../LugRegister/mainwindow.cpp ../LugRegister/database_export.cpp ../LugRegister/configfile.cpp .tmp/LugRegister1.0.0/ && $(COPY_FILE) --parents ../LugRegister/mainwindow.ui .tmp/LugRegister1.0.0/ && (cd `dirname .tmp/LugRegister1.0.0` && $(TAR) LugRegister1.0.0.tar LugRegister1.0.0 && $(COMPRESS) LugRegister1.0.0.tar) && $(MOVE) `dirname .tmp/LugRegister1.0.0`/LugRegister1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/LugRegister1.0.0
 
 
 clean:compiler_clean 
@@ -1832,6 +1835,26 @@ mainwindow.o: ../LugRegister/mainwindow.cpp ../LugRegister/mainwindow.h \
 		../../../Qt5.3.2/5.3/gcc_64/include/QtSql/qtsqlversion.h \
 		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QDate \
 		ui_mainwindow.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QAction \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QApplication \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QButtonGroup \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QCheckBox \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QFormLayout \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QFrame \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QGridLayout \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QHeaderView \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QLabel \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QLineEdit \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QMenu \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QMenuBar \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QPushButton \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QSpacerItem \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QStatusBar \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QTabWidget \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QTableView \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtWidgets/QWidget \
 		../LugRegister/database_export.h \
 		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QFile \
 		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QTextStream \
@@ -1910,6 +1933,78 @@ database_export.o: ../LugRegister/database_export.cpp ../LugRegister/database_ex
 		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qshareddata.h \
 		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o database_export.o ../LugRegister/database_export.cpp
+
+configfile.o: ../LugRegister/configfile.cpp ../LugRegister/configfile.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QFile \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qfile.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/QTextStream \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qlocale.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qvariant.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qmap.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qdebug.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qhash.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qvector.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qpoint.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qset.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../Qt5.3.2/5.3/gcc_64/include/QtCore/qshareddata.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o configfile.o ../LugRegister/configfile.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

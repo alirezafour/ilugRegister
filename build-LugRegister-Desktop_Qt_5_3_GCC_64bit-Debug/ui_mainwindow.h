@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -87,6 +88,7 @@ public:
     QLineEdit *Email_Line2_Register;
     QLabel *label;
     QVBoxLayout *verticalLayout_5;
+    QCheckBox *FirstTime_Checkbox_Register;
     QSpacerItem *verticalSpacer_3;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *AddButton_Registertab;
@@ -143,10 +145,12 @@ public:
     QFrame *line_4;
     QTableView *Table_view_SearchTab;
     QWidget *tab_5;
-    QLabel *Code_Label3_new1;
-    QLineEdit *Code_Line3_new1;
     QTableView *Table_view_new1;
-    QPushButton *pushButton_new1;
+    QPushButton *Ok_Button_ReportTab;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_8;
+    QLabel *Code_Label3_new1;
+    QLineEdit *Code_Line3_Report;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -427,6 +431,11 @@ public:
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setSpacing(6);
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
+        FirstTime_Checkbox_Register = new QCheckBox(tab_2);
+        FirstTime_Checkbox_Register->setObjectName(QStringLiteral("FirstTime_Checkbox_Register"));
+
+        verticalLayout_5->addWidget(FirstTime_Checkbox_Register);
+
         verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_5->addItem(verticalSpacer_3);
@@ -759,14 +768,6 @@ public:
         baseTabWidget->addTab(tab_4, QString());
         tab_5 = new QWidget();
         tab_5->setObjectName(QStringLiteral("tab_5"));
-        Code_Label3_new1 = new QLabel(tab_5);
-        Code_Label3_new1->setObjectName(QStringLiteral("Code_Label3_new1"));
-        Code_Label3_new1->setGeometry(QRect(20, 30, 44, 31));
-        Code_Line3_new1 = new QLineEdit(tab_5);
-        Code_Line3_new1->setObjectName(QStringLiteral("Code_Line3_new1"));
-        Code_Line3_new1->setGeometry(QRect(70, 30, 146, 31));
-        sizePolicy1.setHeightForWidth(Code_Line3_new1->sizePolicy().hasHeightForWidth());
-        Code_Line3_new1->setSizePolicy(sizePolicy1);
         Table_view_new1 = new QTableView(tab_5);
         Table_view_new1->setObjectName(QStringLiteral("Table_view_new1"));
         Table_view_new1->setGeometry(QRect(10, 230, 544, 192));
@@ -775,9 +776,29 @@ public:
         Table_view_new1->setMinimumSize(QSize(1, 3));
         Table_view_new1->setBaseSize(QSize(2, 2));
         Table_view_new1->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        pushButton_new1 = new QPushButton(tab_5);
-        pushButton_new1->setObjectName(QStringLiteral("pushButton_new1"));
-        pushButton_new1->setGeometry(QRect(50, 150, 97, 31));
+        Ok_Button_ReportTab = new QPushButton(tab_5);
+        Ok_Button_ReportTab->setObjectName(QStringLiteral("Ok_Button_ReportTab"));
+        Ok_Button_ReportTab->setGeometry(QRect(50, 150, 97, 31));
+        widget = new QWidget(tab_5);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(20, 30, 172, 25));
+        horizontalLayout_8 = new QHBoxLayout(widget);
+        horizontalLayout_8->setSpacing(6);
+        horizontalLayout_8->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
+        Code_Label3_new1 = new QLabel(widget);
+        Code_Label3_new1->setObjectName(QStringLiteral("Code_Label3_new1"));
+
+        horizontalLayout_8->addWidget(Code_Label3_new1);
+
+        Code_Line3_Report = new QLineEdit(widget);
+        Code_Line3_Report->setObjectName(QStringLiteral("Code_Line3_Report"));
+        sizePolicy1.setHeightForWidth(Code_Line3_Report->sizePolicy().hasHeightForWidth());
+        Code_Line3_Report->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_8->addWidget(Code_Line3_Report);
+
         baseTabWidget->addTab(tab_5, QString());
 
         gridLayout->addWidget(baseTabWidget, 0, 0, 1, 1);
@@ -849,6 +870,7 @@ public:
         Name_Label2->setText(QApplication::translate("MainWindow", "Name :", 0));
         Family_Label2->setText(QApplication::translate("MainWindow", "Family :", 0));
         label->setText(QApplication::translate("MainWindow", "E-Mail :", 0));
+        FirstTime_Checkbox_Register->setText(QApplication::translate("MainWindow", "First time", 0));
         AddButton_Registertab->setText(QApplication::translate("MainWindow", "&Add", 0));
         addPicture_Button->setText(QApplication::translate("MainWindow", "Browse Picture", 0));
         imageLabel_RegisterTab->setText(QApplication::translate("MainWindow", "Load Pic", 0));
@@ -867,9 +889,9 @@ public:
         SearchName_Button->setText(QApplication::translate("MainWindow", "Search Name", 0));
         SearchFamily_Button->setText(QApplication::translate("MainWindow", "Search Family", 0));
         baseTabWidget->setTabText(baseTabWidget->indexOf(tab_4), QApplication::translate("MainWindow", "&Search", 0));
+        Ok_Button_ReportTab->setText(QApplication::translate("MainWindow", "OK", 0));
         Code_Label3_new1->setText(QApplication::translate("MainWindow", "Code :", 0));
-        pushButton_new1->setText(QApplication::translate("MainWindow", "OK", 0));
-        baseTabWidget->setTabText(baseTabWidget->indexOf(tab_5), QApplication::translate("MainWindow", "Page", 0));
+        baseTabWidget->setTabText(baseTabWidget->indexOf(tab_5), QApplication::translate("MainWindow", "Re&port", 0));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0));
         menu_Export->setTitle(QApplication::translate("MainWindow", "E&xport", 0));

@@ -37,6 +37,7 @@ private slots:
     void ExportToDucoWikiFileTodaySlot();
     void searchNameSlot();
     void searchFamilySlot();
+    void generateCode();
     
 private:
     QSqlDatabase db;
