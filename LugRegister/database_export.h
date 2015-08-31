@@ -13,7 +13,7 @@ public:
     bool openFile(QString location);
     bool closeFile();
     bool insertToFile(QString name, QString Family);
-    bool docuExport(QString name, QString Family);
+    bool docuExport(int code, QString name, QString Family);
 
 private:
     QFile file;

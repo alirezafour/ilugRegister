@@ -57,6 +57,8 @@ public:
     QLabel *Family_Label;
     QLineEdit *Family_Line;
     QLineEdit *Code_Line;
+    QLabel *Email_Label;
+    QLineEdit *Email_Line;
     QSpacerItem *horizontalSpacer;
     QLabel *ImageLabel_Maintab;
     QVBoxLayout *verticalLayout;
@@ -86,7 +88,7 @@ public:
     QLabel *Family_Label2;
     QLineEdit *Family_Line2_Registertab;
     QLineEdit *Email_Line2_Register;
-    QLabel *label;
+    QLabel *Email_Label2;
     QVBoxLayout *verticalLayout_5;
     QCheckBox *FirstTime_Checkbox_Register;
     QSpacerItem *verticalSpacer_3;
@@ -147,7 +149,7 @@ public:
     QWidget *tab_5;
     QTableView *Table_view_new1;
     QPushButton *Ok_Button_ReportTab;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_8;
     QLabel *Code_Label3_new1;
     QLineEdit *Code_Line3_Report;
@@ -244,6 +246,16 @@ public:
         Code_Line->setObjectName(QStringLiteral("Code_Line"));
 
         formLayout->setWidget(0, QFormLayout::FieldRole, Code_Line);
+
+        Email_Label = new QLabel(tab);
+        Email_Label->setObjectName(QStringLiteral("Email_Label"));
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, Email_Label);
+
+        Email_Line = new QLineEdit(tab);
+        Email_Line->setObjectName(QStringLiteral("Email_Line"));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, Email_Line);
 
 
         horizontalLayout_2->addLayout(formLayout);
@@ -420,10 +432,10 @@ public:
 
         formLayout_2->setWidget(3, QFormLayout::FieldRole, Email_Line2_Register);
 
-        label = new QLabel(tab_2);
-        label->setObjectName(QStringLiteral("label"));
+        Email_Label2 = new QLabel(tab_2);
+        Email_Label2->setObjectName(QStringLiteral("Email_Label2"));
 
-        formLayout_2->setWidget(3, QFormLayout::LabelRole, label);
+        formLayout_2->setWidget(3, QFormLayout::LabelRole, Email_Label2);
 
 
         verticalLayout_6->addLayout(formLayout_2);
@@ -779,20 +791,20 @@ public:
         Ok_Button_ReportTab = new QPushButton(tab_5);
         Ok_Button_ReportTab->setObjectName(QStringLiteral("Ok_Button_ReportTab"));
         Ok_Button_ReportTab->setGeometry(QRect(50, 150, 97, 31));
-        widget = new QWidget(tab_5);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(20, 30, 172, 25));
-        horizontalLayout_8 = new QHBoxLayout(widget);
+        layoutWidget = new QWidget(tab_5);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 30, 172, 25));
+        horizontalLayout_8 = new QHBoxLayout(layoutWidget);
         horizontalLayout_8->setSpacing(6);
         horizontalLayout_8->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
         horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
-        Code_Label3_new1 = new QLabel(widget);
+        Code_Label3_new1 = new QLabel(layoutWidget);
         Code_Label3_new1->setObjectName(QStringLiteral("Code_Label3_new1"));
 
         horizontalLayout_8->addWidget(Code_Label3_new1);
 
-        Code_Line3_Report = new QLineEdit(widget);
+        Code_Line3_Report = new QLineEdit(layoutWidget);
         Code_Line3_Report->setObjectName(QStringLiteral("Code_Line3_Report"));
         sizePolicy1.setHeightForWidth(Code_Line3_Report->sizePolicy().hasHeightForWidth());
         Code_Line3_Report->setSizePolicy(sizePolicy1);
@@ -858,6 +870,7 @@ public:
         Code_Label->setText(QApplication::translate("MainWindow", "Code :", 0));
         Name_Label->setText(QApplication::translate("MainWindow", "Name :", 0));
         Family_Label->setText(QApplication::translate("MainWindow", "Family :", 0));
+        Email_Label->setText(QApplication::translate("MainWindow", "Email :", 0));
         ImageLabel_Maintab->setText(QApplication::translate("MainWindow", "Load Pic", 0));
         todayDay_lbl->setText(QApplication::translate("MainWindow", "day", 0));
         db_status->setText(QApplication::translate("MainWindow", "Database Not Connect", 0));
@@ -869,7 +882,7 @@ public:
         Code_Label2->setText(QApplication::translate("MainWindow", "Code :", 0));
         Name_Label2->setText(QApplication::translate("MainWindow", "Name :", 0));
         Family_Label2->setText(QApplication::translate("MainWindow", "Family :", 0));
-        label->setText(QApplication::translate("MainWindow", "E-Mail :", 0));
+        Email_Label2->setText(QApplication::translate("MainWindow", "E-Mail :", 0));
         FirstTime_Checkbox_Register->setText(QApplication::translate("MainWindow", "First time", 0));
         AddButton_Registertab->setText(QApplication::translate("MainWindow", "&Add", 0));
         addPicture_Button->setText(QApplication::translate("MainWindow", "Browse Picture", 0));

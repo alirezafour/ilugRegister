@@ -123,12 +123,14 @@ bool MainWindow::FindCode()
     }
         ui->Name_Line->setText("");
         ui->Family_Line->setText("");
+        ui->Email_Line->setText("");
 
         while(query.next())
         {
             QString name = query.value(0).toString();
             QString family = query.value(1).toString();
             int sessionCounter = query.value(2).toInt();
+            QString email = query.value(3).toString();
             if(!(curentDate_Str == attendantDay))
             {
                 sessionCounter++;
@@ -146,6 +148,7 @@ bool MainWindow::FindCode()
             }
             ui->Name_Line->setText(name);
             ui->Family_Line->setText(family);
+            ui->Email_Line->setText(email);
         }
         if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
             loadImage("Image/empty.jpg");
@@ -210,18 +213,21 @@ bool MainWindow::UpdateData()
     Code = ui->Code_Line->text().toInt();
     QString Name = ui->Name_Line->text();
     QString Family = ui->Family_Line->text();
+    QString Email = ui->Email_Line->text();
 
-    if(Code==0 || Name=="" || Family=="") return false;
+    if(Code==0 || Name=="" || Family=="" || Email=="") return false;
 
-    query.prepare("UPDATE person SET firstname = :firstname, lastname = :lastname WHERE Code == :Code ");
+    query.prepare("UPDATE person SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
         query.bindValue(":firstname", Name);
         query.bindValue(":lastname", Family);
         query.bindValue(":Code", Code);
+        query.bindValue(":email", Email);
         query.exec();
-    query.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname WHERE Code == :Code ");
+    query.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
         query.bindValue(":firstname", Name);
         query.bindValue(":lastname", Family);
         query.bindValue(":Code", Code);
+        query.bindValue(":email", Email);
         query.exec();
 
     loadImage("Image/" + ui->Code_Line->text() +".jpg");
@@ -301,12 +307,15 @@ bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
         database_Export db_export;
         if(!(db_export.openFile("Export/DucoWiki " + curentDate_Str + ".txt"))) return false;
 
-        query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
+        query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == "+ dateExport);
         while(query.next())
         {
-            QString name = query.value(0).toString();
-            QString family = query.value(1).toString();
-            db_export.docuExport(name , family);
+            int code = query.value(0).toInt();
+            QString name = query.value(1).toString();
+            QString family = query.value(2).toString();
+
+            //save to ducowiki text file
+            db_export.docuExport(code, name, family);
         }
         db_export.closeFile();
         return true;
