@@ -22,7 +22,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void ConnectionSlot();
+    void databaseConnectSlot();
     void findSlot();
     void addDataSlot();
     void deleteSlot();
@@ -46,7 +46,7 @@ private:
 
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
-    bool createConnection(); //database Connection Function
+    bool databaseConnect(); //database Connection Function
     bool FindCode();       //Select data From Data base (Find Code)
     bool AddData();          //Add data To database
     bool DeleteData();

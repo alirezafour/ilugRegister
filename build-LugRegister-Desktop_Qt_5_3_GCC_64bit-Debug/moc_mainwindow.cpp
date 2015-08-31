@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[18];
-    char stringdata[265];
+    char stringdata[270];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,29 +30,29 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10),
-QT_MOC_LITERAL(1, 11, 14),
-QT_MOC_LITERAL(2, 26, 0),
-QT_MOC_LITERAL(3, 27, 8),
-QT_MOC_LITERAL(4, 36, 11),
-QT_MOC_LITERAL(5, 48, 10),
-QT_MOC_LITERAL(6, 59, 16),
-QT_MOC_LITERAL(7, 76, 14),
-QT_MOC_LITERAL(8, 91, 10),
-QT_MOC_LITERAL(9, 102, 21),
-QT_MOC_LITERAL(10, 124, 12),
-QT_MOC_LITERAL(11, 137, 13),
-QT_MOC_LITERAL(12, 151, 16),
-QT_MOC_LITERAL(13, 168, 21),
-QT_MOC_LITERAL(14, 190, 29),
-QT_MOC_LITERAL(15, 220, 14),
-QT_MOC_LITERAL(16, 235, 16),
-QT_MOC_LITERAL(17, 252, 12)
+QT_MOC_LITERAL(1, 11, 19),
+QT_MOC_LITERAL(2, 31, 0),
+QT_MOC_LITERAL(3, 32, 8),
+QT_MOC_LITERAL(4, 41, 11),
+QT_MOC_LITERAL(5, 53, 10),
+QT_MOC_LITERAL(6, 64, 16),
+QT_MOC_LITERAL(7, 81, 14),
+QT_MOC_LITERAL(8, 96, 10),
+QT_MOC_LITERAL(9, 107, 21),
+QT_MOC_LITERAL(10, 129, 12),
+QT_MOC_LITERAL(11, 142, 13),
+QT_MOC_LITERAL(12, 156, 16),
+QT_MOC_LITERAL(13, 173, 21),
+QT_MOC_LITERAL(14, 195, 29),
+QT_MOC_LITERAL(15, 225, 14),
+QT_MOC_LITERAL(16, 240, 16),
+QT_MOC_LITERAL(17, 257, 12)
     },
-    "MainWindow\0ConnectionSlot\0\0findSlot\0"
-    "addDataSlot\0deleteSlot\0selectPersonSlot\0"
-    "selectDateSlot\0updateSlot\0"
-    "findCodeFromAttendant\0selectByDate\0"
-    "browsingImage\0ExportToFileSlot\0"
+    "MainWindow\0databaseConnectSlot\0\0"
+    "findSlot\0addDataSlot\0deleteSlot\0"
+    "selectPersonSlot\0selectDateSlot\0"
+    "updateSlot\0findCodeFromAttendant\0"
+    "selectByDate\0browsingImage\0ExportToFileSlot\0"
     "ExportToFileTodaySlot\0"
     "ExportToDucoWikiFileTodaySlot\0"
     "searchNameSlot\0searchFamilySlot\0"
@@ -117,7 +117,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->ConnectionSlot(); break;
+        case 0: _t->databaseConnectSlot(); break;
         case 1: _t->findSlot(); break;
         case 2: _t->addDataSlot(); break;
         case 3: _t->deleteSlot(); break;

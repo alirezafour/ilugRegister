@@ -50,9 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // [ Connect actions to Slots]
     connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
-    connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(ConnectionSlot()));
+    connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(databaseConnectSlot()));
     connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(ExportToFileTodaySlot()));
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(ExportToDucoWikiFileTodaySlot()));
+
+    if(!databaseConnect())
+    {
+        QMessageBox::critical(0, "Error to Connect", "ERROR!!! Conection Failed");
+        ui->db_status->setText("Connect to Database Failed.");
+    }
+    else
+        ui->db_status->setText("Connect to database Successful.");
 
     ui->Code_Line->setFocus();
 }
@@ -65,7 +73,7 @@ MainWindow::~MainWindow()
 
 //Connect To Database Function
 //*******************
-bool MainWindow::createConnection()
+bool MainWindow::databaseConnect()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("lug.db");
@@ -169,8 +177,13 @@ bool MainWindow::AddData()
     QString AddFamily = ui->Family_Line2_Registertab->text();
     QString AddEmail = ui->Email_Line2_Register->text();
 
+    //check fileds is empty make error
     if(AddCode==0 || AddName=="" || AddFamily=="") return false;
 
+    //clear the field for next user
+    ui->Name_Line2_Registertab->setText("");
+    ui->Family_Line2_Registertab->setText("");
+    ui->Email_Line2_Register->setText("");
 
     query.prepare("INSERT INTO person (Code, firstname, lastname, email) "
                       "VALUES (:Code, :firstname, :lastname, :email)");
@@ -413,9 +426,9 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
 
 //this Slot for Connect to Database by Click the Connect button
 //******************
-void MainWindow::ConnectionSlot()
+void MainWindow::databaseConnectSlot()
 {
-    if(!createConnection())
+    if(!databaseConnect())
     {
         QMessageBox::critical(0, "Error to Connect", "ERROR!!! Conection Failed");
         ui->db_status->setText("Connect to Database Failed.");
