@@ -870,6 +870,7 @@ public:
         Code_Label->setText(QApplication::translate("MainWindow", "Code :", 0));
         Name_Label->setText(QApplication::translate("MainWindow", "Name :", 0));
         Family_Label->setText(QApplication::translate("MainWindow", "Family :", 0));
+        Code_Line->setText(QString());
         Email_Label->setText(QApplication::translate("MainWindow", "Email :", 0));
         ImageLabel_Maintab->setText(QApplication::translate("MainWindow", "Load Pic", 0));
         todayDay_lbl->setText(QApplication::translate("MainWindow", "day", 0));

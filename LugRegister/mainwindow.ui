@@ -97,7 +97,11 @@
                  <widget class="QLineEdit" name="Family_Line"/>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="Code_Line"/>
+                 <widget class="QLineEdit" name="Code_Line">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
                 </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="Email_Label">
