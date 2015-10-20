@@ -36,7 +36,7 @@ bool database_Export::insertToFile(QString name, QString Family)
 bool database_Export::docuExport(int code, QString name, QString Family)
 {
     QString textLine;
-    if (code > 999)
+    if (code < 100 || code > 999)
         textLine = QString("[[صفحات شخصی:" + name + " " + Family + ":]]\\\\");
     else
         textLine = QString(name + " " + Family + "\\\\");

@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="baseTabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -704,6 +704,13 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QPushButton" name="docuExportButton">
+                  <property name="text">
+                   <string>Duco Export</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -979,7 +986,7 @@
           <x>20</x>
           <y>30</y>
           <width>172</width>
-          <height>25</height>
+          <height>29</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -1013,7 +1020,7 @@
      <x>0</x>
      <y>0</y>
      <width>588</width>
-     <height>20</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

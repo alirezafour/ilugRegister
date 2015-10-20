@@ -185,6 +185,7 @@ bool MainWindow::AddData()
     ui->Family_Line2_Registertab->setText("");
     ui->Email_Line2_Register->setText("");
 
+    //find the person in database
     query.prepare("INSERT INTO person (Code, firstname, lastname, email) "
                       "VALUES (:Code, :firstname, :lastname, :email)");
         query.bindValue(":Code", AddCode);
@@ -193,8 +194,9 @@ bool MainWindow::AddData()
         query.bindValue(":email", AddEmail);
         query.exec();
 
-
+    //show persion data in tableview
     filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
+
     ui->statusBar->showMessage("Data Added!",3000);
     ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
     ui->Code_Line2_Registertab->setFocus();
@@ -205,13 +207,18 @@ bool MainWindow::AddData()
 //*******************
 bool MainWindow::DeleteData()
 {
+    //make error is code field is empty
     if(ui->Code_Line->text().isEmpty()) return false;
 
+    //delete person data from 2 table if database
     QSqlQuery query;
     query.exec("DELETE FROM person WHERE Code ==" + ui->Code_Line->text());
     query.exec("DELETE FROM attendant WHERE Code ==" + ui->Code_Line->text());
+
+    //show table
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
     ui->statusBar->showMessage("Data Deleted!",3000);
+
     ui->Code_Line->selectAll();  //select all Code in Code Line
     ui->Code_Line->setFocus();
     return true;
@@ -222,27 +229,31 @@ bool MainWindow::DeleteData()
 bool MainWindow::UpdateData()
 {
     QSqlQuery query;
+    QSqlQuery query2;
     int Code = 0;
     Code = ui->Code_Line->text().toInt();
     QString Name = ui->Name_Line->text();
     QString Family = ui->Family_Line->text();
     QString Email = ui->Email_Line->text();
 
-    if(Code==0 || Name=="" || Family=="" || Email=="") return false;
+    //make error is code, name, family empty
+    if(Code==0 || Name=="" || Family=="") return false;
 
+    //update 2 table data
     query.prepare("UPDATE person SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
         query.bindValue(":firstname", Name);
         query.bindValue(":lastname", Family);
         query.bindValue(":Code", Code);
         query.bindValue(":email", Email);
         query.exec();
-    query.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
-        query.bindValue(":firstname", Name);
-        query.bindValue(":lastname", Family);
-        query.bindValue(":Code", Code);
-        query.bindValue(":email", Email);
-        query.exec();
+    query2.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
+        query2.bindValue(":firstname", Name);
+        query2.bindValue(":lastname", Family);
+        query2.bindValue(":Code", Code);
+        query2.bindValue(":email", Email);
+        query2.exec();
 
+    //show person image
     loadImage("Image/" + ui->Code_Line->text() +".jpg");
 
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
@@ -564,6 +575,15 @@ void MainWindow::ExportToFileTodaySlot()
 void MainWindow::ExportToDucoWikiFileTodaySlot()
 {
     QString str("\"" + curentDate_Str + "\"");
+    if(!(exportToDucoWikiFileToday(str)))
+        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+    else
+        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+}
+
+void MainWindow::ExportToDucoWikiFileSlot()
+{
+    QString str("\"" + ui->Date_Label->text() + "\"");
     if(!(exportToDucoWikiFileToday(str)))
         QMessageBox::critical(0,"Error Open File", "Open File Failed.");
     else

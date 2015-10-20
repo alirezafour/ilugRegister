@@ -35,6 +35,7 @@ private slots:
     void ExportToFileSlot();
     void ExportToFileTodaySlot();
     void ExportToDucoWikiFileTodaySlot();
+    void ExportToDucoWikiFileSlot();
     void searchNameSlot();
     void searchFamilySlot();
     void generateCode();
