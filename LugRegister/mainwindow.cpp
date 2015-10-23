@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
+    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(ExportToDucoWikiFileSlot()));
 
     //  [Connect LineEdits to Slots]
     connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
@@ -312,9 +313,9 @@ bool MainWindow::exportToTextFileToday(QString dateExport)
 {
     QSqlQuery query;
     database_Export db_export;
-    if(!(db_export.openFile("Export/" + curentDate_Str + ".txt"))) return false;
+    if(!(db_export.openFile("Export/" + dateExport + ".txt"))) return false;
 
-    query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
+    query.exec("SELECT firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
     while(query.next())
     {
         QString name = query.value(0).toString();
@@ -329,9 +330,9 @@ bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
 {
         QSqlQuery query;
         database_Export db_export;
-        if(!(db_export.openFile("Export/DucoWiki " + curentDate_Str + ".txt"))) return false;
+        if(!(db_export.openFile("Export/DucoWiki " + dateExport + ".txt"))) return false;
 
-        query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == "+ dateExport);
+        query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
         while(query.next())
         {
             int code = query.value(0).toInt();
@@ -574,8 +575,7 @@ void MainWindow::ExportToFileTodaySlot()
 
 void MainWindow::ExportToDucoWikiFileTodaySlot()
 {
-    QString str("\"" + curentDate_Str + "\"");
-    if(!(exportToDucoWikiFileToday(str)))
+    if(!(exportToDucoWikiFileToday(curentDate_Str)))
         QMessageBox::critical(0,"Error Open File", "Open File Failed.");
     else
         QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
@@ -583,8 +583,7 @@ void MainWindow::ExportToDucoWikiFileTodaySlot()
 
 void MainWindow::ExportToDucoWikiFileSlot()
 {
-    QString str("\"" + ui->Date_Label->text() + "\"");
-    if(!(exportToDucoWikiFileToday(str)))
+    if(!(exportToDucoWikiFileToday(ui->Date_Line->text())))
         QMessageBox::critical(0,"Error Open File", "Open File Failed.");
     else
         QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
