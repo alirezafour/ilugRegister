@@ -15,10 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp\
     database_export.cpp \
-    configfile.cpp
+    configfile.cpp \
+    logindialog.cpp
 
 HEADERS  += mainwindow.h\
     database_export.h \
-    configfile.h
+    configfile.h \
+    logindialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    logindialog.ui

@@ -39,6 +39,7 @@ private slots:
     void searchNameSlot();
     void searchFamilySlot();
     void generateCode();
+    void login();
     
 private:
     QSqlDatabase db;

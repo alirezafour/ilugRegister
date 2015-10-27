@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "database_export.h"
+#include "logindialog.h"
 
 
 
@@ -607,6 +608,13 @@ void MainWindow::searchFamilySlot()
 void MainWindow::generateCode()
 {
     ui->Code_Line2_Registertab->setText("100");
+}
+
+void MainWindow::login()
+{
+    loginDialog dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
 }
 
 
