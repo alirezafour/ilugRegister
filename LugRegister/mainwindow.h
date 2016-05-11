@@ -9,6 +9,7 @@
 #include <QtSql>
 #include <QDate>
 #include "logindialog.h"
+#include "qtrpt.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,6 +43,8 @@ private slots:
     void generateCode();
     void login();
     void reportForVoteSlot();
+    void reportButton();
+    void setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage);
     
 private:
     QSqlDatabase db;

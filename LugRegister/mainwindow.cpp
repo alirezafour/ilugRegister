@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
     connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(ExportToDucoWikiFileSlot()));
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
+    connect(ui->report_btn, SIGNAL(pressed()), SLOT(reportButton()));
 
     //  [Connect LineEdits to Slots]
     connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
@@ -500,6 +501,7 @@ bool MainWindow::reportforVote()
     return 0;
 }
 
+
 //this Slot for Connect to Database by Click the Connect button
 //******************
 void MainWindow::databaseConnectSlot()
@@ -687,7 +689,44 @@ void MainWindow::reportForVoteSlot()
 }
 
 
+void MainWindow::reportButton()
+{
+        QString fileName = "mydocument.xml";
+        QtRPT *report = new QtRPT(this);
+        report->loadReport(fileName);
+        report->recordCount << ui->Table_view_5->model()->rowCount();
+        QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
+               this, SLOT(setValueReport(int,QString,QVariant&,int)));
+        report->printExec();
+}
 
 
+void MainWindow::setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage)
+{
 
+    if (paramName == "ID")
+    {
+        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).isNull())
+            return;
+        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).toString();
+    }
+    if (paramName == "Code")
+    {
+        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).isNull())
+            return;
+        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).toString();
+    }
+    if (paramName == "firstname")
+    {
+        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).isNull())
+            return;
+        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).toString();
+    }
+    if (paramName == "lastname")
+    {
+        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).isNull())
+            return;
+        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).toString();
+    }
 
+}
