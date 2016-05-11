@@ -8,6 +8,7 @@
 #include <QtWidgets>
 #include <QtSql>
 #include <QDate>
+#include "logindialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -40,12 +41,14 @@ private slots:
     void searchFamilySlot();
     void generateCode();
     void login();
+    void reportForVoteSlot();
     
 private:
     QSqlDatabase db;
     QDate curentDate;
     QString curentDate_Str;
 
+public:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
@@ -60,6 +63,8 @@ private:
     bool exportToDucoWikiFileToday(QString dataExport);
     bool searchName();
     bool searchFamily();
+    bool voteImage(const QString &);
+    bool reportforVote();
 
     Ui::MainWindow *ui;
 };

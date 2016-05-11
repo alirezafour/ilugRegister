@@ -46,3 +46,12 @@ bool database_Export::docuExport(int code, QString name, QString Family)
     return true;
 }
 
+bool database_Export::addToFile(QString text)
+{
+    file.seek(0);
+    QTextStream fileOut(&file);
+    fileOut<< text;
+    fileOut<< endl;
+    return true;
+}
+

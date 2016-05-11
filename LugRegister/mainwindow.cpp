@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "database_export.h"
-#include "logindialog.h"
 
 
 
@@ -14,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //default set
     ui->Date_Line->setText("yyyy-mm-dd");
 
+
     //  Title & Date Config
     setWindowTitle("Lug Register");
     curentDate = QDate::currentDate();
@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //  Picture User Config
     loadImage("Image/empty.jpg");
     BrowsingImage("Image/empty.jpg");
+    voteImage("Image/question.jpg");
 
     // [Conncet buttons to Slots]
     connect(ui->SearchButton, SIGNAL(clicked()), SLOT(findSlot()));
@@ -40,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
     connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(ExportToDucoWikiFileSlot()));
+    connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
     //  [Connect LineEdits to Slots]
     connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
@@ -49,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Family_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchFamilySlot()));
     connect(ui->Name_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchNameSlot()));
     connect(ui->Family_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchFamilySlot()));
+    connect(ui->codeLine_VoteTab, SIGNAL(returnPressed()), SLOT(reportForVoteSlot()));
 
     // [ Connect actions to Slots]
     connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
@@ -334,6 +337,7 @@ bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
         database_Export db_export;
         if(!(db_export.openFile("Export/DucoWiki " + dateExport + ".txt"))) return false;
 
+
         query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
         while(query.next())
         {
@@ -437,6 +441,64 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
        tableview.resizeRowsToContents();
 }
 
+bool MainWindow::voteImage(const QString &fileName)
+{
+    QSize size;
+    size.setHeight(150);
+    size.setWidth(150);
+    QImage image(fileName);
+    if (image.isNull()) return false;
+    image = image.scaled(size, Qt::KeepAspectRatio);
+    ui->ImageLabel_Votetab->setPixmap(QPixmap::fromImage(image));
+    ui->ImageLabel_Votetab->setFixedSize(size);
+    return true;
+}
+
+bool MainWindow::reportforVote()
+{
+    ui->codeLine_VoteTab->selectAll();     //select all Code in Code Line in Report Tab
+
+    if(ui->codeLine_VoteTab->text().isEmpty())
+    {
+        QMessageBox::critical(0, "Enter Code", "Please First type Code \n Type Code First.");
+        ui->codeLine_VoteTab->setFocus();
+        return 1;
+    }
+
+    QString code;
+    int count = 0;
+    code = ui->codeLine_VoteTab->text();
+
+    QSqlQuery query;    //query
+    QSqlQuery query2;   //query
+    QString date;
+    query.exec("SELECT Date FROM dueDay ORDER BY date(Date) DESC Limit 15");
+    while(query.next())
+    {
+        date = query.value(0).toString();
+    }
+    query2.exec("SELECT firstname, lastname FROM attendant WHERE Code = " + code + " AND date(Date) >= \"" + date + "\"");
+    while(query2.next())
+    {
+        count++;
+    }
+    QSqlQueryModel *model = new QSqlQueryModel();
+    model->setQuery(query2);
+
+    if(count >= 15)
+    {
+        voteImage("Image/true.jpg");
+    }
+    else
+    {
+        voteImage("Image/false.jpg");
+    }
+
+    ui->Table_view_VoteTab->setModel(model);
+    ui->codeLine_VoteTab->setFocus();
+    ui->codeLine_VoteTab->selectAll();
+    return 0;
+}
 
 //this Slot for Connect to Database by Click the Connect button
 //******************
@@ -615,6 +677,13 @@ void MainWindow::login()
     loginDialog dialog(this);
     if (dialog.exec() != QDialog::Accepted)
         return;
+}
+
+//this Slot for OK btn in Vote tab
+//**********************
+void MainWindow::reportForVoteSlot()
+{
+    reportforVote();
 }
 
 
