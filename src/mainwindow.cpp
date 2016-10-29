@@ -306,7 +306,7 @@ bool MainWindow::exportToTextFile(QString dateExport)
 {
     QSqlQuery query;
     database_Export db_export;
-    if(!(db_export.openFile("Export/"+ui->Date_Line->text() + ".txt"))) return false;
+    if(!(db_export.openFile("Export/" + ui->Date_Line->text() + ".txt"))) return false;
 
     query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
     while(query.next())
