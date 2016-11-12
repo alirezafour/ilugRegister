@@ -1,4 +1,4 @@
-#include "../include/configfile.h"
+#include "src/configfile.h"
 
 ConfigFile::ConfigFile()
 {

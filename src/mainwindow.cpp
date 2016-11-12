@@ -1,6 +1,6 @@
-#include "../include/mainwindow.h"
-#include "../include/ui_mainwindow.h"
-#include "../include/database_export.h"
+#include "src/mainwindow.h"
+#include "src/ui_mainwindow.h"
+#include "src/database_export.h"
 
 
 
@@ -22,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->todayDay_lbl_SelectTab->setText(curentDate_Str);
 
     //  Picture User Config
-    loadImage("Image/empty.jpg");
-    BrowsingImage("Image/empty.jpg");
-    voteImage("Image/question.jpg");
+    loadImage("qrc:/pic/build/Image/empty.jpg");
+    BrowsingImage("qrc:/pic/build/Image/empty.jpg");
+    voteImage("qrc:/pic/build/Image/question.jpg");
 
 
     // [Conncet buttons to Slots]
@@ -170,7 +170,7 @@ bool MainWindow::FindCode()
             ui->Email_Line->setText(email);
         }
         if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
-            loadImage("Image/empty.jpg");
+            loadImage("qrc:/pic/build/Image/empty.jpg");
         filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
         ui->Code_Line->setFocus();
     return true;
@@ -445,11 +445,11 @@ bool MainWindow::reportforVote()
 
     if(count >= 15)
     {
-        voteImage("Image/true.jpg");
+        voteImage("qrc:/pic/build/Image/true.jpg");
     }
     else
     {
-        voteImage("Image/false.jpg");
+        voteImage("qrc:/pic/build/Image/false.jpg");
     }
 
     ui->Table_view_VoteTab->setModel(model);

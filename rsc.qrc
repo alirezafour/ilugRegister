@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/pic">
+        <file>build/Image/empty.jpg</file>
+        <file>build/Image/true.jpg</file>
+        <file>build/Image/false.jpg</file>
+        <file>build/Image/question.jpg</file>
+    </qresource>
+</RCC>
