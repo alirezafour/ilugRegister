@@ -1,6 +1,6 @@
-#include "src/mainwindow.h"
-#include "src/ui_mainwindow.h"
-#include "src/database_export.h"
+#include "../src/mainwindow.h"
+#include "../src/ui_mainwindow.h"
+#include "../src/database_export.h"
 
 
 

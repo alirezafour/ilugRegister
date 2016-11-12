@@ -29,5 +29,4 @@ $$PWD/src/database/mydatabase.h
 FORMS    += $$PWD/ui/mainwindow.ui \
     $$PWD/ui/logindialog.ui
 
-RESOURCES += \
-    rsc.qrc
+RESOURCES += $$PWD//rsc.qrc
