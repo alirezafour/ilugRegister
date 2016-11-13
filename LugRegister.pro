@@ -18,13 +18,15 @@ SOURCES += $$PWD/src/main.cpp\
     $$PWD/src/database_export.cpp \
     $$PWD/src/configfile.cpp \
     $$PWD/src/logindialog.cpp \
-    $$PWD/src/database/mydatabase.cpp
+    $$PWD/src/database/mydatabase.cpp \
+    $$PWD/src/model/personmodel.cpp
 
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
     $$PWD/src/configfile.h \
     $$PWD/src/logindialog.h \
-$$PWD/src/database/mydatabase.h
+    $$PWD/src/database/mydatabase.h \
+    $$PWD/src/model/personmodel.h
 
 FORMS    += $$PWD/ui/mainwindow.ui \
     $$PWD/ui/logindialog.ui
