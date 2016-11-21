@@ -19,6 +19,12 @@ public:
                     QString family = "", QString email = "");
     bool addPerson(QSqlTableModel *model, QString code, QString name, QString family,
                    QString email);
+    bool deletePerson(QSqlTableModel *model, QString code);
+
+    bool deletePerson(QSqlTableModel *model, QString name, QString family);
+    bool updatePerson(QSqlTableModel *model, QString code, QString name = "", QString family = "",
+                      QString email = "");
+    bool updatePerson(QSqlTableModel *model, int id);
 
 signals:
 
@@ -26,6 +32,8 @@ public slots:
 private:
     QString createFilters(QString code, QString name, QString family,
                           QString email);
+    void createRecord(QSqlRecord *record, QString code, QString name, QString family,
+                      QString email);
 
 };
 

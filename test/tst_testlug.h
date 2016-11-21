@@ -21,6 +21,8 @@ private Q_SLOTS:
     void databaseTest();
     void addPersonModel();
     void findPersonModel();
+    void updatePersonModel();
+    void deletePersonModel();
 };
 
 
