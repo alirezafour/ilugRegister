@@ -49,20 +49,23 @@ bool MyDatabase::createDatabase(QString path)
     db.open();
     QSqlQuery query;
 
-    query.exec("CREATE TABLE \"dueDay\" ("
-               "\"id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "\"date\" DATE NOT NULL)");
+    query.exec("CREATE TABLE dueDay ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+               "date DATE NOT NULL)");
     query.exec("CREATE TABLE person ("
-               "\"id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "\"code\" TEXT UNIQUE,"
-               "\"firstName\" TEXT,"
-               "\"lastName\" TEXT,"
-               "\"sessionCounter\" INTEGER,"
-               "\"email\" TEXT)");
-    query.exec("CREATE TABLE \"attendant\" ("
-               "\"id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "\"personId\" INTEGER NOT NULL,"
-               "\"dateId\" INTEGER NOT NULL)");
+               "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+               "code TEXT UNIQUE,"
+               "firstName TEXT NOT NULL,"
+               "lastName TEXT NOT NULL,"
+               "sessionCounter INTEGER,"
+               "email TEXT,"
+               "regesterDay TEXT)");
+    query.exec("CREATE TABLE attendant ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+               "personId INTEGER NOT NULL,"
+               "dateId INTEGER NOT NULL,"
+               "FOREIGN KEY (personId) REFERENCES person(id),"
+               "FOREIGN KEY (dateId) REFERENCES dueDay(id))");
 
     qDebug("database Created!");
     return true;
