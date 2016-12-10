@@ -3,6 +3,7 @@
 #include <QSqlTableModel>
 #include "../src/database/mydatabase.h"
 #include "../src/model/personmodel.h"
+#include "../src/model/duedaymodel.h"
 
 class TestLug : public QObject
 {
@@ -11,6 +12,7 @@ class TestLug : public QObject
     MyDatabase database;
     QSqlTableModel *model;
     PersonModel personModel;
+    DueDayModel dueDayModel;
 
 public:
     TestLug();
@@ -23,6 +25,7 @@ private Q_SLOTS:
     void findPersonModel();
     void updatePersonModel();
     void deletePersonModel();
+    void findDayDueDayModel();
 };
 
 

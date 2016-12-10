@@ -23,8 +23,10 @@ void TestLug::addPersonModel()
 
     qDebug() << model->index(0,1).data();
 
-    //existed data false
-    //not exist data true
+    /**
+     * @brief ok = true if Data successfully add to database
+     *  and ok = false if Data exist or can't add to database
+     */
     bool ok = personModel.addPerson(model, "1222223", "a22lirez2222a32", "hosd222dsr", "a2l22i2ael222i@lkfdj.com");
 //    personModel.addPerson(model, "1111", "alieaza", "allbkbklabjk", "alireza@lkfdj.com");
 //    personModel.addPerson(model, "2222", "mohamad", "silver", "silveri@lkfdj.com");
@@ -41,19 +43,14 @@ void TestLug::findPersonModel()
 {
     QModelIndex index = model->index(0,1);
     qDebug() << "Fist of findPersonModel : " << index.data();
-    //model = new QSqlTableModel();
     personModel.setModel(model);
     bool ok = personModel.findPerson(model,"1222223");
-    //bool ok2 = personModel.findPerson(model, "", "a22lirez2222a32");
+    QCOMPARE(true, ok);
     QString a = model->record(0).value("firstName").toString();
-
+    QCOMPARE(a, QString("a22lirez2222a32"));
     index = model->index(0,4);
     qDebug() << "session counter : " << index.data();
-    QCOMPARE(a, QString("a22lirez2222a32"));
-    QCOMPARE(true, ok);
-    //QCOMPARE(true, ok2);
 }
-
 
 void TestLug::updatePersonModel()
 {
@@ -79,6 +76,12 @@ void TestLug::deletePersonModel()
 
 
 }
+
+void TestLug::findDayDueDayModel()
+{
+    dueDayModel.setModel(model);
+}
+
 
 QTEST_MAIN(TestLug)
 

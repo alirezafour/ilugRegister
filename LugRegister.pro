@@ -19,14 +19,20 @@ SOURCES += $$PWD/src/main.cpp\
     $$PWD/src/configfile.cpp \
     $$PWD/src/logindialog.cpp \
     $$PWD/src/database/mydatabase.cpp \
-    $$PWD/src/model/personmodel.cpp
+    $$PWD/src/model/personmodel.cpp \
+    $$PWD/src/model/attendantmodel.cpp \
+    $$PWD/src/model/duedaymodel.cpp \
+    $$PWD/src/model/reportmodel.cpp
 
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
     $$PWD/src/configfile.h \
     $$PWD/src/logindialog.h \
     $$PWD/src/database/mydatabase.h \
-    $$PWD/src/model/personmodel.h
+    $$PWD/src/model/personmodel.h \
+    $$PWD/src/model/attendantmodel.h \
+    $$PWD/src/model/duedaymodel.h \
+    $$PWD/src/model/reportmodel.h
 
 FORMS    += $$PWD/ui/mainwindow.ui \
     $$PWD/ui/logindialog.ui
