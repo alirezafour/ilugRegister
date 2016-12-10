@@ -1,7 +1,9 @@
 #include "duedaymodel.h"
+#include <QDebug>
 
 DueDayModel::DueDayModel(QObject *parent) : QObject(parent)
 {
+    m_date = QDate::currentDate().toString(Qt::ISODate);
 
 }
 
@@ -13,9 +15,9 @@ bool DueDayModel::setModel(QSqlTableModel *model)
     return true;
 }
 
-bool DueDayModel::setDate(QSqlTableModel *model, QString &date)
+void DueDayModel::setDate(QString &date)
 {
-    this->m_date = new QDate::s
+    m_date = date;
 }
 
 bool DueDayModel::findDate(QSqlTableModel *model, QString date)
@@ -32,6 +34,32 @@ bool DueDayModel::findDate(QSqlTableModel *model, QString date)
     return true;
 }
 
+bool DueDayModel::addNewDay(QSqlTableModel *model, QString date)
+{
+    //check day exist or not
+    if(!this->findDate(model, date))
+    {
+        qDebug() << "Day Exist.";
+        return false;
+    }
+
+    //if day is not exist add new day
+    QSqlRecord record = model->record();
+    record.setValue(QString("date"), QVariant(date));
+
+    if(model->insertRecord(-1, record))
+    {
+        qDebug("Record Inserted!");
+    }
+    else
+    {
+        qDebug("Inserting record failed!");
+        qDebug() << model->lastError().text();
+        return false;
+    }
+    return true;
+}
+
 QString DueDayModel::createFilter(QString &date)
 {
     QString filter;
@@ -40,4 +68,9 @@ QString DueDayModel::createFilter(QString &date)
         filter = QString("date = '%1'").arg(date);
     }
     return filter;
+}
+
+QString DueDayModel::date() const
+{
+    return m_date;
 }

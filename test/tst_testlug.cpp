@@ -77,9 +77,21 @@ void TestLug::deletePersonModel()
 
 }
 
+void TestLug::addDayDueDayModel()
+{
+    model = new QSqlTableModel();
+    dueDayModel.setModel(model);
+
+    bool ok = dueDayModel.addNewDay(model, QDate::currentDate().toString(Qt::ISODate));
+    QCOMPARE(true, ok);
+
+}
+
 void TestLug::findDayDueDayModel()
 {
     dueDayModel.setModel(model);
+    bool ok = dueDayModel.findDate(model, QDate::currentDate().toString(Qt::ISODate));
+    QCOMPARE(true, ok);
 }
 
 

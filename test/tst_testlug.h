@@ -25,7 +25,9 @@ private Q_SLOTS:
     void findPersonModel();
     void updatePersonModel();
     void deletePersonModel();
+    void addDayDueDayModel();
     void findDayDueDayModel();
+
 };
 
 

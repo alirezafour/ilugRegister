@@ -115,7 +115,7 @@ bool MainWindow::FindCode()
     QSqlQuery query;    //query for person
     QSqlQuery query2;   //query for attendant
     QSqlQuery query3;   //query for dueDay
-    QString attendantDay;   //  what si in the table attendant?
+    QString attendantDay;   //  what is in the table attendant?
     QString dueDayDate; // what is in the table dueDay?
     QString dateInsert("\"" + curentDate_Str + "\""); // add " to curent day
 
