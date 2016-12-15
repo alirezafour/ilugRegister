@@ -60,6 +60,11 @@ bool DueDayModel::addNewDay(QSqlTableModel *model, QString date)
     return true;
 }
 
+QString DueDayModel::dateID(QString &date)
+{
+    //TODO : fix me
+}
+
 QString DueDayModel::createFilter(QString &date)
 {
     QString filter;

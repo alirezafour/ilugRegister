@@ -84,7 +84,6 @@ bool PersonModel::addPerson(QSqlTableModel *model, QString code, QString name,
 
 }
 
-
 bool PersonModel::deletePerson(QSqlTableModel *model, QString code)
 {
     this->findPerson(model, code);
@@ -99,7 +98,6 @@ bool PersonModel::deletePerson(QSqlTableModel *model, QString code)
     }
     return true;
 }
-
 
 bool PersonModel::deletePerson(QSqlTableModel *model, QString name, QString family)
 {
@@ -138,7 +136,10 @@ bool PersonModel::updatePerson(QSqlTableModel *model, QString code, QString name
     return true;
 }
 
-
+QString PersonModel::personID(QString code)
+{
+    //TODO : fix me
+}
 
 QString PersonModel::createFilters(QString code, QString name, QString family, QString email)
 {
@@ -174,8 +175,6 @@ QString PersonModel::createFilters(QString code, QString name, QString family, Q
         return filter;
     }
 }
-
-
 
 void PersonModel::createRecord(QSqlRecord *record, QString code, QString name, QString family, QString email)
 {

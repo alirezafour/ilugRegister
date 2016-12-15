@@ -17,7 +17,7 @@ public:
     QString Date() const;
     bool findDate(QSqlTableModel *model, QString date);
     bool addNewDay(QSqlTableModel *model, QString day = QDate::currentDate().toString(Qt::ISODate));
-
+    QString dateID(QString &date);
     QString date() const;
 
 signals:
