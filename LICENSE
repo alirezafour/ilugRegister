@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 LGPL version 3
 
+=======
+>>>>>>> dc651ba5ad55c56ff823a8eaf26cefa411cb9ae5
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
@@ -7,6 +10,10 @@ LGPL version 3
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dc651ba5ad55c56ff823a8eaf26cefa411cb9ae5
   This version of the GNU Lesser General Public License incorporates
 the terms and conditions of version 3 of the GNU General Public
 License, supplemented by the additional permissions listed below.
@@ -164,6 +171,7 @@ whether future versions of the GNU Lesser General Public License shall
 apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
+<<<<<<< HEAD
 
 LGPL version 2.1
 
@@ -669,3 +677,5 @@ necessary.  Here is a sample; alter the names:
   Ty Coon, President of Vice
 
 That's all there is to it!
+=======
+>>>>>>> dc651ba5ad55c56ff823a8eaf26cefa411cb9ae5
