@@ -83,7 +83,8 @@ void TestLug::addDayDueDayModel()
     dueDayModel.setModel(model);
 
     bool ok = dueDayModel.addNewDay(model, QDate::currentDate().toString(Qt::ISODate));
-    QCOMPARE(true, ok);
+    //QCOMPARE(true, ok);
+    QCOMPARE(false, ok);
 
 }
 
@@ -99,7 +100,46 @@ void TestLug::addAttendantModel()
     model = new QSqlTableModel();
     attendantModel.setModel(model);
 
-    bool ok = attendantModel.addAttendant(model, "1111", "2016-12-23");
+    bool ok = attendantModel.addAttendant(model, "1111", "2016-5-15");
+    //QCOMPARE(true, ok);
+    QCOMPARE(false, ok);
+}
+
+void TestLug::findAttendantModel()
+{
+    model = new QSqlTableModel();
+    attendantModel.setModel(model);
+
+    bool ok = attendantModel.findAttendant(model, 8, 2);
+    QCOMPARE(true, ok);
+}
+
+void TestLug::findAttendantModelByPersonCode()
+{
+    model = new QSqlTableModel();
+    attendantModel.setModel(model);
+
+    bool ok = attendantModel.findAttendant(model, "1111", 0);
+    QCOMPARE(true, ok);
+}
+
+void TestLug::findAttendantModelByDate()
+{
+    model = new QSqlTableModel();
+    attendantModel.setModel(model);
+
+    bool ok = attendantModel.findAttendant(model, 0, "2016-12-15");
+    QModelIndex index = model->index(0,2);
+    qDebug() << index.data();
+    QCOMPARE(true, ok);
+}
+
+void TestLug::deleteAttendantModelByPersonCode()
+{
+    model = new QSqlTableModel();
+    attendantModel.setModel(model);
+
+    bool ok = attendantModel.deleteAttendant(model, "1111");
     QCOMPARE(true, ok);
 }
 

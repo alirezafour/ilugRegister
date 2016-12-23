@@ -37,7 +37,7 @@ bool DueDayModel::findDate(QSqlTableModel *model, QString date)
 bool DueDayModel::addNewDay(QSqlTableModel *model, QString date)
 {
     //check day exist or not
-    if(!this->findDate(model, date))
+    if(this->findDate(model, date))
     {
         qDebug() << "Day Exist.";
         return false;

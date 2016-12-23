@@ -184,7 +184,7 @@ bool MainWindow::AddData()
     QSqlQuery query;
     int AddCode = 0;
     AddCode = ui->Code_Line2_Registertab->text().toInt();
-    QString AddName =ui->Name_Line2_Registertab->text();
+    QString AddName = ui->Name_Line2_Registertab->text();
     QString AddFamily = ui->Family_Line2_Registertab->text();
     QString AddEmail = ui->Email_Line2_Register->text();
 

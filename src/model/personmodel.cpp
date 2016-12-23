@@ -50,7 +50,7 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
                              QString family, QString email)
 {
     QString filter = createFilters(code, name, family, email);
-    if(filter == "")
+    if(filter.isEmpty())
     {
         qDebug("No filter seted for method!");
         return false;
@@ -58,6 +58,7 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
     model->setFilter(filter);
     qDebug("Filter seted for model!");
     model->select();
+
     return true;
 }
 

@@ -30,6 +30,10 @@ private Q_SLOTS:
     void addDayDueDayModel();
     void findDayDueDayModel();
     void addAttendantModel();
+    void findAttendantModel();
+    void findAttendantModelByPersonCode();
+    void findAttendantModelByDate();
+    void deleteAttendantModelByPersonCode();
 
 };
 
