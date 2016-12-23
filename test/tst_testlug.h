@@ -4,6 +4,7 @@
 #include "../src/database/mydatabase.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/duedaymodel.h"
+#include "../src/model/attendantmodel.h"
 
 class TestLug : public QObject
 {
@@ -13,6 +14,7 @@ class TestLug : public QObject
     QSqlTableModel *model;
     PersonModel personModel;
     DueDayModel dueDayModel;
+    AttendantModel attendantModel;
 
 public:
     TestLug();
@@ -27,6 +29,7 @@ private Q_SLOTS:
     void deletePersonModel();
     void addDayDueDayModel();
     void findDayDueDayModel();
+    void addAttendantModel();
 
 };
 

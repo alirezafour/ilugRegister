@@ -1,5 +1,5 @@
 #include "attendantmodel.h"
-
+#include <QDebug>
 
 AttendantModel::AttendantModel(QObject *parent) : QObject(parent)
 {
@@ -21,11 +21,34 @@ bool AttendantModel::setModel(QSqlTableModel *model)
 
 bool AttendantModel::addAttendant(QSqlTableModel *model, QString personCode, QString date)
 {
-    QString personID = personModel.personID(personCode);
-    QString dateID = dateModel.dateID(date);
+    int personID = personModel.personID(personCode);
+    if (personID == 0)
+    {
+        qDebug() << "person code not finded.";
+        return false; // if not finded
+    }
 
-    //TODO : fix me (complete me)
+    int dateID = dateModel.dateID(date);
+    if( dateID == 0)
+    {
+        qDebug() << "date not finded.";
+        return false;  //if not finded
+    }
 
+    QSqlRecord record = model->record();
+    record.setValue(QString("personId"), QVariant(personID));
+    record.setValue(QString("dateId"), QVariant(dateID));
+
+    if(model->insertRecord(-1, record))
+    {
+        qDebug("Record Inserted!");
+    }
+    else
+    {
+        qDebug("Inserting record failed!");
+        qDebug() << model->lastError().text();
+        return false;
+    }
     return true;
 }
 

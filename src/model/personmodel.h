@@ -25,7 +25,7 @@ public:
     bool updatePerson(QSqlTableModel *model, QString code, QString name = "", QString family = "",
                       QString email = "");
     bool updatePerson(QSqlTableModel *model, int id);
-    QString personID(QString code);
+    int personID(QString code);
 
 signals:
 

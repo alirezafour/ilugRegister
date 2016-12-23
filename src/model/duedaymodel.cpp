@@ -60,9 +60,22 @@ bool DueDayModel::addNewDay(QSqlTableModel *model, QString date)
     return true;
 }
 
-QString DueDayModel::dateID(QString &date)
+int DueDayModel::dateID(QString &date)
 {
-    //TODO : fix me
+    int result;
+    QSqlTableModel *model = new QSqlTableModel();
+    model->setTable("dueDay");
+    QString filter = createFilter(date);
+    if(filter.isEmpty())
+    {
+        qDebug("No filter seted for method!");
+        return 0;
+    }
+    model->setFilter(filter);
+    model->select();
+    QSqlRecord record = model->record(0);
+    result = record.value(QString("id")).toInt();
+    return result;
 }
 
 QString DueDayModel::createFilter(QString &date)

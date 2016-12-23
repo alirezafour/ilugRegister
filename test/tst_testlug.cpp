@@ -94,6 +94,15 @@ void TestLug::findDayDueDayModel()
     QCOMPARE(true, ok);
 }
 
+void TestLug::addAttendantModel()
+{
+    model = new QSqlTableModel();
+    attendantModel.setModel(model);
+
+    bool ok = attendantModel.addAttendant(model, "1111", "2016-12-23");
+    QCOMPARE(true, ok);
+}
+
 
 QTEST_MAIN(TestLug)
 

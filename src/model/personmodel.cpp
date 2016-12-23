@@ -136,9 +136,21 @@ bool PersonModel::updatePerson(QSqlTableModel *model, QString code, QString name
     return true;
 }
 
-QString PersonModel::personID(QString code)
+int PersonModel::personID(QString code)
 {
-    //TODO : fix me
+    QSqlTableModel *model = new QSqlTableModel();
+    model->setTable("person");
+    QString filter = createFilters(code,0,0,0);
+    model->setFilter(filter);
+    if(filter.isEmpty())
+    {
+        qDebug() << "filter is empty";
+        return 0;
+    }
+    model->select();
+    QSqlRecord record = model->record(0);
+    int result = record.value(QString("id")).toInt();
+    return result;
 }
 
 QString PersonModel::createFilters(QString code, QString name, QString family, QString email)
