@@ -100,9 +100,8 @@ void TestLug::addAttendantModel()
     model = new QSqlTableModel();
     attendantModel.setModel(model);
 
-    bool ok = attendantModel.addAttendant(model, "1111", "2016-5-15");
-    //QCOMPARE(true, ok);
-    QCOMPARE(false, ok);
+    bool ok = attendantModel.addAttendant(model, "1111", "2016-12-15");
+    QCOMPARE(true, ok);
 }
 
 void TestLug::findAttendantModel()
