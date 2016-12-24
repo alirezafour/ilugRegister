@@ -9,10 +9,16 @@ using namespace std;
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QtWidgets>
-#include <QtSql>
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlTableModel>
 #include <QDate>
 #include "logindialog.h"
-#include <qtrpt.h>
+#include "qtrpt.h"
+#include "../src/model/duedaymodel.h"
+#include "../src/model/personmodel.h"
+#include "../src/model/attendantmodel.h"
+#include "../src/database/mydatabase.h"
 
 namespace Ui {
 class MainWindow;
@@ -50,10 +56,15 @@ private slots:
     void reportForVoteSlot();
     
 private:
-    QSqlDatabase db;
+    MyDatabase m_db;
+    AttendantModel m_attendantModel;
+    PersonModel m_personModel;
+    DueDayModel m_dueDayModel;
+
     QDate curentDate;
     QString curentDate_Str;
 
+private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
@@ -68,8 +79,6 @@ private:
     bool exportToDucoWikiFileToday(QString dataExport);
     bool searchName();
     bool searchFamily();
-    void report();
-    void buttonPrintClicked();
     bool reportforVote();
     bool voteImage(const QString &);
 

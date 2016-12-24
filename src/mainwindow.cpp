@@ -22,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->todayDay_lbl_SelectTab->setText(curentDate_Str);
 
     //  Picture User Config
-    loadImage("qrc:/pic/build/Image/empty.jpg");
-    BrowsingImage("qrc:/pic/build/Image/empty.jpg");
-    voteImage("qrc:/pic/build/Image/question.jpg");
+    loadImage(":/pic/build/Image/empty.jpg");
+    BrowsingImage(":/pic/build/Image/empty.jpg");
+    voteImage(":/pic/build/Image/question.jpg");
 
 
     // [Conncet buttons to Slots]
@@ -62,20 +62,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(ExportToDucoWikiFileTodaySlot()));
 
 
-    if(!databaseConnect())
-    {
-        QMessageBox::critical(0, "Error to Connect", "ERROR!!! Conection Failed");
-        ui->db_status->setText("Connect to Database Failed.");
-    }
-    else
-        ui->db_status->setText("Connect to database Successful.");
-
+    databaseConnect();
     ui->Code_Line->setFocus();
 }
 
 MainWindow::~MainWindow()
 {
-    db.close();
     delete ui;
 }
 
@@ -83,18 +75,14 @@ MainWindow::~MainWindow()
 //*******************
 bool MainWindow::databaseConnect()
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("lug.db");
-    db.setUserName("ilug");
-    db.setPassword("ilug");
-
-    if (!db.open()) {
-        QMessageBox::critical(0, qApp->tr("Cannot open database"),
-            qApp->tr("Unable to establish a database connection.\n"), QMessageBox::Cancel);
+    if (!m_db.open()) {
+        QMessageBox::critical(0, tr("Cannot open database"),
+                              tr("Unable to establish a database connection.\n"), QMessageBox::Cancel);
+        ui->db_status->setText(tr("Connect to Database Failed."));
         return false;
     }
     ViewTable("person", *ui->Table_view);
-    ui->statusBar->showMessage("Database Connected!",3000);
+    ui->statusBar->showMessage(tr("Database Connected!"),3000);
     ui->Code_Line->setFocus();
     return true;
 }
@@ -107,72 +95,68 @@ bool MainWindow::FindCode()
 
     if(ui->Code_Line->text().isEmpty())
     {
-        QMessageBox::critical(0, "Enter Code", "Please First type Code \n Type Code First");
+        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
         ui->Code_Line->setFocus();
         return false;
     }
+    QSqlTableModel * modelD = new QSqlTableModel();
+    QSqlTableModel * modelA = new QSqlTableModel();
+    QString personCode = ui->Code_Line->text();
 
-    QSqlQuery query;    //query for person
-    QSqlQuery query2;   //query for attendant
-    QSqlQuery query3;   //query for dueDay
-    QString attendantDay;   //  what is in the table attendant?
-    QString dueDayDate; // what is in the table dueDay?
-    QString dateInsert("\"" + curentDate_Str + "\""); // add " to curent day
+    bool isAdded = false;
 
-    query.exec("SELECT firstname, lastname, sessionCounter, email FROM person WHERE Code == "+ ui->Code_Line->text());
-    query2.exec("SELECT Date FROM attendant WHERE Code ==" + ui->Code_Line->text());
-    query3.exec("SELECT Date FROM dueDay WHERE Date ==" + dateInsert);
-    while(query3.next())
+    m_dueDayModel.setModel(modelD);
+    isAdded = m_dueDayModel.addNewDay(modelD, curentDate_Str);
+    m_attendantModel.setModel(modelA);
+    isAdded = m_attendantModel.addAttendant(modelA, personCode, curentDate_Str);
+
+
+    ui->Name_Line->setText("");
+    ui->Family_Line->setText("");
+    ui->Email_Line->setText("");
+    if(!isAdded)
     {
-        dueDayDate = QString(query3.value(0).toString());
+        qDebug() << "attendant not added (from Controller)";
+
+        //undo changes
+        modelA->revertAll();
+        modelD->revertAll();
+        return false;
     }
-    if(!(curentDate_Str == dueDayDate))
+    QSqlTableModel * modelP = new QSqlTableModel();
+    m_personModel.setModel(modelP);
+    bool isFinded = m_personModel.findPerson(modelP, personCode);
+    if(!isFinded)
     {
-        query3.prepare("INSERT INTO dueDay (Date)"
-                    "VALUES (:Date)");
-        query3.bindValue(":Date", curentDate_Str);
-        query3.exec();
+        qDebug() << "person Find problem (from Controller)";
+
+        //undo changes
+        modelA->revertAll();
+        modelP->revertAll();
+        modelD->revertAll();
+        return false;
     }
-    while (query2.next())
-    {
-        attendantDay = QString(query2.value(0).toString());
-    }
-        ui->Name_Line->setText("");
-        ui->Family_Line->setText("");
-        ui->Email_Line->setText("");
 
-        while(query.next())
-        {
-            QString name = query.value(0).toString();
-            QString family = query.value(1).toString();
-            int sessionCounter = query.value(2).toInt();
-            QString email = query.value(3).toString();
-            if(!(curentDate_Str == attendantDay))
-            {
-                sessionCounter++;
-                QString Sc = QString::number(sessionCounter);
-                query2.exec("UPDATE person SET sessionCounter = "+ Sc + " WHERE Code == "+ ui->Code_Line->text());
+    //save changes
+    modelA->submitAll();
+    modelP->submitAll();
+    modelD->submitAll();
+    QSqlRecord record = modelP->record(0);
+    QString name = record.value(QString("firstName")).toString();
+    QString family = record.value(QString("lastName")).toString();
+    QString email = record.value(QString("email")).toString();
 
-                // Insert to attendant Table a record
-                query.prepare("INSERT INTO attendant (Code, firstname, lastname, Date) "
-                                  "VALUES (:Code, :firstname, :lastname, :Date)");
-                    query.bindValue(":Code", ui->Code_Line->text());
-                    query.bindValue(":firstname", name);
-                    query.bindValue(":lastname", family);
-                    query.bindValue(":Date", curentDate_Str);
-                    query.exec();
+    ui->Name_Line->setText(name);
+    ui->Family_Line->setText(family);
+    ui->Email_Line->setText(email);
 
-                    //insert to dueDay
+    //TODO : manage photo outside of the Controller
+    if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
+        loadImage(":/pic/build/Image/empty.jpg");
 
-            }
-            ui->Name_Line->setText(name);
-            ui->Family_Line->setText(family);
-            ui->Email_Line->setText(email);
-        }
-        if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
-            loadImage("qrc:/pic/build/Image/empty.jpg");
-        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
-        ui->Code_Line->setFocus();
+    //TODO : change View Table System
+    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    ui->Code_Line->setFocus();
     return true;
 }
 
@@ -181,15 +165,13 @@ bool MainWindow::FindCode()
 bool MainWindow::AddData()
 {
 
-    QSqlQuery query;
-    int AddCode = 0;
-    AddCode = ui->Code_Line2_Registertab->text().toInt();
-    QString AddName = ui->Name_Line2_Registertab->text();
-    QString AddFamily = ui->Family_Line2_Registertab->text();
-    QString AddEmail = ui->Email_Line2_Register->text();
+    QString addCode = ui->Code_Line2_Registertab->text();
+    QString addName = ui->Name_Line2_Registertab->text();
+    QString addFamily = ui->Family_Line2_Registertab->text();
+    QString addEmail = ui->Email_Line2_Register->text();
 
     //check fileds is empty make error
-    if(AddCode==0 || AddName=="" || AddFamily=="") return false;
+    if(addCode==0 || addName=="" || addFamily=="") return false;
 
     //clear the field for next user
     ui->Name_Line2_Registertab->setText("");
@@ -197,20 +179,26 @@ bool MainWindow::AddData()
     ui->Email_Line2_Register->setText("");
 
     //find the person in database
-    query.prepare("INSERT INTO person (Code, firstname, lastname, email) "
-                      "VALUES (:Code, :firstname, :lastname, :email)");
-        query.bindValue(":Code", AddCode);
-        query.bindValue(":firstname", AddName);
-        query.bindValue(":lastname", AddFamily);
-        query.bindValue(":email", AddEmail);
-        query.exec();
+    QSqlTableModel *model = new QSqlTableModel();
+    m_personModel.setModel(model);
+    bool isAdded = m_personModel.addPerson(model, addCode, addName, addFamily, addEmail);
+    if(!isAdded)
+    {
+        qDebug() << "person Not added (from Controller)";
+        model->revertAll();
+        return false;
+    }
+    model->submitAll();
 
     //show persion data in tableview
+    //TODO : change View Table System
     filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
 
+    //TODO : move it to slots
     ui->statusBar->showMessage("Data Added!",3000);
     ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
     ui->Code_Line2_Registertab->setFocus();
+
     return true;
 }
 
@@ -218,20 +206,45 @@ bool MainWindow::AddData()
 //*******************
 bool MainWindow::DeleteData()
 {
+    QString personCode = ui->Code_Line->text();
     //make error is code field is empty
-    if(ui->Code_Line->text().isEmpty()) return false;
+    if(personCode.isEmpty()) return false;
 
-    //delete person data from 2 table if database
-    QSqlQuery query;
-    query.exec("DELETE FROM person WHERE Code ==" + ui->Code_Line->text());
-    query.exec("DELETE FROM attendant WHERE Code ==" + ui->Code_Line->text());
+    //delete person data from 2 table of database
+    QSqlTableModel *modelP = new QSqlTableModel();
+    m_personModel.setModel(modelP);
+    bool isDeleted = m_personModel.deletePerson(modelP, personCode);
+    if(!isDeleted)
+    {
+        qDebug() << "delete person failed (from Controller)";
+        modelP->revertAll();
+
+        return false;
+    }
+
+    //WARNING: we delete attendant data too
+    QSqlTableModel *modelA = new QSqlTableModel();
+    m_attendantModel.setModel(modelA);
+    isDeleted = m_attendantModel.deleteAttendant(modelA, personCode);
+    if(!isDeleted)
+    {
+        qDebug() << "delete attendent failed (from Controller)";
+        modelA->revertAll();
+        modelP->revertAll();
+        return false;
+    }
+    modelA->submitAll();
+    modelP->submitAll();
 
     //show table
+    //TODO : change the view System
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
-    ui->statusBar->showMessage("Data Deleted!",3000);
+    ui->statusBar->showMessage(tr("Data Deleted!"), 3000);
 
+    //TODO : move it to slots
     ui->Code_Line->selectAll();  //select all Code in Code Line
     ui->Code_Line->setFocus();
+
     return true;
 }
 
@@ -239,36 +252,34 @@ bool MainWindow::DeleteData()
 //*******************
 bool MainWindow::UpdateData()
 {
-    QSqlQuery query;
-    QSqlQuery query2;
-    int Code = 0;
-    Code = ui->Code_Line->text().toInt();
-    QString Name = ui->Name_Line->text();
-    QString Family = ui->Family_Line->text();
-    QString Email = ui->Email_Line->text();
+    QString personCode = ui->Code_Line->text();
+    QString name = ui->Name_Line->text();
+    QString family = ui->Family_Line->text();
+    QString email = ui->Email_Line->text();
 
-    //make error is code, name, family empty
-    if(Code==0 || Name=="" || Family=="") return false;
+    //make error is code, name or family is empty
+    if(personCode.isEmpty() || name.isEmpty() || family.isEmpty()) return false;
 
-    //update 2 table data
-    query.prepare("UPDATE person SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
-        query.bindValue(":firstname", Name);
-        query.bindValue(":lastname", Family);
-        query.bindValue(":Code", Code);
-        query.bindValue(":email", Email);
-        query.exec();
-    query2.prepare("UPDATE attendant SET firstname = :firstname, lastname = :lastname, email = :email WHERE Code == :Code ");
-        query2.bindValue(":firstname", Name);
-        query2.bindValue(":lastname", Family);
-        query2.bindValue(":Code", Code);
-        query2.bindValue(":email", Email);
-        query2.exec();
-
+    //update person table data
+    QSqlTableModel *modelP = new QSqlTableModel();
+    m_personModel.setModel(modelP);
+    m_personModel.findPerson(modelP, personCode, "");
+    bool isUpdated = m_personModel.updatePerson(modelP, personCode, name, family, email);
+    if(!isUpdated)
+    {
+        qDebug() << "update person failed (from Controller)";
+        return false;
+    }
+    modelP->submitAll();
     //show person image
+    //TODO : change show Picture system
     loadImage("Image/" + ui->Code_Line->text() +".jpg");
 
+    //TODO : change view system
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
-    ui->statusBar->showMessage("Data Updated!",3000);
+
+    //TODO : move it to slots
+    ui->statusBar->showMessage(tr("Data Updated!"), 3000);
     ui->Code_Line->selectAll();  //select all Code in Code Line
     ui->Code_Line->setFocus();
     return true;
@@ -277,6 +288,7 @@ bool MainWindow::UpdateData()
 
 //this Function for load Image and show in Register tab
 //***********************
+//TODO : change show Picture system
 bool MainWindow::BrowsingImage(const QString &fileName)
 {
     QSize size;
@@ -338,38 +350,34 @@ bool MainWindow::exportToTextFileToday(QString dateExport)
 
 bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
 {
-        QSqlQuery query;
-        database_Export db_export;
-        if(!(db_export.openFile("Export/DucoWiki " + dateExport + ".txt"))) return false;
+    QSqlQuery query;
+    database_Export db_export;
+    if(!(db_export.openFile("Export/DucoWiki " + dateExport + ".txt"))) return false;
 
 
-        query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
-        while(query.next())
-        {
-            int code = query.value(0).toInt();
-            QString name = query.value(1).toString();
-            QString family = query.value(2).toString();
+    query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
+    while(query.next())
+    {
+        int code = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        QString family = query.value(2).toString();
 
-            //save to ducowiki text file
-            db_export.docuExport(code, name, family);
-        }
-        db_export.closeFile();
-        return true;
+        //save to ducowiki text file
+        db_export.docuExport(code, name, family);
+    }
+    db_export.closeFile();
+    return true;
 }
 
 //this function for searching name in database and show to table in search tab
 //****************************
 bool MainWindow::searchName()
 {
-    QString name;
-    name = QString("\'\%"+ui->Name_Line3_SearchTab->text()+"\%\'");
-    QString filter;
-    filter = QString("firstname LIKE "+ name);
+    QString name = QString("'%" + ui->Name_Line3_SearchTab->text() + "%'");
+    QString filter = QString("firstName LIKE "+ name);
 
-    QSqlTableModel *model = new QSqlTableModel(this, db);
-    model->setTable("person");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
+    QSqlTableModel *model = new QSqlTableModel(this);
+    m_personModel.setModel(model);
     model->setFilter(filter);
     ui->Table_view_SearchTab->setModel(model);
     ui->Table_view_SearchTab->resizeColumnsToContents();
@@ -381,35 +389,16 @@ bool MainWindow::searchName()
 //***********************************
 bool MainWindow::searchFamily()
 {
-    QString family;
-    family = QString("\'\%"+ui->Family_Line3_SearchTab->text()+"\%\'");
-    QString filter;
-    filter = QString("lastname LIKE "+ family);
+    QString family = QString("'%"+ui->Family_Line3_SearchTab->text()+"%'");
+    QString filter = QString("lastname LIKE "+ family);
 
-    QSqlTableModel *model = new QSqlTableModel(this, db);
-    model->setTable("person");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
+    QSqlTableModel *model = new QSqlTableModel(this);
+    m_personModel.setModel(model);
     model->setFilter(filter);
     ui->Table_view_SearchTab->setModel(model);
     ui->Table_view_SearchTab->resizeColumnsToContents();
     ui->Table_view_SearchTab->resizeRowsToContents();
     return true;
-}
-
-void MainWindow::report()
-{
-
-}
-
-void MainWindow::buttonPrintClicked() {
-//     QString fileName = "mydocument.xml";
-//     QtRPT *report = new QtRPT(this);
-//     report->loadReport(fileName);
-//     report->recordCount << ui->Table_view_5->model()->rowCount();
-//     QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
-//            this, SLOT(setValue(const int, const QString, QVariant&, const int)));
-    //     report->printExec();
 }
 
 bool MainWindow::reportforVote()
@@ -418,7 +407,7 @@ bool MainWindow::reportforVote()
 
     if(ui->codeLine_VoteTab->text().isEmpty())
     {
-        QMessageBox::critical(0, "Enter Code", "Please First type Code \n Type Code First.");
+        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First."));
         ui->codeLine_VoteTab->setFocus();
         return 1;
     }
@@ -445,11 +434,11 @@ bool MainWindow::reportforVote()
 
     if(count >= 15)
     {
-        voteImage("qrc:/pic/build/Image/true.jpg");
+        voteImage(":/pic/build/Image/true.jpg");
     }
     else
     {
-        voteImage("qrc:/pic/build/Image/false.jpg");
+        voteImage(":/pic/build/Image/false.jpg");
     }
 
     ui->Table_view_VoteTab->setModel(model);
@@ -493,31 +482,31 @@ bool MainWindow::loadImage(const QString &fileName)
 void MainWindow::ViewTable(QString table,QTableView &tableview)
 {
 
-    QSqlTableModel *model = new QSqlTableModel(this, db);
-        model->setTable(table);
-        model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        model->select();
-        tableview.setModel(model);
-        tableview.setWindowTitle(table);
-        tableview.resizeColumnsToContents();
-        tableview.resizeRowsToContents();
+    QSqlTableModel *model = new QSqlTableModel(this);
+    model->setTable(table);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    tableview.setModel(model);
+    tableview.setWindowTitle(table);
+    tableview.resizeColumnsToContents();
+    tableview.resizeRowsToContents();
 
-    ui->statusBar->showMessage("Data Selected!",3000);
+    ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
 //this Function for viewed by rule
 //********************
 void MainWindow::filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview)
 {
-    QSqlTableModel *model = new QSqlTableModel(this, db);
-        model->setTable(table);
-        model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        model->select();
-        model->setFilter(Column + " ==" + RecordFilter);
-        tableview.setModel(model);
-       tableview.setWindowTitle(table);
-       tableview.resizeColumnsToContents();
-       tableview.resizeRowsToContents();
+    QSqlTableModel *model = new QSqlTableModel(this);
+    model->setTable(table);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    model->setFilter(Column + " ==" + RecordFilter);
+    tableview.setModel(model);
+    tableview.setWindowTitle(table);
+    tableview.resizeColumnsToContents();
+    tableview.resizeRowsToContents();
 }
 
 
@@ -527,12 +516,12 @@ void MainWindow::databaseConnectSlot()
 {
     if(!databaseConnect())
     {
-        QMessageBox::critical(0, "Error to Connect", "ERROR!!! Conection Failed");
-        ui->db_status->setText("Connect to Database Failed.");
+        QMessageBox::critical(0, tr("Error to Connect"), tr("ERROR!!! Conection Failed"));
+        ui->db_status->setText(tr("Connect to Database Failed."));
     }
     else
     {
-        ui->db_status->setText("Connect to database Successful.");
+        ui->db_status->setText(tr("Connect to database Successful."));
     }
 }
 
@@ -548,9 +537,9 @@ void MainWindow::findSlot()
 void MainWindow::addDataSlot()
 {
     if(!AddData())
-        QMessageBox::critical(0, "Error to add data", "ERROR!!! add Data Failed");
+        QMessageBox::critical(0, tr("Error to add data"), tr("ERROR!!! add Data Failed"));
     else
-        ui->db_status->setText("Data Added to Database");
+        ui->db_status->setText(tr("Data Added to Database"));
 }
 
 //this Slot for delete Data from Databade by Click to Delete Button
@@ -558,9 +547,9 @@ void MainWindow::addDataSlot()
 void MainWindow::deleteSlot()
 {
     if(!DeleteData())
-        QMessageBox::critical(0, "Error to Delete data", "ERROR!!! Delete Data Failed");
+        QMessageBox::critical(0, tr("Error to Delete data"), tr("ERROR!!! Delete Data Failed"));
     else
-        ui->db_status->setText("Data Deleted!");
+        ui->db_status->setText(tr("Data Deleted!"));
     ui->Code_Line->selectAll();
     ui->Code_Line->setFocus();
 }
@@ -570,7 +559,7 @@ void MainWindow::deleteSlot()
 void MainWindow::selectPersonSlot()
 {
     ViewTable("person", *ui->Table_view);
-    ui->db_status->setText("Data Selected!");
+    ui->db_status->setText(tr("Data Selected!"));
     ui->Code_Line->selectAll();
     ui->Code_Line->setFocus();
 }
@@ -580,7 +569,7 @@ void MainWindow::selectPersonSlot()
 void MainWindow::selectDateSlot()
 {
     ViewTable("attendant", *ui->Table_view_5);
-    ui->db_status->setText("Data Selected!");
+    ui->db_status->setText(tr("Data Selected!"));
 }
 
 //this Slot for update Data to Databade by Click to Update Button
@@ -588,9 +577,9 @@ void MainWindow::selectDateSlot()
 void MainWindow::updateSlot()
 {
     if(!UpdateData())
-        QMessageBox::critical(0, "Error to Update data", "ERROR!!! Update Data Failed");
+        QMessageBox::critical(0, tr("Error to Update data"), tr("ERROR!!! Update Data Failed"));
     else
-        ui->db_status->setText("Data Updated!");
+        ui->db_status->setText(tr("Data Updated!"));
     ui->Code_Line->selectAll();
     ui->Code_Line->setFocus();
 
@@ -611,7 +600,7 @@ void MainWindow::selectByDate()
 {
     QString str("\"" + ui->Date_Line->text() + "\"");
     filterView("attendant", "Date", str, *ui->Table_view_5);
-    ui->statusBar->showMessage("Data Selected!",3000);
+    ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
 //this Slot for Add Image
@@ -620,7 +609,7 @@ void MainWindow::browsingImage()
 {
     if(ui->Code_Line2_Registertab->text()=="")
     {
-        QMessageBox::information(this,"Empty Code Line Edit.", "Enter Code First Please.");
+        QMessageBox::information(this,tr("Empty Code Line Edit."), tr("Enter Code First Please."));
         return;
     }
     QStringList mimeTypeFilters;
@@ -635,7 +624,7 @@ void MainWindow::browsingImage()
     dialog.selectMimeTypeFilter("image/jpeg");
 
     while (dialog.exec() == QDialog::Accepted && !BrowsingImage(dialog.selectedFiles().first())) {}
-    ui->statusBar->showMessage("Image Added!",3000);
+    ui->statusBar->showMessage(tr("Image Added!"), 3000);
 }
 
 //this slot for use exportToTextFile function and alarm for success or not
@@ -644,34 +633,34 @@ void MainWindow::ExportToFileSlot()
 {
     QString str("\"" + ui->Date_Line->text() + "\"");
     if(!(exportToTextFile(str)))
-        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+        QMessageBox::critical(0,tr("Error Open File"), tr("Open File Failed."));
     else
-        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+        QMessageBox::information(0,tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
 void MainWindow::ExportToFileTodaySlot()
 {
     QString str("\"" + curentDate_Str + "\"");
     if(!(exportToTextFileToday(str)))
-        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+        QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
-        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+        QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
 void MainWindow::ExportToDucoWikiFileTodaySlot()
 {
     if(!(exportToDucoWikiFileToday(curentDate_Str)))
-        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+        QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
-        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+        QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
 void MainWindow::ExportToDucoWikiFileSlot()
 {
     if(!(exportToDucoWikiFileToday(ui->Date_Line->text())))
-        QMessageBox::critical(0,"Error Open File", "Open File Failed.");
+        QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
-        QMessageBox::information(0,"Export File Saved!", "Export File Saved!");
+        QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
 //yhis Slot for use searchName Function
@@ -708,10 +697,10 @@ void MainWindow::reportButton()
         report->loadReport(fileName);
         report->recordCount << ui->Table_view_5->model()->rowCount();
         QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
-               this, SLOT(setValueReport(int,QString,QVariant&,int)));
+                         this, SLOT(setValueReport(int,QString,QVariant&,int)));
         report->printExec();
     } catch (exception& e) {
-        QMessageBox::critical(0, "ERROR", e.what());
+        QMessageBox::critical(0, tr("ERROR"), e.what());
     }
 }
 
