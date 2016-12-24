@@ -16,7 +16,7 @@ void PersonModel::setModel(QSqlTableModel *model)
     model->clear();
 
     model->setTable("person");
-    model->setEditStrategy(QSqlTableModel::OnRowChange);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     model->setHeaderData(0, Qt::Horizontal, tr("ID"));
     model->setHeaderData(1, Qt::Horizontal, tr("Code"));
@@ -29,6 +29,10 @@ void PersonModel::setModel(QSqlTableModel *model)
 bool PersonModel::findPerson(QSqlTableModel *model, QString code)
 {
     this->findPerson(model, code, "", "", "");
+    if(model->rowCount() == 0)
+    {
+        return false;
+    }
     QSqlRecord record = model->record(0);
     int value = record.value(QString("sessionCounter")).toInt();
     value++;
@@ -58,7 +62,10 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
     model->setFilter(filter);
     qDebug("Filter seted for model!");
     model->select();
-
+    if(model->rowCount() == 0)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -118,8 +125,6 @@ bool PersonModel::deletePerson(QSqlTableModel *model, QString name, QString fami
 
 bool PersonModel::updatePerson(QSqlTableModel *model, QString code, QString name, QString family, QString email)
 {
-    qDebug() << " value is : "<< model->record(0).value(2);
-
     QSqlRecord record = model->record(0);
     this->createRecord(&record, code, name, family, email);
     qDebug() << " record value is : "<< record.value(2);

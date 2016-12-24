@@ -10,7 +10,7 @@ DueDayModel::DueDayModel(QObject *parent) : QObject(parent)
 bool DueDayModel::setModel(QSqlTableModel *model)
 {
     model->setTable("dueDay");
-    model->setEditStrategy(QSqlTableModel::OnFieldChange);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     return true;
 }
@@ -31,6 +31,10 @@ bool DueDayModel::findDate(QSqlTableModel *model, QString date)
     model->setFilter(filter);
     model->select();
     qDebug("filter set to model!");
+    if(model->rowCount() == 0)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -75,6 +79,7 @@ int DueDayModel::dateID(QString &date)
     model->select();
     QSqlRecord record = model->record(0);
     result = record.value(QString("id")).toInt();
+    qDebug() << QString(result) + " its result from dateID (dueDay)";
     return result;
 }
 

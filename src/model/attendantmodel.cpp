@@ -11,7 +11,7 @@ bool AttendantModel::setModel(QSqlTableModel *model)
     model->clear();
 
     model->setTable("attendant");
-    model->setEditStrategy(QSqlTableModel::OnRowChange);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     model->setHeaderData(0, Qt::Horizontal, tr("ID"));
     model->setHeaderData(0, Qt::Horizontal, tr("Person ID"));
