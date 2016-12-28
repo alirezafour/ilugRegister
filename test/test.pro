@@ -15,6 +15,8 @@ CONFIG   += warn_on qmltestcase c++11
 CONFIG += testcase
 
 include($$PWD/../LugRegister.pro)
+INCLUDEPATH += ..
+
 
 SOURCES += $$PWD/tst_testlug.cpp
 
@@ -23,3 +25,5 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     $$PWD/tst_testlug.h
+
+SOURCES -= $$PWD/../src/main.cpp
