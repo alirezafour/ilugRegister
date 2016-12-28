@@ -10,6 +10,7 @@
 class PersonModel : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PersonModel(QObject *parent = 0);
     ~PersonModel();

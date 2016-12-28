@@ -28,8 +28,7 @@ void PersonModel::setModel(QSqlTableModel *model)
 
 bool PersonModel::findPerson(QSqlTableModel *model, QString code)
 {
-    this->findPerson(model, code, "", "", "");
-    if(model->rowCount() == 0)
+    if(!this->findPerson(model, code, 0, 0, 0))
     {
         return false;
     }
@@ -40,6 +39,7 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code)
     if(model->setRecord(0,record))
     {
         qDebug("Record session counter Updated!");
+        return true;
     }
     else
     {
@@ -47,7 +47,6 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code)
         qDebug("Inserting record failed!");
         return false;
     }
-    return true;
 }
 
 bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
@@ -60,10 +59,10 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
         return false;
     }
     model->setFilter(filter);
-    qDebug("Filter seted for model!");
     model->select();
     if(model->rowCount() == 0)
     {
+        qDebug() << "person Not finded.";
         return false;
     }
     return true;
@@ -72,6 +71,11 @@ bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
 bool PersonModel::addPerson(QSqlTableModel *model, QString code, QString name,
                             QString family, QString email)
 {
+    if(findPerson(model, code))
+    {
+        qDebug() << "person with code = " << model->index(0, 1).data() << "exist.";
+        return false;
+    }
     QSqlRecord record = model->record();
     record.setValue(QString("code"), QVariant(code));
     record.setValue(QString("firstName"), QVariant(name));
@@ -94,17 +98,21 @@ bool PersonModel::addPerson(QSqlTableModel *model, QString code, QString name,
 
 bool PersonModel::deletePerson(QSqlTableModel *model, QString code)
 {
-    this->findPerson(model, code);
+    if(!this->findPerson(model, code, 0))
+    {
+        //finding failed
+        return false;
+    }
     if(model->removeRow(0))
     {
         qDebug() << code + " deleted!";
+        return true;
     }
     else
     {
         qDebug("Can't delete row 0!");
         return false;
-    }
-    return true;
+    } 
 }
 
 bool PersonModel::deletePerson(QSqlTableModel *model, QString name, QString family)
