@@ -40,6 +40,16 @@ bool MyDatabase::open()
     return true;
 }
 
+void MyDatabase::dbTransaction()
+{
+    db.transaction();
+}
+
+void MyDatabase::dbCommit()
+{
+    db.commit();
+}
+
 bool MyDatabase::createDatabase(QString path)
 {    
     db = QSqlDatabase::addDatabase("QSQLITE");

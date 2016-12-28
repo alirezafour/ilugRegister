@@ -107,6 +107,8 @@ bool MainWindow::FindCode()
 
     m_dueDayModel.setModel(modelD);
     isAdded = m_dueDayModel.addNewDay(modelD, curentDate_Str);
+
+    modelD->submitAll();
     m_attendantModel.setModel(modelA);
     isAdded = m_attendantModel.addAttendant(modelA, personCode, curentDate_Str);
 
@@ -133,14 +135,15 @@ bool MainWindow::FindCode()
         //undo changes
         modelA->revertAll();
         modelP->revertAll();
-        modelD->revertAll();
         return false;
     }
-
+    m_db.dbTransaction();
     //save changes
     modelA->submitAll();
     modelP->submitAll();
-    modelD->submitAll();
+    m_db.dbCommit();
+
+
     QSqlRecord record = modelP->record(0);
     QString name = record.value(QString("firstName")).toString();
     QString family = record.value(QString("lastName")).toString();

@@ -13,6 +13,8 @@ public:
     explicit MyDatabase(QObject *parent = 0);
     ~MyDatabase();
     bool open();
+    void dbTransaction();
+    void dbCommit();
     bool createDatabase(QString path);
 
 signals:
