@@ -24,6 +24,8 @@ public:
 
 
 private Q_SLOTS:
+    void initTestCase();
+
     void testCase1();
     void databaseTest();
     void addPersonModel();
@@ -38,7 +40,7 @@ private Q_SLOTS:
     void findAttendantModelByDate();
     void deleteAttendantModelByPersonCode();
 
-    void deleteDataBase();
+    void cleanupTestCase();
 
 };
 
