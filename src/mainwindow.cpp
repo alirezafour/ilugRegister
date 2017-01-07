@@ -92,13 +92,18 @@ bool MainWindow::databaseConnect()
 bool MainWindow::FindCode()
 {   
     ui->Code_Line->selectAll();     //select all Code in Code Line
+    ui->Name_Line->setText("");
+    ui->Family_Line->setText("");
+    ui->Email_Line->setText("");
 
-    if(ui->Code_Line->text().isEmpty())
+    if(ui->Code_Line->text().isEmpty()) //if there is no code on the code line
     {
         QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
         ui->Code_Line->setFocus();
         return false;
     }
+
+
     QSqlTableModel * modelD = new QSqlTableModel();
     QSqlTableModel * modelA = new QSqlTableModel();
     QString personCode = ui->Code_Line->text();
@@ -113,9 +118,7 @@ bool MainWindow::FindCode()
     isAdded = m_attendantModel.addAttendant(modelA, personCode, curentDate_Str);
 
 
-    ui->Name_Line->setText("");
-    ui->Family_Line->setText("");
-    ui->Email_Line->setText("");
+
     if(!isAdded)
     {
         qDebug() << "attendant not added (from Controller)";
@@ -193,14 +196,9 @@ bool MainWindow::AddData()
     }
     model->submitAll();
 
-    //show persion data in tableview
     //TODO : change View Table System
+    //show persion data in tableview
     filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
-
-    //TODO : move it to slots
-    ui->statusBar->showMessage("Data Added!",3000);
-    ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
-    ui->Code_Line2_Registertab->setFocus();
 
     return true;
 }
@@ -236,17 +234,15 @@ bool MainWindow::DeleteData()
         modelP->revertAll();
         return false;
     }
+    m_db.dbTransaction();
     modelA->submitAll();
     modelP->submitAll();
+    m_db.dbCommit();
 
     //show table
     //TODO : change the view System
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
     ui->statusBar->showMessage(tr("Data Deleted!"), 3000);
-
-    //TODO : move it to slots
-    ui->Code_Line->selectAll();  //select all Code in Code Line
-    ui->Code_Line->setFocus();
 
     return true;
 }
@@ -281,10 +277,6 @@ bool MainWindow::UpdateData()
     //TODO : change view system
     filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
 
-    //TODO : move it to slots
-    ui->statusBar->showMessage(tr("Data Updated!"), 3000);
-    ui->Code_Line->selectAll();  //select all Code in Code Line
-    ui->Code_Line->setFocus();
     return true;
 
 }
@@ -543,6 +535,10 @@ void MainWindow::addDataSlot()
         QMessageBox::critical(0, tr("Error to add data"), tr("ERROR!!! add Data Failed"));
     else
         ui->db_status->setText(tr("Data Added to Database"));
+
+    ui->statusBar->showMessage("Data Added!",3000);
+    ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
+    ui->Code_Line2_Registertab->setFocus();
 }
 
 //this Slot for delete Data from Databade by Click to Delete Button
@@ -553,7 +549,8 @@ void MainWindow::deleteSlot()
         QMessageBox::critical(0, tr("Error to Delete data"), tr("ERROR!!! Delete Data Failed"));
     else
         ui->db_status->setText(tr("Data Deleted!"));
-    ui->Code_Line->selectAll();
+
+    ui->Code_Line->selectAll();  //select all Code in Code Line
     ui->Code_Line->setFocus();
 }
 
@@ -583,9 +580,10 @@ void MainWindow::updateSlot()
         QMessageBox::critical(0, tr("Error to Update data"), tr("ERROR!!! Update Data Failed"));
     else
         ui->db_status->setText(tr("Data Updated!"));
-    ui->Code_Line->selectAll();
-    ui->Code_Line->setFocus();
 
+    ui->statusBar->showMessage(tr("Data Updated!"), 3000);
+    ui->Code_Line->selectAll();  //select all Code in Code Line
+    ui->Code_Line->setFocus();
 }
 
 //this function for searching and finding code in attendent table in database and show to table in Select tab

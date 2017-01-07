@@ -8,7 +8,7 @@ MyDatabase::MyDatabase(QObject *parent) : QObject(parent)
 
 MyDatabase::~MyDatabase()
 {
-    qDebug("database closed!");
+    qDebug() << "database closed!";
     db.close();
 }
 
