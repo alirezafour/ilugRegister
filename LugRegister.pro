@@ -4,8 +4,9 @@
 #
 #-------------------------------------------------
 
-include($$PWD/QtRPT/QtRPT.pri)
 QT       += core gui sql
+
+include($$PWD/QtRPT/QtRPT.pri)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,7 +23,8 @@ SOURCES += $$PWD/src/main.cpp\
     $$PWD/src/model/personmodel.cpp \
     $$PWD/src/model/attendantmodel.cpp \
     $$PWD/src/model/duedaymodel.cpp \
-    $$PWD/src/model/reportmodel.cpp
+    $$PWD/src/model/reportmodel.cpp \
+ #   src/photomanager.cpp
 
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
@@ -32,7 +34,8 @@ HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/model/personmodel.h \
     $$PWD/src/model/attendantmodel.h \
     $$PWD/src/model/duedaymodel.h \
-    $$PWD/src/model/reportmodel.h
+    $$PWD/src/model/reportmodel.h \
+ #   src/photomanager.h
 
 FORMS    += $$PWD/ui/mainwindow.ui \
     $$PWD/ui/logindialog.ui
