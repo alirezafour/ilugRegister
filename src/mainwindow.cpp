@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
     connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(ExportToDucoWikiFileSlot()));
-    connect(ui->report_btn, SIGNAL(pressed()), SLOT(reportButton()));
+    //connect(ui->report_btn, SIGNAL(pressed()), SLOT(reportButton()));
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
     //  [Connect LineEdits to Slots]
@@ -683,57 +683,57 @@ void MainWindow::generateCode()
     ui->Code_Line2_Registertab->setText("100");
 }
 
-void MainWindow::login()
-{
-    loginDialog dialog(this);
-    if (dialog.exec() != QDialog::Accepted)
-        return;
-}
+//void MainWindow::login()
+//{
+//    loginDialog dialog(this);
+//    if (dialog.exec() != QDialog::Accepted)
+//        return;
+//}
 
-void MainWindow::reportButton()
-{
-    try {
-        QString fileName = "mydocument.xml";
-        QtRPT *report = new QtRPT(this);
-        report->loadReport(fileName);
-        report->recordCount << ui->Table_view_5->model()->rowCount();
-        QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
-                         this, SLOT(setValueReport(int,QString,QVariant&,int)));
-        report->printExec();
-    } catch (exception& e) {
-        QMessageBox::critical(0, tr("ERROR"), e.what());
-    }
-}
+//void MainWindow::reportButton()
+//{
+//    try {
+//        QString fileName = "mydocument.xml";
+//        QtRPT *report = new QtRPT(this);
+//        report->loadReport(fileName);
+//        report->recordCount << ui->Table_view_5->model()->rowCount();
+//        QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
+//                         this, SLOT(setValueReport(int,QString,QVariant&,int)));
+//        report->printExec();
+//    } catch (exception& e) {
+//        QMessageBox::critical(0, tr("ERROR"), e.what());
+//    }
+//}
 
-void MainWindow::setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage)
-{
+//void MainWindow::setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage)
+//{
 
-    if (paramName == "ID")
-    {
-        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).isNull())
-            return;
-        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).toString();
-    }
-    if (paramName == "Code")
-    {
-        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).isNull())
-            return;
-        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).toString();
-    }
-    if (paramName == "firstname")
-    {
-        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).isNull())
-            return;
-        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).toString();
-    }
-    if (paramName == "lastname")
-    {
-        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).isNull())
-            return;
-        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).toString();
-    }
+//    if (paramName == "ID")
+//    {
+//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).isNull())
+//            return;
+//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).toString();
+//    }
+//    if (paramName == "Code")
+//    {
+//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).isNull())
+//            return;
+//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).toString();
+//    }
+//    if (paramName == "firstname")
+//    {
+//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).isNull())
+//            return;
+//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).toString();
+//    }
+//    if (paramName == "lastname")
+//    {
+//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).isNull())
+//            return;
+//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).toString();
+//    }
 
-}
+//}
 
 void MainWindow::reportForVoteSlot()
 {

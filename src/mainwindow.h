@@ -1,9 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include<iostream>
-using namespace std;
-
 #include <QMainWindow>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -14,7 +11,7 @@ using namespace std;
 #include <QSqlTableModel>
 #include <QDate>
 #include "logindialog.h"
-#include "qtrpt.h"
+//#include "qtrpt.h"
 #include "../src/model/duedaymodel.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/attendantmodel.h"
@@ -50,9 +47,9 @@ private slots:
     void searchNameSlot();
     void searchFamilySlot();
     void generateCode();
-    void login();
-    void reportButton();
-    void setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage);
+    //void login();
+    //void reportButton();
+    //void setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage);
     void reportForVoteSlot();
     
 private:
