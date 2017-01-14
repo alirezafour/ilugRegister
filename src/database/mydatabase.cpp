@@ -69,7 +69,7 @@ bool MyDatabase::createDatabase(QString path)
                "lastName TEXT NOT NULL,"
                "sessionCounter INTEGER,"
                "email TEXT,"
-               "regesterDay TEXT)");
+               "registerDay TEXT)");
     query.exec("CREATE TABLE attendant ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "personId INTEGER NOT NULL,"

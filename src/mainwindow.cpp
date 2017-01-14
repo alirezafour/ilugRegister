@@ -2,8 +2,6 @@
 #include "src/ui_mainwindow.h"
 #include "src/database_export.h"
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -28,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // [Conncet buttons to Slots]
-    connect(ui->SearchButton, SIGNAL(clicked()), SLOT(findSlot()));
-    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(addDataSlot()));
+    connect(ui->SearchButton, SIGNAL(clicked()), SLOT(on_search_button_clicked()));
+    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
     connect(ui->SelectButton, SIGNAL(clicked()), SLOT(selectPersonSlot()));
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deleteSlot()));
     connect(ui->updateButton, SIGNAL(clicked()), SLOT(updateSlot()));
@@ -46,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
     //  [Connect LineEdits to Slots]
-    connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(findSlot()));
+    connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(on_search_button_clicked()));
     connect(ui->Code_Line3_Selecttab, SIGNAL(returnPressed()), SLOT(findCodeFromAttendant()));
     connect(ui->Date_Line, SIGNAL(returnPressed()), SLOT(selectByDate()));
     connect(ui->Name_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchNameSlot()));
@@ -83,85 +81,6 @@ bool MainWindow::databaseConnect()
     }
     ViewTable("person", *ui->Table_view);
     ui->statusBar->showMessage(tr("Database Connected!"),3000);
-    ui->Code_Line->setFocus();
-    return true;
-}
-
-//Find data From Database by Code Function
-//**************
-bool MainWindow::FindCode()
-{   
-    ui->Code_Line->selectAll();     //select all Code in Code Line
-    ui->Name_Line->setText("");
-    ui->Family_Line->setText("");
-    ui->Email_Line->setText("");
-
-    if(ui->Code_Line->text().isEmpty()) //if there is no code on the code line
-    {
-        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
-        ui->Code_Line->setFocus();
-        return false;
-    }
-
-
-    QSqlTableModel * modelD = new QSqlTableModel();
-    QSqlTableModel * modelA = new QSqlTableModel();
-    QString personCode = ui->Code_Line->text();
-
-    bool isAdded = false;
-
-    m_dueDayModel.setModel(modelD);
-    isAdded = m_dueDayModel.addNewDay(modelD, curentDate_Str);
-
-    modelD->submitAll();
-    m_attendantModel.setModel(modelA);
-    isAdded = m_attendantModel.addAttendant(modelA, personCode, curentDate_Str);
-
-
-
-    if(!isAdded)
-    {
-        qDebug() << "attendant not added (from Controller)";
-
-        //undo changes
-        modelA->revertAll();
-        modelD->revertAll();
-        return false;
-    }
-    QSqlTableModel * modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
-    bool isFinded = m_personModel.findPerson(modelP, personCode);
-    if(!isFinded)
-    {
-        qDebug() << "person Find problem (from Controller)";
-
-        //undo changes
-        modelA->revertAll();
-        modelP->revertAll();
-        return false;
-    }
-    m_db.dbTransaction();
-    //save changes
-    modelA->submitAll();
-    modelP->submitAll();
-    m_db.dbCommit();
-
-
-    QSqlRecord record = modelP->record(0);
-    QString name = record.value(QString("firstName")).toString();
-    QString family = record.value(QString("lastName")).toString();
-    QString email = record.value(QString("email")).toString();
-
-    ui->Name_Line->setText(name);
-    ui->Family_Line->setText(family);
-    ui->Email_Line->setText(email);
-
-    //TODO : manage photo outside of the Controller
-    if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
-        loadImage(":/pic/build/Image/empty.jpg");
-
-    //TODO : change View Table System
-    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
     ui->Code_Line->setFocus();
     return true;
 }
@@ -522,14 +441,38 @@ void MainWindow::databaseConnectSlot()
 
 //this Slot for Select Data From Database by Click the Search Button or Enter in Code text line
 //*****************
-void MainWindow::findSlot()
+void MainWindow::on_search_button_clicked()
 {
-    FindCode();
+    ui->Code_Line->selectAll();     //select all Code in Code Line
+    ui->Name_Line->setText("");
+    ui->Family_Line->setText("");
+    ui->Email_Line->setText("");
+
+    if(ui->Code_Line->text().isEmpty()) //if there is no code on the code line
+    {
+        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
+        ui->Code_Line->setFocus();
+    }
+    //call the method and get the data
+    Person person = m_iLAController.findCode(ui->Code_Line->text());
+
+    //set data for Ui
+    ui->Name_Line->setText(person.firstName());
+    ui->Family_Line->setText(person.lastName());
+    ui->Email_Line->setText(person.email());
+
+    //TODO : manage photo outside of the Controller
+    if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
+        loadImage(":/pic/build/Image/empty.jpg");
+
+    //TODO : change View Table System
+    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    ui->Code_Line->setFocus();
 }
 
 //this Slot for add Data to Databade by Click to Add Button
 //*****************
-void MainWindow::addDataSlot()
+void MainWindow::on_add_button_registerTab_clicked()
 {
     if(!AddData())
         QMessageBox::critical(0, tr("Error to add data"), tr("ERROR!!! add Data Failed"));

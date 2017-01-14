@@ -10,12 +10,15 @@
 #include <QSqlRecord>
 #include <QSqlTableModel>
 #include <QDate>
-#include "logindialog.h"
+//#include "logindialog.h"
 //#include "qtrpt.h"
 #include "../src/model/duedaymodel.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/attendantmodel.h"
 #include "../src/database/mydatabase.h"
+
+#include "src/controllers/ilugapicontroller.h"
+#include "src/model/person.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,8 +34,8 @@ public:
 
 private slots:
     void databaseConnectSlot();
-    void findSlot();
-    void addDataSlot();
+    void on_search_button_clicked();
+    void on_add_button_registerTab_clicked();
     void deleteSlot();
     void selectPersonSlot();
     void selectDateSlot();
@@ -57,7 +60,7 @@ private:
     AttendantModel m_attendantModel;
     PersonModel m_personModel;
     DueDayModel m_dueDayModel;
-
+    ILugApiController m_iLAController;
     QDate curentDate;
     QString curentDate_Str;
 
@@ -65,7 +68,7 @@ private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
-    bool FindCode();       //Select data From Data base (Find Code)
+    Person FindCode();       //Select data From Data base (Find Code)
     bool AddData();          //Add data To database
     bool DeleteData();
     bool UpdateData();

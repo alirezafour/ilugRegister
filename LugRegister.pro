@@ -24,6 +24,8 @@ SOURCES += $$PWD/src/main.cpp\
     $$PWD/src/model/attendantmodel.cpp \
     $$PWD/src/model/duedaymodel.cpp \
     $$PWD/src/model/reportmodel.cpp \
+    src/controllers/ilugapicontroller.cpp \
+    src/model/person.cpp
 
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
@@ -34,6 +36,8 @@ HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/model/attendantmodel.h \
     $$PWD/src/model/duedaymodel.h \
     $$PWD/src/model/reportmodel.h \
+    src/controllers/ilugapicontroller.h \
+    src/model/person.h
 
 FORMS    += $$PWD/ui/mainwindow.ui \
     #$$PWD/ui/logindialog.ui

@@ -83,7 +83,7 @@ bool PersonModel::addPerson(QSqlTableModel *model, QString code, QString name,
     record.setValue(QString("lastName"), QVariant(family));
     record.setValue(QString("sessionCounter"), QVariant(0));
     record.setValue(QString("email"), QVariant(email));
-    record.setValue(QString("regesterDay"), QDate::currentDate().toString(Qt::ISODate));
+    record.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
     if(model->insertRecord(-1, record))
     {
         qDebug("Record Inserted!");
