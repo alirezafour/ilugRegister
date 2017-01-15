@@ -417,7 +417,7 @@ void MainWindow::on_search_button_clicked()
         ui->Code_Line->setFocus();
     }
     //call the method and get the data
-    Person person = m_iLAController.findCode(ui->Code_Line->text());
+    Person person = m_iLAController.findPersonByCode(ui->Code_Line->text());
 
     //set data for Ui
     ui->Name_Line->setText(person.firstName());

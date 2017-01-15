@@ -9,7 +9,7 @@ ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 
 //Find data From Database by Code Function
 //**************
-Person ILugApiController::findCode(QString code)
+Person ILugApiController::findPersonByCode(QString code)
 {
     QSqlTableModel * modelD = new QSqlTableModel();
     QSqlTableModel * modelA = new QSqlTableModel();
