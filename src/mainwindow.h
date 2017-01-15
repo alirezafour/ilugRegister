@@ -50,9 +50,6 @@ private slots:
     void searchNameSlot();
     void searchFamilySlot();
     void generateCode();
-    //void login();
-    //void reportButton();
-    //void setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage);
     void reportForVoteSlot();
     
 private:
@@ -68,8 +65,6 @@ private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
-    Person FindCode();       //Select data From Data base (Find Code)
-    bool AddData();          //Add data To database
     bool DeleteData();
     bool UpdateData();
     bool loadImage(const QString &);

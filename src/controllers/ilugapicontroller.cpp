@@ -64,3 +64,30 @@ Person ILugApiController::findCode(QString code)
     person.setEmail(email);
     return person;
 }
+
+//Add data to Database Function
+//**************
+bool ILugApiController::addPerson(const Person &person)
+{
+    QString code = person.code();
+    QString firstName = person.firstName();
+    QString lastName = person.lastName();
+    QString email = person.email();
+
+
+    //check fileds is empty make error
+    if(code==0 || firstName=="" || lastName=="") return false;
+
+    //find the person in database
+    QSqlTableModel *model = new QSqlTableModel();
+    m_personModel.setModel(model);
+    bool isAdded = m_personModel.addPerson(model, code, firstName, lastName, email);
+    if(!isAdded)
+    {
+        qDebug() << "person Not added (from Controller)";
+        model->revertAll();
+        return false;
+    }
+    model->submitAll();
+    return true;
+}

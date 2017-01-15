@@ -21,6 +21,7 @@ class ILugApiController : public QObject
 public:
     explicit ILugApiController(QObject *parent = 0);
     Person findCode(QString code);
+    bool addPerson(const Person &person);
 
 signals:
 

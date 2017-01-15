@@ -85,43 +85,6 @@ bool MainWindow::databaseConnect()
     return true;
 }
 
-//Add data to Database Function
-//**************
-bool MainWindow::AddData()
-{
-
-    QString addCode = ui->Code_Line2_Registertab->text();
-    QString addName = ui->Name_Line2_Registertab->text();
-    QString addFamily = ui->Family_Line2_Registertab->text();
-    QString addEmail = ui->Email_Line2_Register->text();
-
-    //check fileds is empty make error
-    if(addCode==0 || addName=="" || addFamily=="") return false;
-
-    //clear the field for next user
-    ui->Name_Line2_Registertab->setText("");
-    ui->Family_Line2_Registertab->setText("");
-    ui->Email_Line2_Register->setText("");
-
-    //find the person in database
-    QSqlTableModel *model = new QSqlTableModel();
-    m_personModel.setModel(model);
-    bool isAdded = m_personModel.addPerson(model, addCode, addName, addFamily, addEmail);
-    if(!isAdded)
-    {
-        qDebug() << "person Not added (from Controller)";
-        model->revertAll();
-        return false;
-    }
-    model->submitAll();
-
-    //TODO : change View Table System
-    //show persion data in tableview
-    filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
-
-    return true;
-}
-
 //this Function for Delete Data From person Table and folow Delete From attendant by Code
 //*******************
 bool MainWindow::DeleteData()
@@ -474,10 +437,28 @@ void MainWindow::on_search_button_clicked()
 //*****************
 void MainWindow::on_add_button_registerTab_clicked()
 {
-    if(!AddData())
+    Person person;
+    person.setCode(ui->Code_Line2_Registertab->text());
+    person.setFirstName(ui->Name_Line2_Registertab->text());
+    person.setLastName(ui->Family_Line2_Registertab->text());
+    person.setEmail(ui->Email_Line2_Register->text());
+
+    if(!m_iLAController.addPerson(person))
+    {
         QMessageBox::critical(0, tr("Error to add data"), tr("ERROR!!! add Data Failed"));
+    }
     else
+    {
+        //TODO : change View Table System
+        //show persion data in tableview
+        filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
         ui->db_status->setText(tr("Data Added to Database"));
+    }
+
+    //clear the field for next user
+    ui->Name_Line2_Registertab->setText("");
+    ui->Family_Line2_Registertab->setText("");
+    ui->Email_Line2_Register->setText("");
 
     ui->statusBar->showMessage("Data Added!",3000);
     ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
@@ -625,58 +606,6 @@ void MainWindow::generateCode()
 {
     ui->Code_Line2_Registertab->setText("100");
 }
-
-//void MainWindow::login()
-//{
-//    loginDialog dialog(this);
-//    if (dialog.exec() != QDialog::Accepted)
-//        return;
-//}
-
-//void MainWindow::reportButton()
-//{
-//    try {
-//        QString fileName = "mydocument.xml";
-//        QtRPT *report = new QtRPT(this);
-//        report->loadReport(fileName);
-//        report->recordCount << ui->Table_view_5->model()->rowCount();
-//        QObject::connect(report, SIGNAL(setValue(const int, const QString, QVariant&, const int)),
-//                         this, SLOT(setValueReport(int,QString,QVariant&,int)));
-//        report->printExec();
-//    } catch (exception& e) {
-//        QMessageBox::critical(0, tr("ERROR"), e.what());
-//    }
-//}
-
-//void MainWindow::setValueReport(int recNo, QString paramName, QVariant &paramValue, int reportPage)
-//{
-
-//    if (paramName == "ID")
-//    {
-//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).isNull())
-//            return;
-//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,0)).toString();
-//    }
-//    if (paramName == "Code")
-//    {
-//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).isNull())
-//            return;
-//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,1)).toString();
-//    }
-//    if (paramName == "firstname")
-//    {
-//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).isNull())
-//            return;
-//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,2)).toString();
-//    }
-//    if (paramName == "lastname")
-//    {
-//        if (ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).isNull())
-//            return;
-//        paramValue = ui->Table_view_5->model()->data(ui->Table_view_5->model()->index(recNo,3)).toString();
-//    }
-
-//}
 
 void MainWindow::reportForVoteSlot()
 {
