@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // [Conncet buttons to Slots]
     connect(ui->SearchButton, SIGNAL(clicked()), SLOT(on_search_button_clicked()));
     connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
-    connect(ui->SelectButton, SIGNAL(clicked()), SLOT(selectPersonSlot()));
-    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deleteSlot()));
+    connect(ui->SelectButton, SIGNAL(clicked()), SLOT(on_select_button_clicked()));
+    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(on_delete_button_clicked()));
     connect(ui->updateButton, SIGNAL(clicked()), SLOT(updateSlot()));
     connect(ui->addPicture_Button, SIGNAL(clicked()), SLOT(browsingImage()));
     connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
@@ -82,50 +82,6 @@ bool MainWindow::databaseConnect()
     ViewTable("person", *ui->Table_view);
     ui->statusBar->showMessage(tr("Database Connected!"),3000);
     ui->Code_Line->setFocus();
-    return true;
-}
-
-//this Function for Delete Data From person Table and folow Delete From attendant by Code
-//*******************
-bool MainWindow::DeleteData()
-{
-    QString personCode = ui->Code_Line->text();
-    //make error is code field is empty
-    if(personCode.isEmpty()) return false;
-
-    //delete person data from 2 table of database
-    QSqlTableModel *modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
-    bool isDeleted = m_personModel.deletePerson(modelP, personCode);
-    if(!isDeleted)
-    {
-        qDebug() << "delete person failed (from Controller)";
-        modelP->revertAll();
-
-        return false;
-    }
-
-    //WARNING: we delete attendant data too
-    QSqlTableModel *modelA = new QSqlTableModel();
-    m_attendantModel.setModel(modelA);
-    isDeleted = m_attendantModel.deleteAttendant(modelA, personCode);
-    if(!isDeleted)
-    {
-        qDebug() << "delete attendent failed (from Controller)";
-        modelA->revertAll();
-        modelP->revertAll();
-        return false;
-    }
-    m_db.dbTransaction();
-    modelA->submitAll();
-    modelP->submitAll();
-    m_db.dbCommit();
-
-    //show table
-    //TODO : change the view System
-    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
-    ui->statusBar->showMessage(tr("Data Deleted!"), 3000);
-
     return true;
 }
 
@@ -467,12 +423,24 @@ void MainWindow::on_add_button_registerTab_clicked()
 
 //this Slot for delete Data from Databade by Click to Delete Button
 //*****************
-void MainWindow::deleteSlot()
+void MainWindow::on_delete_button_clicked()
 {
-    if(!DeleteData())
+    if(!m_iLAController.deletePerson(ui->Code_Line->text()))
+    {
         QMessageBox::critical(0, tr("Error to Delete data"), tr("ERROR!!! Delete Data Failed"));
+    }
     else
+    {
+        //show table
+        //TODO : change the view System
+        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+
+        ui->Name_Line->setText("");
+        ui->Family_Line->setText("");
+        ui->Email_Line->setText("");
         ui->db_status->setText(tr("Data Deleted!"));
+        ui->statusBar->showMessage(tr("Data Deleted!"), 3000);
+    }
 
     ui->Code_Line->selectAll();  //select all Code in Code Line
     ui->Code_Line->setFocus();
@@ -480,7 +448,7 @@ void MainWindow::deleteSlot()
 
 //this Slot for select Data from Databade by Click to Select Button
 //*****************
-void MainWindow::selectPersonSlot()
+void MainWindow::on_select_button_clicked()
 {
     ViewTable("person", *ui->Table_view);
     ui->db_status->setText(tr("Data Selected!"));

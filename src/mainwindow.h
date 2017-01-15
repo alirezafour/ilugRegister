@@ -36,8 +36,8 @@ private slots:
     void databaseConnectSlot();
     void on_search_button_clicked();
     void on_add_button_registerTab_clicked();
-    void deleteSlot();
-    void selectPersonSlot();
+    void on_delete_button_clicked();
+    void on_select_button_clicked();
     void selectDateSlot();
     void updateSlot();
     void findCodeFromAttendant();
@@ -65,7 +65,6 @@ private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
-    bool DeleteData();
     bool UpdateData();
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);

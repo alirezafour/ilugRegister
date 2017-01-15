@@ -9,7 +9,7 @@ ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 
 //Find data From Database by Code Function
 //**************
-Person ILugApiController::findPersonByCode(QString code)
+Person ILugApiController::findPersonByCode(const QString &code)
 {
     QSqlTableModel * modelD = new QSqlTableModel();
     QSqlTableModel * modelA = new QSqlTableModel();
@@ -89,5 +89,40 @@ bool ILugApiController::addPerson(const Person &person)
         return false;
     }
     model->submitAll();
+    return true;
+}
+
+bool ILugApiController::deletePerson(const QString &personCode)
+{
+    //make error is code field is empty
+    if(personCode.isEmpty()) return false;
+
+    //delete person data from 2 table of database
+    QSqlTableModel *modelP = new QSqlTableModel();
+    m_personModel.setModel(modelP);
+    bool isDeleted = m_personModel.deletePerson(modelP, personCode);
+    if(!isDeleted)
+    {
+        qDebug() << "delete person failed (from Controller)";
+        modelP->revertAll();
+
+        return false;
+    }
+
+    //WARNING: we delete attendant data too
+    QSqlTableModel *modelA = new QSqlTableModel();
+    m_attendantModel.setModel(modelA);
+    isDeleted = m_attendantModel.deleteAttendant(modelA, personCode);
+    if(!isDeleted)
+    {
+        qDebug() << "delete attendent failed (from Controller)";
+        modelA->revertAll();
+        modelP->revertAll();
+        return false;
+    }
+    m_db.dbTransaction();
+    modelA->submitAll();
+    modelP->submitAll();
+    m_db.dbCommit();
     return true;
 }

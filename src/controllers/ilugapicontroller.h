@@ -20,8 +20,9 @@ class ILugApiController : public QObject
     QString curentDate_Str;
 public:
     explicit ILugApiController(QObject *parent = 0);
-    Person findPersonByCode(QString code);
+    Person findPersonByCode(const QString &code);
     bool addPerson(const Person &person);
+    bool deletePerson(const QString &personCode);
 
 signals:
 
