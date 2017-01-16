@@ -92,6 +92,8 @@ bool ILugApiController::addPerson(const Person &person)
     return true;
 }
 
+//this Function for Delete Data From person Table and folow Delete From attendant by Code
+//*******************
 bool ILugApiController::deletePerson(const QString &personCode)
 {
     //make error is code field is empty
@@ -124,5 +126,26 @@ bool ILugApiController::deletePerson(const QString &personCode)
     modelA->submitAll();
     modelP->submitAll();
     m_db.dbCommit();
+    return true;
+}
+
+//this Function for Update data in Main tab
+//*******************
+bool ILugApiController::updatePerson(const Person &person)
+{
+    //make error is code, name or family is empty
+    if(person.code().isEmpty() || person.firstName().isEmpty() || person.lastName().isEmpty()) return false;
+
+    //update person table data
+    QSqlTableModel *modelP = new QSqlTableModel();
+    m_personModel.setModel(modelP);
+    m_personModel.findPerson(modelP, person.code(), "");
+    bool isUpdated = m_personModel.updatePerson(modelP, person.code(), person.firstName(), person.lastName(), person.email());
+    if(!isUpdated)
+    {
+        qDebug() << "update person failed (from Controller)";
+        return false;
+    }
+    modelP->submitAll();
     return true;
 }

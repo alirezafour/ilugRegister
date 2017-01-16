@@ -39,7 +39,7 @@ private slots:
     void on_delete_button_clicked();
     void on_select_button_clicked();
     void selectDateSlot();
-    void updateSlot();
+    void on_update_button_clicked();
     void findCodeFromAttendant();
     void selectByDate();
     void browsingImage();
@@ -65,7 +65,6 @@ private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
-    bool UpdateData();
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);
     bool exportToTextFile(QString dateExport);

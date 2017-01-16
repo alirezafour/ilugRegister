@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
     connect(ui->SelectButton, SIGNAL(clicked()), SLOT(on_select_button_clicked()));
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(on_delete_button_clicked()));
-    connect(ui->updateButton, SIGNAL(clicked()), SLOT(updateSlot()));
+    connect(ui->updateButton, SIGNAL(clicked()), SLOT(on_update_button_clicked()));
     connect(ui->addPicture_Button, SIGNAL(clicked()), SLOT(browsingImage()));
     connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
     connect(ui->selectDate_dateTable_button, SIGNAL(clicked()), SLOT(selectByDate()));
@@ -83,40 +83,6 @@ bool MainWindow::databaseConnect()
     ui->statusBar->showMessage(tr("Database Connected!"),3000);
     ui->Code_Line->setFocus();
     return true;
-}
-
-//this Function for Update data in Main tab
-//*******************
-bool MainWindow::UpdateData()
-{
-    QString personCode = ui->Code_Line->text();
-    QString name = ui->Name_Line->text();
-    QString family = ui->Family_Line->text();
-    QString email = ui->Email_Line->text();
-
-    //make error is code, name or family is empty
-    if(personCode.isEmpty() || name.isEmpty() || family.isEmpty()) return false;
-
-    //update person table data
-    QSqlTableModel *modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
-    m_personModel.findPerson(modelP, personCode, "");
-    bool isUpdated = m_personModel.updatePerson(modelP, personCode, name, family, email);
-    if(!isUpdated)
-    {
-        qDebug() << "update person failed (from Controller)";
-        return false;
-    }
-    modelP->submitAll();
-    //show person image
-    //TODO : change show Picture system
-    loadImage("Image/" + ui->Code_Line->text() +".jpg");
-
-    //TODO : change view system
-    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
-
-    return true;
-
 }
 
 //this Function for load Image and show in Register tab
@@ -466,12 +432,27 @@ void MainWindow::selectDateSlot()
 
 //this Slot for update Data to Databade by Click to Update Button
 //*****************
-void MainWindow::updateSlot()
+void MainWindow::on_update_button_clicked()
 {
-    if(!UpdateData())
+    Person person;
+    person.setCode(ui->Code_Line->text());
+    person.setFirstName(ui->Name_Line->text());
+    person.setLastName(ui->Family_Line->text());
+    person.setEmail(ui->Email_Line->text());
+    if(!m_iLAController.updatePerson(person))
+    {
         QMessageBox::critical(0, tr("Error to Update data"), tr("ERROR!!! Update Data Failed"));
+    }
     else
+    {
         ui->db_status->setText(tr("Data Updated!"));
+        //show person image
+        //TODO : change show Picture system
+        loadImage("Image/" + ui->Code_Line->text() +".jpg");
+
+        //TODO : change view system
+        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    }
 
     ui->statusBar->showMessage(tr("Data Updated!"), 3000);
     ui->Code_Line->selectAll();  //select all Code in Code Line

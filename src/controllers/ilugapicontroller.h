@@ -23,6 +23,7 @@ public:
     Person findPersonByCode(const QString &code);
     bool addPerson(const Person &person);
     bool deletePerson(const QString &personCode);
+    bool updatePerson(const Person &person);
 
 signals:
 
