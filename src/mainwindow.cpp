@@ -1,5 +1,5 @@
 #include "src/mainwindow.h"
-#include "src/ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "src/database_export.h"
 
 MainWindow::MainWindow(QWidget *parent) :

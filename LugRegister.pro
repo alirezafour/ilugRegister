@@ -32,8 +32,8 @@ HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/model/attendantmodel.h \
     $$PWD/src/model/duedaymodel.h \
     $$PWD/src/model/reportmodel.h \
-    src/controllers/ilugapicontroller.h \
-    src/model/person.h
+    $$PWD/src/controllers/ilugapicontroller.h \
+    $$PWD/src/model/person.h
 
 FORMS    += $$PWD/ui/mainwindow.ui
 

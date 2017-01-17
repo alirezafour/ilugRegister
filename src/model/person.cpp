@@ -10,7 +10,7 @@ Person::~Person()
 
 }
 
-Person::Person(const Person &person)
+Person::Person(const Person &person, QObject *parent) : QObject(parent)
 {
     this->setPerson(person);
 }

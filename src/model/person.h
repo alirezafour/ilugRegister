@@ -25,7 +25,7 @@ class Person : public QObject
 public:
     explicit Person(QObject *parent = 0);
     ~Person();
-    Person(const Person &person);
+    explicit Person(const Person &person, QObject *parent = 0);
     Person(Person &&person);
     Person &operator =(const Person &person);
     Person &operator =(Person &&person);

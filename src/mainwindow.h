@@ -42,7 +42,7 @@ private slots:
     void selectByDate();
     void browsingImage();
     void on_export_button_clicked();
-    void ExportToFileTodaySlot();
+    void on_export_today_action_triggered();
     void ExportToDucoWikiFileTodaySlot();
     void ExportToDucoWikiFileSlot();
     void searchNameSlot();
