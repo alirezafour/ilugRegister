@@ -10,8 +10,6 @@
 #include <QSqlRecord>
 #include <QSqlTableModel>
 #include <QDate>
-//#include "logindialog.h"
-//#include "qtrpt.h"
 #include "../src/model/duedaymodel.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/attendantmodel.h"
@@ -43,7 +41,7 @@ private slots:
     void findCodeFromAttendant();
     void selectByDate();
     void browsingImage();
-    void ExportToFileSlot();
+    void on_export_button_clicked();
     void ExportToFileTodaySlot();
     void ExportToDucoWikiFileTodaySlot();
     void ExportToDucoWikiFileSlot();
@@ -67,8 +65,6 @@ private:
     bool databaseConnect(); //database Connection Function
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);
-    bool exportToTextFile(QString dateExport);
-    bool exportToTextFileToday(QString dateExport);
     bool exportToDucoWikiFileToday(QString dataExport);
     bool searchName();
     bool searchFamily();

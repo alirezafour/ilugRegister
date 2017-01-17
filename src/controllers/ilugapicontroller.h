@@ -24,6 +24,7 @@ public:
     bool addPerson(const Person &person);
     bool deletePerson(const QString &personCode);
     bool updatePerson(const Person &person);
+    bool exportToTextByDate(const QString &date);
 
 signals:
 

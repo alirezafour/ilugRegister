@@ -1,5 +1,6 @@
 #include "ilugapicontroller.h"
 #include <QDebug>
+#include "src/database_export.h"
 
 ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 {
@@ -32,6 +33,8 @@ Person ILugApiController::findPersonByCode(const QString &code)
         //undo changes
         modelA->revertAll();
         modelD->revertAll();
+        delete modelA;
+        delete modelD;
         return Person();
     }
     QSqlTableModel * modelP = new QSqlTableModel();
@@ -44,6 +47,9 @@ Person ILugApiController::findPersonByCode(const QString &code)
         //undo changes
         modelA->revertAll();
         modelP->revertAll();
+        delete modelA;
+        delete modelD;
+        delete modelP;
         return Person();
     }
     m_db.dbTransaction();
@@ -62,6 +68,10 @@ Person ILugApiController::findPersonByCode(const QString &code)
     person.setFirstName(name);
     person.setLastName(family);
     person.setEmail(email);
+
+    delete modelA;
+    delete modelD;
+    delete modelP;
     return person;
 }
 
@@ -86,9 +96,11 @@ bool ILugApiController::addPerson(const Person &person)
     {
         qDebug() << "person Not added (from Controller)";
         model->revertAll();
+        delete model;
         return false;
     }
     model->submitAll();
+    delete model;
     return true;
 }
 
@@ -107,7 +119,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
     {
         qDebug() << "delete person failed (from Controller)";
         modelP->revertAll();
-
+        delete modelP;
         return false;
     }
 
@@ -120,12 +132,16 @@ bool ILugApiController::deletePerson(const QString &personCode)
         qDebug() << "delete attendent failed (from Controller)";
         modelA->revertAll();
         modelP->revertAll();
+        delete modelA;
+        delete modelP;
         return false;
     }
     m_db.dbTransaction();
     modelA->submitAll();
     modelP->submitAll();
     m_db.dbCommit();
+    delete modelA;
+    delete modelP;
     return true;
 }
 
@@ -144,8 +160,42 @@ bool ILugApiController::updatePerson(const Person &person)
     if(!isUpdated)
     {
         qDebug() << "update person failed (from Controller)";
+        modelP->revertAll();
+        delete modelP;
         return false;
     }
     modelP->submitAll();
+    delete modelP;
+    return true;
+}
+
+//this function for export date in date line to text file
+//******************************
+bool ILugApiController::exportToTextByDate(const QString &date)
+{
+    QSqlQuery query;
+    query.exec("SELECT firstName, lastName FROM dueDay, person, attendant"
+               " WHERE dueDay.id == attendant.dateId and"
+               " person.id == attendant.personId and"
+               " dueDay.date == '"+ date + "';");
+    if(!(query.lastError().text() == " "))
+    {
+        qDebug() << query.lastError().text();
+        return false;
+    }
+
+    database_Export dbExport;
+    if(!dbExport.openFile("Export/" + date + ".txt"))
+    {
+        qDebug() << "Failed to open File";
+        return false;
+    }
+    while(query.next())
+    {
+        QString firstName = query.value(0).toString();
+        QString lastName = query.value(1).toString();
+        dbExport.insertToFile(firstName , lastName);
+    }
+    dbExport.closeFile();
     return true;
 }

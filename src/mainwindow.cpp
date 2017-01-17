@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
     connect(ui->selectDate_dateTable_button, SIGNAL(clicked()), SLOT(selectByDate()));
     connect(ui->selectAll_Button, SIGNAL(clicked()), SLOT(selectDateSlot()));
-    connect(ui->ExportButton, SIGNAL(clicked()), SLOT(ExportToFileSlot()));
+    connect(ui->ExportButton, SIGNAL(clicked()), SLOT(on_export_button_clicked()));
     connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
@@ -56,9 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // [ Connect actions to Slots]
     connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
     connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(databaseConnectSlot()));
-    connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(ExportToFileTodaySlot()));
+    connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(on_export_today_action_triggered()));
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(ExportToDucoWikiFileTodaySlot()));
-
 
     databaseConnect();
     ui->Code_Line->setFocus();
@@ -108,42 +107,6 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     ui->imageLabel_RegisterTab->setFixedSize(size);
 
     image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
-    return true;
-}
-
-//this function for export date in date line to text file
-//******************************
-bool MainWindow::exportToTextFile(QString dateExport)
-{
-    QSqlQuery query;
-    database_Export db_export;
-    if(!(db_export.openFile("Export/" + ui->Date_Line->text() + ".txt"))) return false;
-
-    query.exec("SELECT firstname, lastname FROM attendant WHERE Date == "+ dateExport);
-    while(query.next())
-    {
-        QString name = query.value(0).toString();
-        QString family = query.value(1).toString();
-        db_export.insertToFile(name , family);
-    }
-    db_export.closeFile();
-    return true;
-}
-
-bool MainWindow::exportToTextFileToday(QString dateExport)
-{
-    QSqlQuery query;
-    database_Export db_export;
-    if(!(db_export.openFile("Export/" + dateExport + ".txt"))) return false;
-
-    query.exec("SELECT firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
-    while(query.next())
-    {
-        QString name = query.value(0).toString();
-        QString family = query.value(1).toString();
-        db_export.insertToFile(name , family);
-    }
-    db_export.closeFile();
     return true;
 }
 
@@ -499,23 +462,22 @@ void MainWindow::browsingImage()
 
     while (dialog.exec() == QDialog::Accepted && !BrowsingImage(dialog.selectedFiles().first())) {}
     ui->statusBar->showMessage(tr("Image Added!"), 3000);
+
 }
 
 //this slot for use exportToTextFile function and alarm for success or not
 //************************
-void MainWindow::ExportToFileSlot()
+void MainWindow::on_export_button_clicked()
 {
-    QString str("\"" + ui->Date_Line->text() + "\"");
-    if(!(exportToTextFile(str)))
+    if(!(m_iLAController.exportToTextByDate(ui->Date_Line->text())))
         QMessageBox::critical(0,tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0,tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
-void MainWindow::ExportToFileTodaySlot()
+void MainWindow::on_export_today_action_triggered()
 {
-    QString str("\"" + curentDate_Str + "\"");
-    if(!(exportToTextFileToday(str)))
+    if(!(m_iLAController.exportToTextByDate(curentDate_Str)))
         QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));

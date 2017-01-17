@@ -4,11 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core widgets gui sql
+QT       += core gui sql
 
-#include($$PWD/QtRPT/QtRPT.pri)
-
-#greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LugRegister
 TEMPLATE = app
@@ -18,7 +16,6 @@ SOURCES += $$PWD/src/main.cpp\
         $$PWD/src/mainwindow.cpp\
     $$PWD/src/database_export.cpp \
     $$PWD/src/configfile.cpp \
-    #$$PWD/src/logindialog.cpp \
     $$PWD/src/database/mydatabase.cpp \
     $$PWD/src/model/personmodel.cpp \
     $$PWD/src/model/attendantmodel.cpp \
@@ -30,7 +27,6 @@ SOURCES += $$PWD/src/main.cpp\
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
     $$PWD/src/configfile.h \
-    #$$PWD/src/logindialog.h \
     $$PWD/src/database/mydatabase.h \
     $$PWD/src/model/personmodel.h \
     $$PWD/src/model/attendantmodel.h \
@@ -39,7 +35,6 @@ HEADERS  += $$PWD/src/mainwindow.h\
     src/controllers/ilugapicontroller.h \
     src/model/person.h
 
-FORMS    += $$PWD/ui/mainwindow.ui \
-    #$$PWD/ui/logindialog.ui
+FORMS    += $$PWD/ui/mainwindow.ui
 
 RESOURCES += $$PWD//rsc.qrc
