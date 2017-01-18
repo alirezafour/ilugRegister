@@ -43,8 +43,8 @@ private slots:
     void browsingImage();
     void on_export_button_clicked();
     void on_export_today_action_triggered();
-    void ExportToDucoWikiFileTodaySlot();
-    void ExportToDucoWikiFileSlot();
+    void on_ducoWiki_export_action_triggered();
+    void on_docu_export_button_clicked();
     void searchNameSlot();
     void searchFamilySlot();
     void generateCode();
@@ -65,7 +65,6 @@ private:
     bool databaseConnect(); //database Connection Function
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);
-    bool exportToDucoWikiFileToday(QString dataExport);
     bool searchName();
     bool searchFamily();
     bool reportforVote();

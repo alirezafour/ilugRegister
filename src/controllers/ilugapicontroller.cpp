@@ -171,7 +171,7 @@ bool ILugApiController::updatePerson(const Person &person)
 
 //this function for export date in date line to text file
 //******************************
-bool ILugApiController::exportToTextByDate(const QString &date)
+bool ILugApiController::exportToTextByDate(const QString &date, bool toDocu)
 {
     QSqlQuery query;
     query.exec("SELECT firstName, lastName FROM dueDay, person, attendant"
@@ -184,8 +184,18 @@ bool ILugApiController::exportToTextByDate(const QString &date)
         return false;
     }
 
+    QString location = "Export/";
+    if(toDocu)
+    {
+        location = location + "DucoWiki " + date + ".txt";
+    }
+    else
+    {
+        location = location + date + ".txt";
+    }
+
     database_Export dbExport;
-    if(!dbExport.openFile("Export/" + date + ".txt"))
+    if(!dbExport.openFile(location))
     {
         qDebug() << "Failed to open File";
         return false;
@@ -194,7 +204,14 @@ bool ILugApiController::exportToTextByDate(const QString &date)
     {
         QString firstName = query.value(0).toString();
         QString lastName = query.value(1).toString();
-        dbExport.insertToFile(firstName , lastName);
+        if(toDocu)
+        {
+            dbExport.docuExport(firstName, lastName);
+        }
+        else
+        {
+            dbExport.insertToFile(firstName , lastName);
+        }
     }
     dbExport.closeFile();
     return true;

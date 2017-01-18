@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
-    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(ExportToDucoWikiFileSlot()));
+    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(on_docu_export_button_clicked()));
     //connect(ui->report_btn, SIGNAL(pressed()), SLOT(reportButton()));
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
     connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(databaseConnectSlot()));
     connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(on_export_today_action_triggered()));
-    connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(ExportToDucoWikiFileTodaySlot()));
+    connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(on_ducoWiki_export_action_triggered()));
 
     databaseConnect();
     ui->Code_Line->setFocus();
@@ -107,27 +107,6 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     ui->imageLabel_RegisterTab->setFixedSize(size);
 
     image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
-    return true;
-}
-
-bool MainWindow::exportToDucoWikiFileToday(QString dateExport)
-{
-    QSqlQuery query;
-    database_Export db_export;
-    if(!(db_export.openFile("Export/DucoWiki " + dateExport + ".txt"))) return false;
-
-
-    query.exec("SELECT Code, firstname, lastname FROM attendant WHERE Date == \""+ dateExport + "\"");
-    while(query.next())
-    {
-        int code = query.value(0).toInt();
-        QString name = query.value(1).toString();
-        QString family = query.value(2).toString();
-
-        //save to ducowiki text file
-        db_export.docuExport(code, name, family);
-    }
-    db_export.closeFile();
     return true;
 }
 
@@ -483,17 +462,17 @@ void MainWindow::on_export_today_action_triggered()
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
-void MainWindow::ExportToDucoWikiFileTodaySlot()
+void MainWindow::on_ducoWiki_export_action_triggered()
 {
-    if(!(exportToDucoWikiFileToday(curentDate_Str)))
+    if(!(m_iLAController.exportToTextByDate(curentDate_Str, true)))
         QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
-void MainWindow::ExportToDucoWikiFileSlot()
+void MainWindow::on_docu_export_button_clicked()
 {
-    if(!(exportToDucoWikiFileToday(ui->Date_Line->text())))
+    if(!(m_iLAController.exportToTextByDate(ui->Date_Line->text(), true)))
         QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
