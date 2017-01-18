@@ -2,10 +2,11 @@
 
 database_Export::database_Export()
 {
+
 }
 
 
-bool database_Export::openFile(QString location)
+bool database_Export::openFile(const QString &location)
 {
     file.setFileName(location);
     if(file.open(QIODevice::ReadWrite))
@@ -23,30 +24,29 @@ bool database_Export::closeFile()
     return true;
 }
 
-bool database_Export::insertToFile(QString name, QString Family)
+bool database_Export::insertToFile(const QString &name, const QString &family)
 {
     QString textLine;
-    textLine = QString(name + " " + Family);
+    textLine = QString(name + " " + family);
     QTextStream fileOut(&file);
     fileOut<< endl;
     fileOut<< textLine;
     return true;
 }
 
-bool database_Export::docuExport(int code, QString name, QString Family)
+bool database_Export::docuExport(const QString &name, const QString &family)
 {
     QString textLine;
-    if (code < 100 || code > 999)
-        textLine = QString("[[صفحات شخصی:" + name + " " + Family + ":]]\\\\");
-    else
-        textLine = QString(name + " " + Family + "\\\\");
+    //if he/she is not a new member he/she should have docuwiki link to his/her page.
+    textLine = QString("[[صفحات شخصی:" + name + " " + family + ":]]\\\\");
+    //textLine = QString(name + " " + family + "\\\\");
     QTextStream fileOut(&file);
     fileOut<< endl;
     fileOut<< textLine;
     return true;
 }
 
-bool database_Export::addToFile(QString text)
+bool database_Export::addToFile(const QString &text)
 {
     file.seek(0);
     QTextStream fileOut(&file);
