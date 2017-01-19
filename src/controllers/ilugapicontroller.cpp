@@ -1,11 +1,20 @@
 #include "ilugapicontroller.h"
 #include <QDebug>
 #include "src/database_export.h"
+#include <QSqlQuery>
 
 ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 {
     curentDate = QDate::currentDate();
     curentDate_Str = curentDate.toString(Qt::ISODate);
+}
+
+bool ILugApiController::openDatabase()
+{
+    if(m_db.open())
+        return true;
+    else
+        return false;
 }
 
 //Find data From Database by Code Function
@@ -235,4 +244,39 @@ bool ILugApiController::searchPersonByLastName(const QString &lastName, QSqlTabl
     m_personModel.setModel(model);
     model->setFilter(filter);
     return true;
+}
+
+bool ILugApiController::countForElection(const QString &code, QSqlQueryModel *model)
+{
+    int count = 0; //count the number of session he/she was present
+    QSqlQuery query;    //query
+    QSqlQuery query2;   //query
+    QString date;
+    query.exec("SELECT date FROM dueDay ORDER BY date(Date) DESC Limit 15");
+    while(query.next())
+    {
+        date = query.value(0).toString();
+    }
+    qDebug() << date;
+
+    query2.exec("select firstName, lastName, dueDay.date "
+                "From person, dueDay, attendant "
+                "WHERE attendant.personId = person.id "
+                  "and attendant.dateId = dueDay.id "
+                  "and code = " + code + " "
+                  "AND date(date) >= '" + date + "';");
+
+    while(query2.next())
+    {
+        count++;
+    }
+    model->setQuery(query2);
+    if(count >= 10)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

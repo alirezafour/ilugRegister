@@ -1,13 +1,17 @@
 #include "src/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "src/database_export.h"
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlTableModel>
+#include <QSqlQuery>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    searchModel = new QSqlTableModel(this);
 
     //default set
     ui->Date_Line->setText("yyyy-mm-dd");
@@ -60,29 +64,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(on_export_today_action_triggered()));
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(on_ducoWiki_export_action_triggered()));
 
-    databaseConnect();
+    databaseConnectSlot();
     ui->Code_Line->setFocus();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-//Connect To Database Function
-//*******************
-bool MainWindow::databaseConnect()
-{
-    if (!m_db.open()) {
-        QMessageBox::critical(0, tr("Cannot open database"),
-                              tr("Unable to establish a database connection.\n"), QMessageBox::Cancel);
-        ui->db_status->setText(tr("Connect to Database Failed."));
-        return false;
-    }
-    ViewTable("person", *ui->Table_view);
-    ui->statusBar->showMessage(tr("Database Connected!"),3000);
-    ui->Code_Line->setFocus();
-    return true;
 }
 
 //this Function for load Image and show in Register tab
@@ -109,52 +97,6 @@ bool MainWindow::BrowsingImage(const QString &fileName)
 
     image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
     return true;
-}
-
-bool MainWindow::reportforVote()
-{
-    ui->codeLine_VoteTab->selectAll();     //select all Code in Code Line in Report Tab
-
-    if(ui->codeLine_VoteTab->text().isEmpty())
-    {
-        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First."));
-        ui->codeLine_VoteTab->setFocus();
-        return 1;
-    }
-
-    QString code;
-    int count = 0;
-    code = ui->codeLine_VoteTab->text();
-
-    QSqlQuery query;    //query
-    QSqlQuery query2;   //query
-    QString date;
-    query.exec("SELECT Date FROM dueDay ORDER BY date(Date) DESC Limit 15");
-    while(query.next())
-    {
-        date = query.value(0).toString();
-    }
-    query2.exec("SELECT firstname, lastname FROM attendant WHERE Code = " + code + " AND date(Date) >= \"" + date + "\"");
-    while(query2.next())
-    {
-        count++;
-    }
-    QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(query2);
-
-    if(count >= 15)
-    {
-        voteImage(":/pic/build/Image/true.jpg");
-    }
-    else
-    {
-        voteImage(":/pic/build/Image/false.jpg");
-    }
-
-    ui->Table_view_VoteTab->setModel(model);
-    ui->codeLine_VoteTab->setFocus();
-    ui->codeLine_VoteTab->selectAll();
-    return 0;
 }
 
 bool MainWindow::voteImage(const QString &fileName)
@@ -219,12 +161,11 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
     tableview.resizeRowsToContents();
 }
 
-
 //this Slot for Connect to Database by Click the Connect button
 //******************
 void MainWindow::databaseConnectSlot()
 {
-    if(!databaseConnect())
+    if(!m_iLAController.openDatabase())
     {
         QMessageBox::critical(0, tr("Error to Connect"), tr("ERROR!!! Conection Failed"));
         ui->db_status->setText(tr("Connect to Database Failed."));
@@ -232,6 +173,9 @@ void MainWindow::databaseConnectSlot()
     else
     {
         ui->db_status->setText(tr("Connect to database Successful."));
+        ViewTable("person", *ui->Table_view);
+        ui->statusBar->showMessage(tr("Database Connected!"),3000);
+        ui->Code_Line->setFocus();
     }
 }
 
@@ -476,7 +420,28 @@ void MainWindow::generateCode()
 
 void MainWindow::reportForVoteSlot()
 {
-    reportforVote();
+    ui->codeLine_VoteTab->selectAll();     //select all Code in Code Line in Report Tab
+
+    if(ui->codeLine_VoteTab->text().isEmpty())
+    {
+        QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First."));
+        ui->codeLine_VoteTab->setFocus();
+    }
+    else
+    {
+        static QSqlQueryModel *model = new QSqlQueryModel(this);
+        if(m_iLAController.countForElection(ui->codeLine_VoteTab->text(), model))
+        {
+            voteImage(":/pic/build/Image/true.jpg");
+        }
+        else
+        {
+            voteImage(":/pic/build/Image/false.jpg");
+        }
+        ui->Table_view_VoteTab->setModel(model);
+        ui->codeLine_VoteTab->setFocus();
+        ui->codeLine_VoteTab->selectAll();
+    }
 }
 
 

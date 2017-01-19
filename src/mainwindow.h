@@ -2,18 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QMessageBox>
 #include <QtWidgets>
-#include <QSqlError>
-#include <QSqlRecord>
-#include <QSqlTableModel>
 #include <QDate>
-#include "../src/model/duedaymodel.h"
-#include "../src/model/personmodel.h"
-#include "../src/model/attendantmodel.h"
-#include "../src/database/mydatabase.h"
 
 #include "src/controllers/ilugapicontroller.h"
 #include "src/model/person.h"
@@ -51,11 +41,6 @@ private slots:
     void reportForVoteSlot();
     
 private:
-    MyDatabase m_db;
-    AttendantModel m_attendantModel;
-    PersonModel m_personModel;
-    DueDayModel m_dueDayModel;
-    QSqlTableModel *searchModel;
     ILugApiController m_iLAController;
     QDate curentDate;
     QString curentDate_Str;
@@ -66,7 +51,6 @@ private:
     bool databaseConnect(); //database Connection Function
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);
-    bool reportforVote();
     bool voteImage(const QString &);
 
     Ui::MainWindow *ui;

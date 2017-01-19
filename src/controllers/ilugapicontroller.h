@@ -20,6 +20,7 @@ class ILugApiController : public QObject
     QString curentDate_Str;
 public:
     explicit ILugApiController(QObject *parent = 0);
+    bool openDatabase();
     Person findPersonByCode(const QString &code);
     bool addPerson(const Person &person);
     bool deletePerson(const QString &personCode);
@@ -27,6 +28,7 @@ public:
     bool exportToTextByDate(const QString &date, bool toDocu = false);
     bool searchPersonByFirstName(const QString &name, QSqlTableModel *model);
     bool searchPersonByLastName(const QString &lastName, QSqlTableModel *model);
+    bool countForElection(const QString &code, QSqlQueryModel *model);
 
 signals:
 
