@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    searchModel = new QSqlTableModel(this);
 
     //default set
     ui->Date_Line->setText("yyyy-mm-dd");
@@ -107,38 +108,6 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     ui->imageLabel_RegisterTab->setFixedSize(size);
 
     image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
-    return true;
-}
-
-//this function for searching name in database and show to table in search tab
-//****************************
-bool MainWindow::searchName()
-{
-    QString name = QString("'%" + ui->Name_Line3_SearchTab->text() + "%'");
-    QString filter = QString("firstName LIKE "+ name);
-
-    QSqlTableModel *model = new QSqlTableModel(this);
-    m_personModel.setModel(model);
-    model->setFilter(filter);
-    ui->Table_view_SearchTab->setModel(model);
-    ui->Table_view_SearchTab->resizeColumnsToContents();
-    ui->Table_view_SearchTab->resizeRowsToContents();
-    return true;
-}
-
-//this function for searching family in database and show to table in search tab
-//***********************************
-bool MainWindow::searchFamily()
-{
-    QString family = QString("'%"+ui->Family_Line3_SearchTab->text()+"%'");
-    QString filter = QString("lastname LIKE "+ family);
-
-    QSqlTableModel *model = new QSqlTableModel(this);
-    m_personModel.setModel(model);
-    model->setFilter(filter);
-    ui->Table_view_SearchTab->setModel(model);
-    ui->Table_view_SearchTab->resizeColumnsToContents();
-    ui->Table_view_SearchTab->resizeRowsToContents();
     return true;
 }
 
@@ -482,14 +451,22 @@ void MainWindow::on_docu_export_button_clicked()
 //*************************
 void MainWindow::searchNameSlot()
 {
-    searchName();
+    static QSqlTableModel *model = new QSqlTableModel(this);
+    m_iLAController.searchPersonByFirstName(ui->Name_Line3_SearchTab->text(), model);
+    ui->Table_view_SearchTab->setModel(model);
+    ui->Table_view_SearchTab->resizeColumnsToContents();
+    ui->Table_view_SearchTab->resizeRowsToContents();
 }
 
 //this Slot for use searchfamily Function
 //************************
 void MainWindow::searchFamilySlot()
 {
-    searchFamily();
+    static QSqlTableModel *model = new QSqlTableModel(this);
+    m_iLAController.searchPersonByLastName(ui->Family_Line3_SearchTab->text(), model);
+    ui->Table_view_SearchTab->setModel(model);
+    ui->Table_view_SearchTab->resizeColumnsToContents();
+    ui->Table_view_SearchTab->resizeRowsToContents();
 }
 
 void MainWindow::generateCode()

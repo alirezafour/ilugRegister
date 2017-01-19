@@ -55,6 +55,7 @@ private:
     AttendantModel m_attendantModel;
     PersonModel m_personModel;
     DueDayModel m_dueDayModel;
+    QSqlTableModel *searchModel;
     ILugApiController m_iLAController;
     QDate curentDate;
     QString curentDate_Str;
@@ -65,11 +66,8 @@ private:
     bool databaseConnect(); //database Connection Function
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);
-    bool searchName();
-    bool searchFamily();
     bool reportforVote();
     bool voteImage(const QString &);
-
 
     Ui::MainWindow *ui;
 };

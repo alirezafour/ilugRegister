@@ -216,3 +216,23 @@ bool ILugApiController::exportToTextByDate(const QString &date, bool toDocu)
     dbExport.closeFile();
     return true;
 }
+
+//this function for searching name in database and show to table in search tab
+//****************************
+bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTableModel *model)
+{
+    QString filter = "firstName LIKE '%" + firstName + "%'";
+    m_personModel.setModel(model);
+    model->setFilter(filter);
+    return true;
+}
+
+//this function for searching family in database and show to table in search tab
+//***********************************
+bool ILugApiController::searchPersonByLastName(const QString &lastName, QSqlTableModel *model)
+{
+    QString filter = "lastName LIKE '%" + lastName + "%'";
+    m_personModel.setModel(model);
+    model->setFilter(filter);
+    return true;
+}

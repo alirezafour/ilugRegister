@@ -25,6 +25,8 @@ public:
     bool deletePerson(const QString &personCode);
     bool updatePerson(const Person &person);
     bool exportToTextByDate(const QString &date, bool toDocu = false);
+    bool searchPersonByFirstName(const QString &name, QSqlTableModel *model);
+    bool searchPersonByLastName(const QString &lastName, QSqlTableModel *model);
 
 signals:
 
