@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "src/database_export.h"
 #include <QSqlQuery>
+#include <QPointer>
 
 ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 {
@@ -21,52 +22,15 @@ bool ILugApiController::openDatabase()
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    QSqlTableModel * modelD = new QSqlTableModel();
-    QSqlTableModel * modelA = new QSqlTableModel();
-
-    bool isAdded = false;
-
-    m_dueDayModel.setModel(modelD);
-    isAdded = m_dueDayModel.addNewDay(modelD, curentDate_Str);
-
-    modelD->submitAll();
-    m_attendantModel.setModel(modelA);
-    isAdded = m_attendantModel.addAttendant(modelA, code, curentDate_Str);
-
-
-
-    if(!isAdded)
-    {
-        qDebug() << "attendant not added (from Controller)";
-
-        //undo changes
-        modelA->revertAll();
-        modelD->revertAll();
-        delete modelA;
-        delete modelD;
-        return Person();
-    }
-    QSqlTableModel * modelP = new QSqlTableModel();
+    QPointer<QSqlTableModel> modelP = new QSqlTableModel();
     m_personModel.setModel(modelP);
-    bool isFinded = m_personModel.findPerson(modelP, code);
-    if(!isFinded)
+
+    if(!m_personModel.findPerson(modelP, code))
     {
         qDebug() << "person Find problem (from Controller)";
-
-        //undo changes
-        modelA->revertAll();
         modelP->revertAll();
-        delete modelA;
-        delete modelD;
-        delete modelP;
         return Person();
     }
-    m_db.dbTransaction();
-    //save changes
-    modelA->submitAll();
-    modelP->submitAll();
-    m_db.dbCommit();
-
 
     QSqlRecord record = modelP->record(0);
     QString name = record.value(QString("firstName")).toString();
@@ -78,9 +42,31 @@ Person ILugApiController::findPersonByCode(const QString &code)
     person.setLastName(family);
     person.setEmail(email);
 
-    delete modelA;
-    delete modelD;
-    delete modelP;
+    QPointer<QSqlTableModel> modelD = new QSqlTableModel();
+    QPointer<QSqlTableModel> modelA = new QSqlTableModel();
+
+    m_dueDayModel.setModel(modelD);
+    m_dueDayModel.addNewDay(modelD, curentDate_Str);
+
+    modelD->submitAll();
+    m_attendantModel.setModel(modelA);
+
+    if(!m_attendantModel.addAttendant(modelA, code, curentDate_Str))
+    {
+        qDebug() << "attendant not added (from Controller)";
+
+        //undo changes
+        modelA->revertAll();
+        modelD->revertAll();
+        return person;
+    }
+
+    m_db.dbTransaction();
+    //save changes
+    modelA->submitAll();
+    modelP->submitAll();
+    m_db.dbCommit();
+
     return person;
 }
 
@@ -98,18 +84,16 @@ bool ILugApiController::addPerson(const Person &person)
     if(code==0 || firstName=="" || lastName=="") return false;
 
     //find the person in database
-    QSqlTableModel *model = new QSqlTableModel();
+    QPointer<QSqlTableModel> model = new QSqlTableModel();
     m_personModel.setModel(model);
     bool isAdded = m_personModel.addPerson(model, code, firstName, lastName, email);
     if(!isAdded)
     {
         qDebug() << "person Not added (from Controller)";
         model->revertAll();
-        delete model;
         return false;
     }
     model->submitAll();
-    delete model;
     return true;
 }
 
@@ -121,7 +105,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
     if(personCode.isEmpty()) return false;
 
     //delete person data from 2 table of database
-    QSqlTableModel *modelP = new QSqlTableModel();
+    QPointer<QSqlTableModel> modelP = new QSqlTableModel();
     m_personModel.setModel(modelP);
     bool isDeleted = m_personModel.deletePerson(modelP, personCode);
     if(!isDeleted)
@@ -133,7 +117,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
     }
 
     //WARNING: we delete attendant data too
-    QSqlTableModel *modelA = new QSqlTableModel();
+    QPointer<QSqlTableModel> modelA = new QSqlTableModel();
     m_attendantModel.setModel(modelA);
     isDeleted = m_attendantModel.deleteAttendant(modelA, personCode);
     if(!isDeleted)
@@ -141,16 +125,12 @@ bool ILugApiController::deletePerson(const QString &personCode)
         qDebug() << "delete attendent failed (from Controller)";
         modelA->revertAll();
         modelP->revertAll();
-        delete modelA;
-        delete modelP;
         return false;
     }
     m_db.dbTransaction();
     modelA->submitAll();
     modelP->submitAll();
     m_db.dbCommit();
-    delete modelA;
-    delete modelP;
     return true;
 }
 
@@ -162,7 +142,7 @@ bool ILugApiController::updatePerson(const Person &person)
     if(person.code().isEmpty() || person.firstName().isEmpty() || person.lastName().isEmpty()) return false;
 
     //update person table data
-    QSqlTableModel *modelP = new QSqlTableModel();
+    QPointer<QSqlTableModel> modelP = new QSqlTableModel();
     m_personModel.setModel(modelP);
     m_personModel.findPerson(modelP, person.code(), "");
     bool isUpdated = m_personModel.updatePerson(modelP, person.code(), person.firstName(), person.lastName(), person.email());
@@ -170,11 +150,9 @@ bool ILugApiController::updatePerson(const Person &person)
     {
         qDebug() << "update person failed (from Controller)";
         modelP->revertAll();
-        delete modelP;
         return false;
     }
     modelP->submitAll();
-    delete modelP;
     return true;
 }
 
