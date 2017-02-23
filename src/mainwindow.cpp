@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
     connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
     connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(on_docu_export_button_clicked()));
-    //connect(ui->report_btn, SIGNAL(pressed()), SLOT(reportButton()));
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
     //  [Connect LineEdits to Slots]
@@ -281,7 +280,13 @@ void MainWindow::on_select_button_clicked()
 //**********************
 void MainWindow::selectDateSlot()
 {
-    ViewTable("attendant", *ui->Table_view_5);
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    model->setQuery("Select firstName, lastName, date "
+                    "FROM person, attendant, dueDay "
+                    "WHERE person.id = attendant.personId "
+                    "AND dueDay.id = attendant.dateId;");
+    qDebug() << model->lastError().text();
+    ui->Table_view_5->setModel(model);
     ui->db_status->setText(tr("Data Selected!"));
 }
 
@@ -318,7 +323,14 @@ void MainWindow::on_update_button_clicked()
 //***********************
 void MainWindow::findCodeFromAttendant()
 {
-    filterView("attendant", "Code", ui->Code_Line3_Selecttab->text(), *ui->Table_view_5);
+    QString code = ui->Code_Line3_Selecttab->text();
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    model->setQuery("Select firstName, lastName, date "
+                    "FROM person, attendant, dueDay "
+                    "WHERE person.id = attendant.personId "
+                    "AND dueDay.id = attendant.dateId "
+                    "AND person.code = " + code + ";");
+    ui->Table_view_5->setModel(model);
     ui->Code_Line3_Selecttab->selectAll();
     ui->Code_Line3_Selecttab->setFocus();
 }
@@ -327,8 +339,14 @@ void MainWindow::findCodeFromAttendant()
 //********************
 void MainWindow::selectByDate()
 {
-    QString str("\"" + ui->Date_Line->text() + "\"");
-    filterView("attendant", "Date", str, *ui->Table_view_5);
+    QString date = ui->Date_Line->text();
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    model->setQuery("Select firstName, lastName, date "
+                    "FROM person, attendant, dueDay "
+                    "WHERE person.id = attendant.personId "
+                    "AND dueDay.id = attendant.dateId "
+                    "AND dueDay.date = '" + date + "';");
+    ui->Table_view_5->setModel(model);
     ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
