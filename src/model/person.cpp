@@ -44,42 +44,43 @@ Person &Person::operator =(Person &&person)
     return *this;
 }
 
-int Person::id() const
+int Person::getId() const
 {
     return m_id;
 }
 
-QString Person::code() const
+QString Person::getCode() const
 {
     return m_code;
 }
 
-QString Person::firstName() const
+QString Person::getFirstName() const
 {
     return m_firstName;
 }
 
-QString Person::lastName() const
+QString Person::getLastName() const
 {
     return m_lastName;
 }
 
-int Person::sessionCounter() const
+int Person::getSessionCounter() const
 {
     return m_sessionCounter;
 }
 
-QString Person::email() const
+QString Person::getEmail() const
 {
     return m_email;
 }
 
-QString Person::registerDay() const
+QString Person::getRegisterDay() const
 {
     return m_registerDay;
 }
 
-void Person::setId(int id)
+
+void Person::setId(const int &id)
 {
     if (m_id == id)
         return;
@@ -88,7 +89,7 @@ void Person::setId(int id)
     emit idChanged(id);
 }
 
-void Person::setCode(QString code)
+void Person::setCode(const QString &code)
 {
     if (m_code == code)
         return;
@@ -97,7 +98,7 @@ void Person::setCode(QString code)
     emit codeChanged(code);
 }
 
-void Person::setFirstName(QString firstName)
+void Person::setFirstName(const QString &firstName)
 {
     if (m_firstName == firstName)
         return;
@@ -106,7 +107,7 @@ void Person::setFirstName(QString firstName)
     emit firstNameChanged(firstName);
 }
 
-void Person::setLastName(QString lastName)
+void Person::setLastName(const QString &lastName)
 {
     if (m_lastName == lastName)
         return;
@@ -115,7 +116,7 @@ void Person::setLastName(QString lastName)
     emit lastNameChanged(lastName);
 }
 
-void Person::setSessionCounter(int sessionCounter)
+void Person::setSessionCounter(const int &sessionCounter)
 {
     if (m_sessionCounter == sessionCounter)
         return;
@@ -124,7 +125,7 @@ void Person::setSessionCounter(int sessionCounter)
     emit sessionCounterChanged(sessionCounter);
 }
 
-void Person::setEmail(QString email)
+void Person::setEmail(const QString &email)
 {
     if (m_email == email)
         return;
@@ -133,7 +134,7 @@ void Person::setEmail(QString email)
     emit emailChanged(email);
 }
 
-void Person::setRegisterDay(QString registerDay)
+void Person::setRegisterDay(const QString &registerDay)
 {
     if (m_registerDay == registerDay)
         return;

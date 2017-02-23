@@ -197,9 +197,9 @@ void MainWindow::on_search_button_clicked()
     Person person = m_iLAController.findPersonByCode(ui->Code_Line->text());
 
     //set data for Ui
-    ui->Name_Line->setText(person.firstName());
-    ui->Family_Line->setText(person.lastName());
-    ui->Email_Line->setText(person.email());
+    ui->Name_Line->setText(person.getFirstName());
+    ui->Family_Line->setText(person.getLastName());
+    ui->Email_Line->setText(person.getEmail());
 
     //TODO : manage photo outside of the Controller
     if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))

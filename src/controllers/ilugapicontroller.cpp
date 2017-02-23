@@ -74,10 +74,10 @@ Person ILugApiController::findPersonByCode(const QString &code)
 //**************
 bool ILugApiController::addPerson(const Person &person)
 {
-    QString code = person.code();
-    QString firstName = person.firstName();
-    QString lastName = person.lastName();
-    QString email = person.email();
+    QString code = person.getCode();
+    QString firstName = person.getFirstName();
+    QString lastName = person.getLastName();
+    QString email = person.getEmail();
 
 
     //check fileds is empty make error
@@ -139,13 +139,13 @@ bool ILugApiController::deletePerson(const QString &personCode)
 bool ILugApiController::updatePerson(const Person &person)
 {
     //make error is code, name or family is empty
-    if(person.code().isEmpty() || person.firstName().isEmpty() || person.lastName().isEmpty()) return false;
+    if(person.getCode().isEmpty() || person.getFirstName().isEmpty() || person.getLastName().isEmpty()) return false;
 
     //update person table data
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
     m_personModel.setModel(modelP);
-    m_personModel.findPerson(modelP, person.code(), "");
-    bool isUpdated = m_personModel.updatePerson(modelP, person.code(), person.firstName(), person.lastName(), person.email());
+    m_personModel.findPerson(modelP, person.getCode(), "");
+    bool isUpdated = m_personModel.updatePerson(modelP, person.getCode(), person.getFirstName(), person.getLastName(), person.getEmail());
     if(!isUpdated)
     {
         qDebug() << "update person failed (from Controller)";

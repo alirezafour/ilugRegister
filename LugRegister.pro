@@ -21,8 +21,8 @@ SOURCES += $$PWD/src/main.cpp\
     $$PWD/src/model/attendantmodel.cpp \
     $$PWD/src/model/duedaymodel.cpp \
     $$PWD/src/model/reportmodel.cpp \
-    src/controllers/ilugapicontroller.cpp \
-    src/model/person.cpp
+    $$PWD/src/controllers/ilugapicontroller.cpp \
+    $$PWD/src/model/person.cpp
 
 HEADERS  += $$PWD/src/mainwindow.h\
     $$PWD/src/database_export.h \
