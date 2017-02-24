@@ -1,3 +1,20 @@
+/*
+*   Copyright (C) 2014 Alireza Hor <alirezafour@gmail.com>
+*
+*   This program is free software; you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License version 3,
+*   or (at your option) any later version, as published by the Free
+*   Software Foundation
+*
+*   This program is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details
+*
+*   You should have received a copy of the GNU General Public
+*   License along with this program;
+*/
+
 #include "src/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "src/database_export.h"
@@ -153,7 +170,7 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
     model->setTable(table);
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
-    model->setFilter(Column + " ==" + RecordFilter);
+    model->setFilter(Column + " = " + RecordFilter);
     tableview.setModel(model);
     tableview.setWindowTitle(table);
     tableview.resizeColumnsToContents();
@@ -192,8 +209,9 @@ void MainWindow::on_search_button_clicked()
         QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
         ui->Code_Line->setFocus();
     }
+    QString  code = ui->Code_Line->text();
     //call the method and get the data
-    Person person = m_iLAController.findPersonByCode(ui->Code_Line->text());
+    Person person = m_iLAController.findPersonByCode(code);
 
     //set data for Ui
     ui->Name_Line->setText(person.getFirstName());
@@ -201,11 +219,11 @@ void MainWindow::on_search_button_clicked()
     ui->Email_Line->setText(person.getEmail());
 
     //TODO : manage photo outside of the Controller
-    if(!loadImage("Image/" + ui->Code_Line->text() +".jpg"))
+    if(!loadImage("Image/" + code +".jpg"))
         loadImage(":/pic/build/Image/empty.jpg");
 
     //TODO : change View Table System
-    filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+    filterView("person","Code", code, *ui->Table_view);
     ui->Code_Line->setFocus();
 }
 
@@ -448,7 +466,8 @@ void MainWindow::reportForVoteSlot()
     else
     {
         static QSqlQueryModel *model = new QSqlQueryModel(this);
-        if(m_iLAController.countForElection(ui->codeLine_VoteTab->text(), model))
+        QString code = ui->codeLine_VoteTab->text();
+        if(m_iLAController.countForElection(code, model))
         {
             voteImage(":/pic/build/Image/true.jpg");
         }
@@ -456,6 +475,11 @@ void MainWindow::reportForVoteSlot()
         {
             voteImage(":/pic/build/Image/false.jpg");
         }
+        model->setQuery("Select firstName, lastName, date "
+                        "FROM person, attendant, dueDay "
+                        "WHERE person.id = attendant.personId "
+                        "AND dueDay.id = attendant.dateId "
+                        "AND person.code = " + code + ";");
         ui->Table_view_VoteTab->setModel(model);
         ui->codeLine_VoteTab->setFocus();
         ui->codeLine_VoteTab->selectAll();

@@ -79,7 +79,7 @@ int DueDayModel::dateID(QString &date)
     model->select();
     QSqlRecord record = model->record(0);
     result = record.value(QString("id")).toInt();
-    qDebug() << QString(result) + " its result from dateID (dueDay)";
+    qDebug() << QString::number(result) + " its result from dateID (dueDay)";
     return result;
 }
 

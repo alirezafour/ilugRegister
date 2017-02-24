@@ -1,5 +1,6 @@
 #include "mydatabase.h"
 #include <QDebug>
+#include <QSqlError>
 
 MyDatabase::MyDatabase(QObject *parent) : QObject(parent)
 {
@@ -21,20 +22,10 @@ bool MyDatabase::open()
     }
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("lug.db");
-    db.setUserName("ilug");
-    db.setPassword("ilug");
 
     if (!db.open()) {
-        qDebug("database Not Exist!");
-        if(this->createDatabase("lug.db"))
-        {
-            return true;
-        }
-        else
-        {
-            qDebug("ERROR!!! Can't Open and Create Database!!!");
-            return false;
-        }
+        qDebug() << db.lastError().text();
+        return false;
     }
     qDebug("database opened!");
     return true;
@@ -54,14 +45,16 @@ bool MyDatabase::createDatabase(QString path)
 {    
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path);
-    db.setUserName("ilug");
-    db.setPassword("ilug");
-    db.open();
+    if(!db.open())
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
     QSqlQuery query;
 
     query.exec("CREATE TABLE dueDay ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "date DATE NOT NULL)");
+               "date DATE NOT NULL);");
     query.exec("CREATE TABLE person ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "code TEXT UNIQUE,"
@@ -69,13 +62,13 @@ bool MyDatabase::createDatabase(QString path)
                "lastName TEXT NOT NULL,"
                "sessionCounter INTEGER,"
                "email TEXT,"
-               "registerDay TEXT)");
+               "registerDay TEXT);");
     query.exec("CREATE TABLE attendant ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "personId INTEGER NOT NULL,"
                "dateId INTEGER NOT NULL,"
                "FOREIGN KEY (personId) REFERENCES person(id),"
-               "FOREIGN KEY (dateId) REFERENCES dueDay(id))");
+               "FOREIGN KEY (dateId) REFERENCES dueDay(id));");
 
     qDebug("database Created!");
     return true;
