@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Code_Line->setValidator(v);
     ui->Code_Line2_Registertab->setValidator(v);
     ui->Code_Line3_Selecttab->setValidator(v);
+    ui->codeLine_VoteTab->setValidator(v);
     ui->Date_Line->setInputMask("0000-00-00;_");
 
     //default set
