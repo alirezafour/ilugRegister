@@ -23,6 +23,7 @@
 #include <QSqlTableModel>
 #include <QSqlQuery>
 #include <QMessageBox>
+#include <QValidator>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //default set
-    ui->Date_Line->setText("yyyy-mm-dd");
 
 
     //  Title & Date Config
@@ -45,6 +44,17 @@ MainWindow::MainWindow(QWidget *parent) :
     loadImage(":/pic/build/Image/empty.jpg");
     BrowsingImage(":/pic/build/Image/empty.jpg");
     voteImage(":/pic/build/Image/question.jpg");
+
+    //inputMask of line edit Config
+    QValidator *v = new QIntValidator(0, 9999999999, this); //the input code from mage page can be between these numbers
+    ui->Code_Line->setValidator(v);
+    ui->Code_Line2_Registertab->setValidator(v);
+    ui->Code_Line3_Selecttab->setValidator(v);
+    ui->Date_Line->setInputMask("0000-00-00;_");
+
+    //default set
+    ui->Date_Line->setText(curentDate_Str);
+
 
 
     // [Conncet buttons to Slots]
