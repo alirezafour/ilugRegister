@@ -96,7 +96,7 @@ int PersonModel::addPerson(const QString &code, const QString &name,
     record.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
     if(this->insertRecord(-1, record))
     {
-        qDebug("Record Inserted!");
+        return this->rowCount() - 1;
     }
     else
     {
@@ -106,7 +106,6 @@ int PersonModel::addPerson(const QString &code, const QString &name,
             qDebug() << "Insert record to person failed.";
         return row;
     }
-    return this->rowCount() - 1;
 }
 
 bool PersonModel::deletePerson(const QString &code)
@@ -148,7 +147,7 @@ bool PersonModel::deletePerson(const QString &name, const QString &family)
     }
 }
 
-int PersonModel::personID(const QString &code)
+int PersonModel::personID(const QString &code) const
 {
     for(int i = 0; i < this->rowCount(); ++i )
     {
