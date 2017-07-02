@@ -14,10 +14,8 @@ TEMPLATE = app
 CONFIG   += warn_on qmltestcase c++11
 CONFIG += testcase
 
-include($$PWD/../LugRegister.pro)
+include($$PWD/../src/src.pri)
 INCLUDEPATH += ..
-SOURCES -= $$PWD/../src/main.cpp
-
 
 SOURCES += $$PWD/tst_testlug.cpp
 

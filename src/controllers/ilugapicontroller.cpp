@@ -23,9 +23,9 @@ bool ILugApiController::openDatabase()
 Person ILugApiController::findPersonByCode(const QString &code)
 {
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
+    m_personModel.setHeaders(modelP);
 
-    if(!m_personModel.findPerson(modelP, code))
+    if(!m_personModel.findPersonAndIncreaseSection(modelP, code))
     {
         qDebug() << "person Find problem (from Controller)";
         modelP->revertAll();
@@ -85,7 +85,7 @@ bool ILugApiController::addPerson(const Person &person)
 
     //find the person in database
     QPointer<QSqlTableModel> model = new QSqlTableModel();
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     bool isAdded = m_personModel.addPerson(model, code, firstName, lastName, email);
     if(!isAdded)
     {
@@ -106,7 +106,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
 
     //delete person data from 2 table of database
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
+    m_personModel.setHeaders(modelP);
     bool isDeleted = m_personModel.deletePerson(modelP, personCode);
     if(!isDeleted)
     {
@@ -143,7 +143,7 @@ bool ILugApiController::updatePerson(const Person &person)
 
     //update person table data
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
+    m_personModel.setHeaders(modelP);
     m_personModel.findPerson(modelP, person.getCode(), "");
     bool isUpdated = m_personModel.updatePerson(modelP, person.getCode(), person.getFirstName(), person.getLastName(), person.getEmail());
     if(!isUpdated)
@@ -209,7 +209,7 @@ bool ILugApiController::exportToTextByDate(const QString &date, bool toDocu)
 bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTableModel *model)
 {
     QString filter = "firstName LIKE '%" + firstName + "%'";
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     model->setFilter(filter);
     return true;
 }
@@ -219,7 +219,7 @@ bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTa
 bool ILugApiController::searchPersonByLastName(const QString &lastName, QSqlTableModel *model)
 {
     QString filter = "lastName LIKE '%" + lastName + "%'";
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     model->setFilter(filter);
     return true;
 }
