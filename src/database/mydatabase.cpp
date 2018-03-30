@@ -54,7 +54,9 @@ bool MyDatabase::createDatabase(QString path)
 
     query.exec("CREATE TABLE dueDay ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "date DATE NOT NULL);");
+               "day DATE NOT NULL,"
+               "dayNumber INTEGER,"
+               "persianDay TEXT);");
     query.exec("CREATE TABLE person ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "code TEXT UNIQUE,"

@@ -1,6 +1,4 @@
 #include "personmodel.h"
-#include <QDebug>
-#include <QDate>
 
 PersonModel::PersonModel(QObject *parent) : QSqlTableModel(parent)
 {

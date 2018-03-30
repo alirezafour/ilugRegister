@@ -1,10 +1,11 @@
 #include <QObject>
 #include <QtTest>
 #include <QSqlTableModel>
+#include <QFile>
 #include "../src/database/mydatabase.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/duedaymodel.h"
-#include "../src/model/attendantmodel.h"
+//#include "../src/model/attendantmodel.h"
 
 class QTime;
 
@@ -14,7 +15,7 @@ class TestLug : public QObject
 
     MyDatabase database;
     PersonModel *personModel;
-//    DueDayModel dueDayModel;
+    DueDayModel *dueDayModel;
 //    AttendantModel attendantModel;
 //    QTime myTimer;
 
@@ -30,8 +31,8 @@ private Q_SLOTS:
     void addPersonModel();
     void findPersonModel();
     void deletePersonModel();
-//    void addDayDueDayModel();
-//    void findDayDueDayModel();
+    void addDayDueDayModel();
+    void findDayDueDayModel();
 //    void addAttendantModel();
 //    void findAttendantModel();
 //    void findAttendantModelByPersonCode();

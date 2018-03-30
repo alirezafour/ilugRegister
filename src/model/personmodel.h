@@ -6,6 +6,8 @@
 #include <QSqlRecord>
 #include <QString>
 #include <QSqlError>
+#include <QDebug>
+#include <QDate>
 
 class PersonModel : public QSqlTableModel
 {

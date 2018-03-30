@@ -1,5 +1,4 @@
 #include "tst_testlug.h"
-#include <QTime>
 
 TestLug::TestLug()
 {
@@ -66,113 +65,26 @@ void TestLug::deletePersonModel()
     database.dbCommit();
 }
 
-//void TestLug::addDayDueDayModel()
-//{
-//    dueDayModel.setModel(model);
-//    Q_ASSERT_X(dueDayModel.addNewDay(model, QDate::currentDate().toString(Qt::ISODate)), "adding date", "failed to add");
-//    model->submitAll();
-//}
+void TestLug::addDayDueDayModel()
+{
+    dueDayModel = new DueDayModel();
+    dueDayModel->setHeaders();
+    dueDayModel->addNewDay();
+    dueDayModel->addNewDay("2014-12-12");
+    dueDayModel->submitAll();
 
-//void TestLug::findDayDueDayModel()
-//{
+}
 
-//    dueDayModel.setModel(model);
-//    dueDayModel.addNewDay(model, "2016-12-12");
-//    model->submitAll();
+void TestLug::findDayDueDayModel()
+{
 
-//    dueDayModel.setModel(model);
-//    Q_ASSERT_X(dueDayModel.findDate(model, "2016-12-12"), "finding date", "failed to find");
+    dueDayModel->addNewDay("2016-12-12");
+    dueDayModel->submitAll();
 
-//}
+    int row = dueDayModel->findDueDay("2016-12-12");
+    QCOMPARE(row, dueDayModel->rowCount() - 1);
 
-//void TestLug::addAttendantModel()
-//{
-//    database.dbTransaction();
-//    personModel.setHeaders(model);
-//    personModel.addPerson(model, "2231441", "ehsan", "sorayayi", "soraya@lkfdj.com");
-//    model->submitAll();
-
-//    dueDayModel.setModel(model);
-//    dueDayModel.addNewDay(model, "2011-12-13");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    Q_ASSERT_X(attendantModel.addAttendant(model, "1434232", "2011-12-13"), "adding attedant", "faild to add");
-//    model->submitAll();
-//    database.dbCommit();
-
-//}
-
-//void TestLug::findAttendantModel()
-//{
-
-//    //    attendantModel.setModel(model);
-//    //    bool ok = attendantModel.findAttendant(model, 79, 11);
-//    //    QCOMPARE(true, ok);
-//}
-
-//void TestLug::findAttendantModelByPersonCode()
-//{
-//    database.dbTransaction();
-//    personModel.setHeaders(model);
-//    personModel.addPerson(model, "2231441", "ehsan", "sorayayi", "soraya@lkfdj.com");
-//    model->submitAll();
-
-//    dueDayModel.setModel(model);
-//    dueDayModel.addNewDay(model, "2011-10-11");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    attendantModel.addAttendant(model, "2231441", "2011-10-11");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    Q_ASSERT_X(attendantModel.findAttendant(model, "2231441", 0), "finding attendant", "faild to find");
-//    database.dbCommit();
-//}
-
-//void TestLug::findAttendantModelByDate()
-//{
-//    database.dbTransaction();
-//    personModel.setHeaders(model);
-//    personModel.addPerson(model, "123321123", "ehsan", "sorayayi", "soraya@lkfdj.com");
-//    model->submitAll();
-
-//    dueDayModel.setModel(model);
-//    dueDayModel.addNewDay(model, "2011-12-21");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    attendantModel.addAttendant(model, "123321123", "2011-12-21");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    Q_ASSERT_X(attendantModel.findAttendant(model, 0, "2011-12-21"), "finding attendant by date", "faild to find");
-//    //qDebug() << model->index(0,2).data();
-//    database.dbCommit();
-
-//}
-
-//void TestLug::deleteAttendantModelByPersonCode()
-//{
-//    database.dbTransaction();
-//    personModel.setHeaders(model);
-//    personModel.addPerson(model, "54234234", "ssossoss", "sorayayi", "soraya@lkfdj.com");
-//    model->submitAll();
-
-//    dueDayModel.setModel(model);
-//    dueDayModel.addNewDay(model, "2011-11-11");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    attendantModel.addAttendant(model, "54234234", "2011-11-11");
-//    model->submitAll();
-
-//    attendantModel.setModel(model);
-//    Q_ASSERT_X(attendantModel.deleteAttendant(model, "54234234"), "finding attendant by date", "faild to find");
-//    model->submitAll();
-//    database.dbCommit();
-//}
+}
 
 void TestLug::cleanupTestCase()
 {

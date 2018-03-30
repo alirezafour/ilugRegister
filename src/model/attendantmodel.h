@@ -15,23 +15,23 @@ class AttendantModel : public QObject
     Q_OBJECT
 public:
     explicit AttendantModel(QObject *parent = 0);
-    bool setModel(QSqlTableModel *model);
-    bool addAttendant(QSqlTableModel *model, QString personCode, QString date);
-    bool deleteAttendant(QSqlTableModel *model, QString personCode);
-    //bool updateAttendant(QSqlTableModel *model, QString personId);
-    bool findAttendant(QSqlTableModel *model, int personId, int dueDayId);
-    bool findAttendant(QSqlTableModel *model, QString personCode, QString date);
+//    bool setModel(QSqlTableModel *model);
+//    bool addAttendant(QSqlTableModel *model, QString personCode, QString date);
+//    bool deleteAttendant(QSqlTableModel *model, QString personCode);
+//    //bool updateAttendant(QSqlTableModel *model, QString personId);
+//    bool findAttendant(QSqlTableModel *model, int personId, int dueDayId);
+//    bool findAttendant(QSqlTableModel *model, QString personCode, QString date);
 
-signals:
+//signals:
 
-public slots:
+//public slots:
 
-private:
-    QString createFilters(int personId, int dueDayId);
+//private:
+//    QString createFilters(int personId, int dueDayId);
 
-private:
-    PersonModel personModel;
-    DueDayModel dateModel;
+//private:
+//    PersonModel personModel;
+//    DueDayModel dateModel;
 
 };
 
