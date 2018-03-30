@@ -123,7 +123,7 @@ bool PersonModel::deletePerson(const QString &code)
         if(this->lastError().isValid())
             qDebug() << this->lastError().text();
         else
-            qDebug() << "Failed to delete row " + row;
+            qDebug() << "Failed to delete row " << row << " from person table.";
         return false;
     } 
 }

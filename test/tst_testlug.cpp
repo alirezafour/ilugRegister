@@ -88,6 +88,14 @@ void TestLug::findDayDueDayModel()
 
 }
 
+void TestLug::deleteDayDUeDayModel()
+{
+    dueDayModel->addNewDay("2011-12-1");
+    dueDayModel->submitAll();
+
+    Q_ASSERT_X( dueDayModel->deleteDueDay("2011-12-1"), "day deleted.", "failed to delete day.");
+}
+
 void TestLug::cleanupTestCase()
 {
     delete personModel;

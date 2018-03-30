@@ -69,3 +69,30 @@ int DueDayModel::addNewDay(const QString &day, const QString &dayNumber, const Q
         return row;
     }
 }
+
+bool DueDayModel::deleteDueDay(const QString &day, const QString &dayNumber, const QString &persianDay)
+{
+    int row = this->findDueDay(day);
+    if(row == -1)
+    {
+        qDebug() << "failed to find dueDay = " << day << " for deleting.";
+        return false;
+    }
+
+    if(this->removeRow(row))
+    {
+        return true;
+    }
+    else
+    {
+        if(this->lastError().isValid())
+        {
+            qDebug() << this->lastError().text();
+        }
+        else
+        {
+            qDebug() << "Failed to delete row " << row << " to delete in dueDay.";
+        }
+    }
+    return false;
+}

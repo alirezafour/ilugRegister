@@ -19,7 +19,7 @@ public:
     void setHeaders();
     int findDueDay(const QString &day) const;
     int addNewDay(const QString &day = QDate::currentDate().toString(Qt::ISODate), const QString &dayNumber = "0", const QString &persianDay = "");
-//    bool deleteDueDay(const QString &day);
+    bool deleteDueDay(const QString &day, const QString &dayNumber = "0", const QString &persianDay = "");
 //    int updateDueDay(const QString &oldDay, const QString &newDay);
 //    int dateID(const QString &day) const;
 };
