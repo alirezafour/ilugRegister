@@ -76,3 +76,9 @@ bool MyDatabase::createDatabase(QString path)
     return true;
 
 }
+
+bool MyDatabase::close()
+{
+    db.close();
+    return true;
+}

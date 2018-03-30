@@ -89,6 +89,8 @@ void TestLug::findDayDueDayModel()
 void TestLug::cleanupTestCase()
 {
     delete personModel;
+    delete dueDayModel;
+    database.close();
     Q_ASSERT_X(QFile::remove("lug.db"), "deleting database", "delete failed");
 }
 
