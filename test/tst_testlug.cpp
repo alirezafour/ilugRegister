@@ -69,8 +69,10 @@ void TestLug::addDayDueDayModel()
 {
     dueDayModel = new DueDayModel();
     dueDayModel->setHeaders();
-    dueDayModel->addNewDay();
-    dueDayModel->addNewDay("2014-12-12");
+    int curRow = dueDayModel->addNewDay();
+    QCOMPARE(curRow, 0);
+    int row = dueDayModel->addNewDay("2014-12-12");
+    QCOMPARE(row , 1);
     dueDayModel->submitAll();
 
 }
