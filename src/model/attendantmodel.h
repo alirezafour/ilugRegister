@@ -10,28 +10,17 @@
 #include "duedaymodel.h"
 
 
-class AttendantModel : public QObject
+class AttendantModel : public QSqlTableModel
 {
     Q_OBJECT
 public:
     explicit AttendantModel(QObject *parent = 0);
-//    bool setModel(QSqlTableModel *model);
-//    bool addAttendant(QSqlTableModel *model, QString personCode, QString date);
-//    bool deleteAttendant(QSqlTableModel *model, QString personCode);
-//    //bool updateAttendant(QSqlTableModel *model, QString personId);
-//    bool findAttendant(QSqlTableModel *model, int personId, int dueDayId);
-//    bool findAttendant(QSqlTableModel *model, QString personCode, QString date);
-
-//signals:
-
-//public slots:
-
-//private:
-//    QString createFilters(int personId, int dueDayId);
-
-//private:
-//    PersonModel personModel;
-//    DueDayModel dateModel;
+    ~AttendantModel();
+    void setHeaders();
+    int findAttendant(const QString &id);
+    int findAttendant(const QString &personId, const QString &dueDayId);
+    int addAttendant(const QString &personId, const QString &dueDayId);
+    bool deleteAttendant(const QString &personId, const QString &dueDayId);
 
 };
 

@@ -1,152 +1,105 @@
 #include "attendantmodel.h"
 #include <QDebug>
 
-AttendantModel::AttendantModel(QObject *parent) : QObject(parent)
+AttendantModel::AttendantModel(QObject *parent) : QSqlTableModel(parent)
 {
 
 }
 
-//bool AttendantModel::setModel(QSqlTableModel *model)
-//{
-//    model->clear();
+AttendantModel::~AttendantModel()
+{
 
-//    model->setTable("attendant");
-//    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-//    model->select();
-//    model->setHeaderData(0, Qt::Horizontal, tr("ID"));
-//    model->setHeaderData(0, Qt::Horizontal, tr("Person ID"));
-//    model->setHeaderData(0, Qt::Horizontal, tr("Date ID"));
-//    return true;
-//}
+}
 
-//bool AttendantModel::addAttendant(QSqlTableModel *model, QString personCode, QString date)
-//{
-//    int personID = personModel.personID(personCode);
-//    if (personID == 0)
-//    {
-//        qDebug() << "person code not finded.";
-//        return false; // if not finded
-//    }
+void AttendantModel::setHeaders()
+{
+    this->clear();
 
-//    int dateID = dateModel.dateID(date);
-//    if( dateID == 0)
-//    {
-//        qDebug() << "date not finded.";
-//        return false;  //if not finded
-//    }
+    this->setTable("attendant");
+    this->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->select();
+    this->setHeaderData(0, Qt::Horizontal, tr("id"));
+    this->setHeaderData(1, Qt::Horizontal, tr("personId"));
+    this->setHeaderData(2, Qt::Horizontal, tr("dueDayId"));
+}
 
-//    if(this->findAttendant(model, personID, dateID))
-//    {
-//        qDebug() << "attendant already exist.";
-//        return false;
-//    }
+int AttendantModel::findAttendant(const QString &id)
+{
+    for(int i = 0; i < this->rowCount(); ++i)
+    {
+        const QString &inId = this->record(i).value("id").toString();
+        if(id == inId)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
-//    QSqlRecord record = model->record();
-//    record.setValue(QString("personId"), QVariant(personID));
-//    record.setValue(QString("dateId"), QVariant(dateID));
-//    qDebug() << record.value(0);
+int AttendantModel::findAttendant(const QString &personId, const QString &dueDayId)
+{
+    for(int i = 0; i < this->rowCount(); ++i)
+    {
+        const QString &inPersonId = this->record(i).value("personId").toString();
+        const QString &inDueDayId = this->record(i).value("dueDayId").toString();
+        if((personId == inPersonId) && (dueDayId == inDueDayId))
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
-//    if(model->insertRecord(-1, record))
-//    {
-//        qDebug("Record Inserted!");
-//    }
-//    else
-//    {
-//        qDebug("Inserting record failed!");
-//        qDebug() << model->lastError().text();
-//        return false;
-//    }
-//    return true;
-//}
+int AttendantModel::addAttendant(const QString &personId, const QString &dueDayId)
+{
+    int row = findAttendant(personId, dueDayId);
+    if( row != -1)
+    {
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Error to add attendant.";
+        return row;
+    }
+    QSqlRecord record = this->record();
+    record.setValue(QString("personId"), QVariant(personId));
+    record.setValue(QString("dueDayId"), QVariant(dueDayId));
+    if(this->insertRecord(-1, record))
+    {
+        return this->rowCount() - 1;
+    }
+    else
+    {
+        if(this->lastError().isValid())
+            qDebug() <<  this->lastError().text();
+        else
+            qDebug() << "Insert record to attendant failed.";
+        return row;
+    }
+}
 
-//bool AttendantModel::deleteAttendant(QSqlTableModel *model, QString personCode)
-//{
-//    int personID = personModel.personID(personCode);
-//    if(personID == 0)
-//    {
-//        qDebug() << "person Id does not exist.";
-//        return false;
-//    }
-//    if(!this->findAttendant(model, personID, 0))
-//    {
-//        qDebug() << "person Id not find in attendant.";
-//        return false;
-//    }
-
-//    for(int i = 0; i < model->rowCount(); i++)
-//    {
-//        if(!model->removeRow(i))
-//        {
-//            qDebug() << "delete row in attendant make an Error: ";
-//            qDebug() << model->lastError().text();
-//            return false;
-//        }
-//    }
-//    return true;
-//}
-
-//bool AttendantModel::findAttendant(QSqlTableModel *model, int personId, int dueDayId)
-//{
-//    QString filter = createFilters(personId, dueDayId);
-//    qDebug() << filter;
-//    if(filter.isEmpty())
-//    {
-//        qDebug("No filter seted for method!");
-//        return false;
-//    }
-//    model->setFilter(filter);
-//    qDebug("Filter seted for model!");
-//    model->select();
-//    if(model->rowCount() == 0)
-//    {
-//        qDebug() << "no row find in attendant table";
-//        return false;
-//    }
-//    return true;
-//}
-
-//bool AttendantModel::findAttendant(QSqlTableModel *model, QString personCode, QString date)
-//{
-//    int personID = personModel.personID(personCode);
-//    int dateID = dateModel.dateID(date);
-//    if (personID == 0 && dateID == 0)
-//    {
-//        qDebug() << "person ID and date ID not finded.";
-//        return false; // if not finded
-//    }
-
-//    if(this->findAttendant(model, personID, dateID))
-//    {
-//        qDebug() << "attendant record finded.";
-//        return true;
-//    }
-//    else
-//    {
-//        return false;
-//    }
-//}
-
-//QString AttendantModel::createFilters(int personId, int dueDayId)
-//{
-//    QString filter;
-//    QStringList filterList;
-//    if(personId != 0)
-//    {
-//        filterList.append(QString("personId = %1").arg(personId));
-//    }
-//    if(dueDayId != 0)
-//    {
-//        filterList.append(QString("dateId = %1").arg(dueDayId));
-//    }
-
-//    if(filterList.isEmpty())
-//    {
-//        return 0;  //if all data was empty
-//    }
-//    else
-//    {
-//        filter = filterList.join(" and ");
-//        return filter;
-//    }
-//}
-
+bool AttendantModel::deleteAttendant(const QString &personId, const QString &dueDayId)
+{
+    int row = this->findAttendant(personId, dueDayId);
+    if(row == -1)
+    {
+        qDebug() << "Failed to find attendant with personId = " << personId << " and dueDayId = " << dueDayId << ".";
+        return false;
+    }
+    if(this->removeRow(row))
+    {
+        return true;
+    }
+    else
+    {
+        if(this->lastError().isValid())
+        {
+            qDebug() << this->lastError().text();
+        }
+        else
+        {
+            qDebug() << "Failed to delete attendant data.";
+        }
+        return false;
+    }
+}
