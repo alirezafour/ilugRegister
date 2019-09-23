@@ -6,7 +6,8 @@ SOURCES += $$PWD/database_export.cpp \
     $$PWD/model/duedaymodel.cpp \
     $$PWD/model/reportmodel.cpp \
     #$$PWD/controllers/ilugapicontroller.cpp \
-    $$PWD/model/person.cpp
+    $$PWD/model/person.cpp \
+    $$PWD/UI/widgetui.cpp
 
 HEADERS  += \ $$PWD/database_export.h \
     $$PWD/configfile.h \
@@ -16,7 +17,8 @@ HEADERS  += \ $$PWD/database_export.h \
     $$PWD/model/duedaymodel.h \
     $$PWD/model/reportmodel.h \
     #$$PWD/controllers/ilugapicontroller.h \
-    $$PWD/model/person.h
+    $$PWD/model/person.h \
+    $$PWD/UI/widgetui.h
 
 #FORMS    += $$PWD/../ui/mainwindow.ui
 
