@@ -3,12 +3,11 @@
 
 #include <QObject>
 #include <QSqlTableModel>
-#include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlError>
 #include <QString>
-#include "personmodel.h"
-#include "duedaymodel.h"
-
+#include <QDebug>
+#include <QDate>
 
 class AttendantModel : public QSqlTableModel
 {
@@ -17,10 +16,10 @@ public:
     explicit AttendantModel(QObject *parent = 0);
     ~AttendantModel();
     void setHeaders();
-    int findAttendant(const QString &id);
-    int findAttendant(const QString &personId, const QString &dueDayId);
-    int addAttendant(const QString &personId, const QString &dueDayId);
-    bool deleteAttendant(const QString &personId, const QString &dueDayId);
+    int findAttendant(int id);
+    int findAttendant(int personId, int dueDayId);
+    int addAttendant(int personId, int dueDayId);
+    bool deleteAttendant(int personId, int dueDayId);
 
 };
 

@@ -5,7 +5,7 @@
 #include "../src/database/mydatabase.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/duedaymodel.h"
-//#include "../src/model/attendantmodel.h"
+#include "../src/model/attendantmodel.h"
 
 class QTime;
 
@@ -16,8 +16,8 @@ class TestLug : public QObject
     MyDatabase database;
     PersonModel *personModel;
     DueDayModel *dueDayModel;
-//    AttendantModel attendantModel;
-//    QTime myTimer;
+    AttendantModel *attendantModel;
+    //QTime myTimer;
 
 public:
     TestLug();
@@ -34,11 +34,9 @@ private Q_SLOTS:
     void addDayDueDayModel();
     void findDayDueDayModel();
     void deleteDayDUeDayModel();
-//    void addAttendantModel();
-//    void findAttendantModel();
-//    void findAttendantModelByPersonCode();
-//    void findAttendantModelByDate();
-//    void deleteAttendantModelByPersonCode();
+    void addAttendantModel();
+    void findAttendantModel();
+    void deleteAttendantModel();
 
     void cleanupTestCase();
 

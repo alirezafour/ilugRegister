@@ -23,11 +23,11 @@ void AttendantModel::setHeaders()
     this->setHeaderData(2, Qt::Horizontal, tr("dueDayId"));
 }
 
-int AttendantModel::findAttendant(const QString &id)
+int AttendantModel::findAttendant(int id)
 {
     for(int i = 0; i < this->rowCount(); ++i)
     {
-        const QString &inId = this->record(i).value("id").toString();
+        int inId = this->record(i).value("id").toInt();
         if(id == inId)
         {
             return i;
@@ -36,12 +36,12 @@ int AttendantModel::findAttendant(const QString &id)
     return -1;
 }
 
-int AttendantModel::findAttendant(const QString &personId, const QString &dueDayId)
+int AttendantModel::findAttendant(int personId, int dueDayId)
 {
     for(int i = 0; i < this->rowCount(); ++i)
     {
-        const QString &inPersonId = this->record(i).value("personId").toString();
-        const QString &inDueDayId = this->record(i).value("dueDayId").toString();
+        int inPersonId = this->record(i).value("personId").toInt();
+        int inDueDayId = this->record(i).value("dueDayId").toInt();
         if((personId == inPersonId) && (dueDayId == inDueDayId))
         {
             return i;
@@ -50,7 +50,7 @@ int AttendantModel::findAttendant(const QString &personId, const QString &dueDay
     return -1;
 }
 
-int AttendantModel::addAttendant(const QString &personId, const QString &dueDayId)
+int AttendantModel::addAttendant(int personId, int dueDayId)
 {
     int row = findAttendant(personId, dueDayId);
     if( row != -1)
@@ -78,7 +78,7 @@ int AttendantModel::addAttendant(const QString &personId, const QString &dueDayI
     }
 }
 
-bool AttendantModel::deleteAttendant(const QString &personId, const QString &dueDayId)
+bool AttendantModel::deleteAttendant(int personId, int dueDayId)
 {
     int row = this->findAttendant(personId, dueDayId);
     if(row == -1)
