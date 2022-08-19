@@ -27,15 +27,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi process compiling
 
 # Find Qt
 #if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-#	set(CMAKE_PREFIX_PATH "C:\\Qt\\"
+	set(CMAKE_PREFIX_PATH "C:/Qt/6.3.1/msvc2019_64") #Qt Prefix path
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui") #set ui files
+set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui)
-find_package(Qt6 REQUIRED COMPONENTS Sql)
 
+include_directories(src)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -49,6 +50,7 @@ set(PROJECT_SOURCES
         src/controllers/ilugapicontroller.cpp
         src/model/person.cpp
         src/UI/widgetui.cpp
+        src/mainwindow.cpp
 
         src/database_export.h
         src/configfile.h
@@ -60,19 +62,20 @@ set(PROJECT_SOURCES
         src/controllers/ilugapicontroller.h
         src/model/person.h
         src/UI/widgetui.h
+        src/mainwindow.h
+
+        ui/mainwindow.ui
 )
 
-qt_add_executable(${TARGET_NAME}
-        MANUAL_FINALIZATION
+add_executable(${TARGET_NAME}
         ${PROJECT_SOURCES})
-
 
 target_link_libraries(${TARGET_NAME} PRIVATE Qt6::Sql)
 target_link_libraries(${TARGET_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 set_target_properties(${TARGET_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    WIN32_EXECUTABLE ON
+    MACOSX_BUNDLE ON
 )
 
 

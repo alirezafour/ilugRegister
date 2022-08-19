@@ -33,8 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-
     //  Title & Date Config
     setWindowTitle("Lug Register");
     curentDate = QDate::currentDate();
@@ -48,11 +46,11 @@ MainWindow::MainWindow(QWidget *parent) :
     voteImage(":/pic/build/Image/question.jpg");
 
     //inputMask of line edit Config
-    std::unique_ptr<QValidator> v = std::make_unique<QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
-    ui->Code_Line->setValidator(v);
-    ui->Code_Line2_Registertab->setValidator(v);
-    ui->Code_Line3_Selecttab->setValidator(v);
-    ui->codeLine_VoteTab->setValidator(v);
+    std::unique_ptr<const QValidator> v = std::make_unique<const QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
+    ui->Code_Line->setValidator(v.get());
+    ui->Code_Line2_Registertab->setValidator(v.get());
+    ui->Code_Line3_Selecttab->setValidator(v.get());
+    ui->codeLine_VoteTab->setValidator(v.get());
     ui->Date_Line->setInputMask("0000-00-00;_");
 
     //default set

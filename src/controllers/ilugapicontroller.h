@@ -14,9 +14,6 @@ class ILugApiController : public QObject
 {
     Q_OBJECT
     MyDatabase m_db;
-    AttendantModel m_attendantModel;
-    PersonModel m_personModel;
-    DueDayModel m_dueDayModel;
     QDate curentDate;
     QString curentDate_Str;
 public:
