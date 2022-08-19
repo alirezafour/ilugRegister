@@ -1,0 +1,27 @@
+SOURCES += $$PWD/database_export.cpp \
+    $$PWD/configfile.cpp \
+    $$PWD/database/mydatabase.cpp \
+    $$PWD/model/personmodel.cpp \
+    $$PWD/model/attendantmodel.cpp \
+    $$PWD/model/duedaymodel.cpp \
+    $$PWD/model/reportmodel.cpp \
+    $$PWD/controllers/ilugapicontroller.cpp \
+    $$PWD/model/person.cpp \
+    $$PWD/UI/widgetui.cpp \
+    $$PWD/UI/Component/myqpushbutton.cpp
+
+HEADERS  += \ $$PWD/database_export.h \
+    $$PWD/configfile.h \
+    $$PWD/database/mydatabase.h \
+    $$PWD/model/personmodel.h \
+    $$PWD/model/attendantmodel.h \
+    $$PWD/model/duedaymodel.h \
+    $$PWD/model/reportmodel.h \
+    $$PWD/controllers/ilugapicontroller.h \
+    $$PWD/model/person.h \
+    $$PWD/UI/widgetui.h \
+    $$PWD/UI/Component/myqpushbutton.h
+
+FORMS    += $$PWD/../ui/mainwindow.ui
+
+RESOURCES += $$PWD/..//rsc.qrc

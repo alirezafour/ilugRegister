@@ -1,8 +1,10 @@
 #include "ilugapicontroller.h"
+
 #include <QDebug>
-#include "src/database_export.h"
 #include <QSqlQuery>
 #include <QPointer>
+
+#include "src/database_export.h"
 
 ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 {
@@ -22,17 +24,16 @@ bool ILugApiController::openDatabase()
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
-
-    if(!m_personModel.findPerson(modelP, code))
+    PersonModel personModel; //= std::make_unique<PersonModel>();
+    personModel.setHeaders();
+    if(int row = personModel.findPersonAndIncreaseSection(code) < 0)
     {
-        qDebug() << "person Find problem (from Controller)";
-        modelP->revertAll();
+        qDebug() << "row didn't found " << row << "\n";
+        personModel.revertAll();
         return Person();
     }
 
-    QSqlRecord record = modelP->record(0);
+    QSqlRecord record = personModel.record(0);
     QString name = record.value(QString("firstName")).toString();
     QString family = record.value(QString("lastName")).toString();
     QString email = record.value(QString("email")).toString();
@@ -42,8 +43,8 @@ Person ILugApiController::findPersonByCode(const QString &code)
     person.setLastName(family);
     person.setEmail(email);
 
-    QPointer<QSqlTableModel> modelD = new QSqlTableModel();
-    QPointer<QSqlTableModel> modelA = new QSqlTableModel();
+    std::unique_ptr<QSqlTableModel> modelD = std::make_unique<QSqlTableModel>();
+    std::unique_ptr<QSqlTableModel> modelA = std::make_unique<QSqlTableModel>();
 
     m_dueDayModel.setModel(modelD);
     m_dueDayModel.addNewDay(modelD, curentDate_Str);
@@ -81,11 +82,11 @@ bool ILugApiController::addPerson(const Person &person)
 
 
     //check fileds is empty make error
-    if(code==0 || firstName=="" || lastName=="") return false;
+    if(code=="" || firstName=="" || lastName=="") return false;
 
     //find the person in database
     QPointer<QSqlTableModel> model = new QSqlTableModel();
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     bool isAdded = m_personModel.addPerson(model, code, firstName, lastName, email);
     if(!isAdded)
     {
@@ -106,7 +107,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
 
     //delete person data from 2 table of database
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
+    m_personModel.setHeaders(modelP);
     bool isDeleted = m_personModel.deletePerson(modelP, personCode);
     if(!isDeleted)
     {
@@ -143,7 +144,7 @@ bool ILugApiController::updatePerson(const Person &person)
 
     //update person table data
     QPointer<QSqlTableModel> modelP = new QSqlTableModel();
-    m_personModel.setModel(modelP);
+    m_personModel.setHeaders(modelP);
     m_personModel.findPerson(modelP, person.getCode(), "");
     bool isUpdated = m_personModel.updatePerson(modelP, person.getCode(), person.getFirstName(), person.getLastName(), person.getEmail());
     if(!isUpdated)
@@ -209,7 +210,7 @@ bool ILugApiController::exportToTextByDate(const QString &date, bool toDocu)
 bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTableModel *model)
 {
     QString filter = "firstName LIKE '%" + firstName + "%'";
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     model->setFilter(filter);
     return true;
 }
@@ -219,7 +220,7 @@ bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTa
 bool ILugApiController::searchPersonByLastName(const QString &lastName, QSqlTableModel *model)
 {
     QString filter = "lastName LIKE '%" + lastName + "%'";
-    m_personModel.setModel(model);
+    m_personModel.setHeaders(model);
     model->setFilter(filter);
     return true;
 }

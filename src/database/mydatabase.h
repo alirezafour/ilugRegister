@@ -16,6 +16,7 @@ public:
     void dbTransaction();
     void dbCommit();
     bool createDatabase(QString path);
+    bool close();
 
 signals:
 

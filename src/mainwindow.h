@@ -6,7 +6,6 @@
 #include <QDate>
 
 #include "src/controllers/ilugapicontroller.h"
-#include "src/model/person.h"
 
 namespace Ui {
 class MainWindow;

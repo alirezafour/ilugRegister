@@ -44,7 +44,7 @@ int ConfigFile::lastNewUserNumber()
         QTextStream in(&file);
         num++;
         QString text("last new user number = " + QString::number(num));
-        in << endl << text;
+        in << "\n" << text;
         return;
 
     }

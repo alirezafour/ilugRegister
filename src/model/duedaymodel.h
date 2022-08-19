@@ -5,28 +5,23 @@
 #include <QSqlTableModel>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QString>
+#include <QDebug>
 #include <QDate>
 
-class DueDayModel : public QObject
+class DueDayModel : public QSqlTableModel
 {
     Q_OBJECT
+
 public:
     explicit DueDayModel(QObject *parent = 0);
-    bool setModel(QSqlTableModel *model);
-    void setDate(QString &date);
-    QString Date() const;
-    bool findDate(QSqlTableModel *model, QString date);
-    bool addNewDay(QSqlTableModel *model, QString day = QDate::currentDate().toString(Qt::ISODate));
-    int dateID(QString &date);
-    QString date() const;
-
-signals:
-
-public slots:
-
-private:
-    QString createFilter(QString &date);
-    QString m_date;
+    ~DueDayModel();
+    void setHeaders();
+    int findDueDay(const QString &day) const;
+    int addNewDay(const QString &day = QDate::currentDate().toString(Qt::ISODate), const QString &dayNumber = "0", const QString &persianDay = "");
+    bool deleteDueDay(const QString &day, const QString &dayNumber = "0", const QString &persianDay = "");
+//    int updateDueDay(const QString &oldDay, const QString &newDay);
+//    int dateID(const QString &day) const;
 };
 
 #endif // DUEDAYMODEL_H

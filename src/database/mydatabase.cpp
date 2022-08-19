@@ -54,7 +54,13 @@ bool MyDatabase::createDatabase(QString path)
 
     query.exec("CREATE TABLE dueDay ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-               "date DATE NOT NULL);");
+               "day DATE NOT NULL,"
+               "dayNumber INTEGER,"
+               "persianDay TEXT);");
+    if(query.lastError().isValid())
+    {
+        qDebug() << query.lastError().text();
+    }
     query.exec("CREATE TABLE person ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "code TEXT UNIQUE,"
@@ -63,14 +69,36 @@ bool MyDatabase::createDatabase(QString path)
                "sessionCounter INTEGER,"
                "email TEXT,"
                "registerDay TEXT);");
+    if(query.lastError().isValid())
+    {
+        qDebug() << query.lastError().text();
+    }
     query.exec("CREATE TABLE attendant ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                "personId INTEGER NOT NULL,"
-               "dateId INTEGER NOT NULL,"
+               "dueDayId INTEGER NOT NULL,"
                "FOREIGN KEY (personId) REFERENCES person(id),"
-               "FOREIGN KEY (dateId) REFERENCES dueDay(id));");
+               "FOREIGN KEY (dueDayId) REFERENCES dueDay(id));");
+    if(query.lastError().isValid())
+    {
+        qDebug() << query.lastError().text();
+    }
+    query.exec("CREATE VIEW attendant_view AS "
+               "SELECT person.code AS code, person.firstName AS firstName, person.lastName AS lastName, dueDay.day AS day "
+               "FROM person, dueDay, attendant "
+               "WHERE atendant.personId = person.id AND attendant.dueDayId = dueDay.id;");
+    if(query.lastError().isValid())
+    {
+        qDebug() << query.lastError().text();
+    }
 
     qDebug("database Created!");
     return true;
 
+}
+
+bool MyDatabase::close()
+{
+    db.close();
+    return true;
 }

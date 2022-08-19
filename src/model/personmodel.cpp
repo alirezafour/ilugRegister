@@ -1,8 +1,6 @@
 #include "personmodel.h"
-#include <QDebug>
-#include <QDate>
 
-PersonModel::PersonModel(QObject *parent) : QObject(parent)
+PersonModel::PersonModel(QObject *parent) : QSqlTableModel(parent)
 {
 
 }
@@ -12,214 +10,147 @@ PersonModel::~PersonModel()
 
 }
 
-void PersonModel::setModel(QSqlTableModel *model)
+void PersonModel::setHeaders()
 {
-    model->clear();
+    this->clear();
 
-    model->setTable("person");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-    model->setHeaderData(0, Qt::Horizontal, tr("ID"));
-    model->setHeaderData(1, Qt::Horizontal, tr("Code"));
-    model->setHeaderData(2, Qt::Horizontal, tr("First Name"));
-    model->setHeaderData(3, Qt::Horizontal, tr("Last Name"));
-    model->setHeaderData(4, Qt::Horizontal, tr("Sesstion Counter"));
-    model->setHeaderData(5, Qt::Horizontal, tr("Email"));
+    this->setTable("person");
+    this->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->select();
+    this->setHeaderData(0, Qt::Horizontal, tr("ID"));
+    this->setHeaderData(1, Qt::Horizontal, tr("Code"));
+    this->setHeaderData(2, Qt::Horizontal, tr("First Name"));
+    this->setHeaderData(3, Qt::Horizontal, tr("Last Name"));
+    this->setHeaderData(4, Qt::Horizontal, tr("Sesstion Counter"));
+    this->setHeaderData(5, Qt::Horizontal, tr("Email"));
 }
 
-bool PersonModel::findPerson(QSqlTableModel *model, QString code)
+int PersonModel::findPersonAndIncreaseSection(const QString &code)
 {
-    if(!this->findPerson(model, code, 0, 0, 0))
+    int row = this->findPerson(code, 0, 0, 0);
+    if(row == -1)
     {
-        return false;
+        return row;
     }
-    QSqlRecord record = model->record(0);
-    int value = record.value(QString("sessionCounter")).toInt();
-    value++;
-    record.setValue(QString("sessionCounter"), QVariant(value));
-    if(model->setRecord(0,record))
+    QSqlRecord record = this->record(row);
+    int sc = record.value("sessionCounter").toInt();
+    sc++;
+    record.setValue("sessionCounter", QVariant(sc));
+    if(!this->setRecord(row, record))
     {
-        qDebug("Record session counter Updated!");
-        return true;
+        //throw something
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Error updating session counter in person table.";
+        return row;
     }
-    else
-    {
-        qDebug() << model->lastError().text();
-        qDebug("Inserting record failed!");
-        return false;
-    }
+    return row;
 }
 
-bool PersonModel::findPerson(QSqlTableModel *model, QString code, QString name,
-                             QString family, QString email)
+int PersonModel::findPerson(const QString &code, const QString &name,
+                             const QString &family, const QString &email) const
 {
-    QString filter = createFilters(code, name, family, email);
-    if(filter.isEmpty())
+    for(int i = 0; i < this->rowCount(); ++i)
     {
-        qDebug("No filter seted for method!");
-        return false;
+        const QString &inCode = this->record(i).value("code").toString();
+        if(code == inCode)
+        {
+            return i;
+        }
+        else if(name.isEmpty() && family.isEmpty() && email.isEmpty())
+        {
+            continue;
+        }
+        const QString &inName = this->record(i).value("firstName").toString();
+        const QString &inFamily = this->record(i).value("lastName").toString();
+        const QString &inEmail = this->record(i).value("email").toString();
+        if((name.isEmpty() || name == inName) && (family.isEmpty() || family == inFamily) && (email.isEmpty() || email == inEmail))
+        {
+            return i;
+        }
     }
-    model->setFilter(filter);
-    model->select();
-    if(model->rowCount() == 0)
-    {
-        qDebug() << "person Not finded.";
-        return false;
-    }
-    return true;
+    return -1;
 }
 
-bool PersonModel::addPerson(QSqlTableModel *model, QString code, QString name,
-                            QString family, QString email)
+int PersonModel::addPerson(const QString &code, const QString &name,
+                            const QString &family, const QString &email)
 {
-    if(findPerson(model, code))
+    int row = findPersonAndIncreaseSection(code);
+    if(row != -1)
     {
-        qDebug() << "person with code = " << model->index(0, 1).data() << "exist.";
-        return false;
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Error to add person by code " << code;
+        return row;
     }
-    QSqlRecord record = model->record();
+    QSqlRecord record = this->record();
     record.setValue(QString("code"), QVariant(code));
     record.setValue(QString("firstName"), QVariant(name));
     record.setValue(QString("lastName"), QVariant(family));
     record.setValue(QString("sessionCounter"), QVariant(0));
     record.setValue(QString("email"), QVariant(email));
     record.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
-    if(model->insertRecord(-1, record))
+    if(this->insertRecord(-1, record))
     {
-        qDebug("Record Inserted!");
+        return this->rowCount() - 1;
     }
     else
     {
-        qDebug("Inserting record failed!");
-        qDebug() << model->lastError().text();
-        return false;
+        if(this->lastError().isValid())
+            qDebug() <<  this->lastError().text();
+        else
+            qDebug() << "Insert record to person failed.";
+        return row;
     }
-    return true;
-
 }
 
-bool PersonModel::deletePerson(QSqlTableModel *model, QString code)
+bool PersonModel::deletePerson(const QString &code)
 {
-    if(!this->findPerson(model, code, 0))
+    int row = this->findPerson(code, 0);
+    if(row == -1)
     {
-        //finding failed
+        qDebug() << "Failed to find person with " << code << " for deleting it.";
         return false;
     }
-    if(model->removeRow(0))
+    if(this->removeRow(row))
     {
-        qDebug() << code + " deleted!";
         return true;
     }
     else
     {
-        qDebug("Can't delete row 0!");
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Failed to delete row " << row << " from person table.";
         return false;
     } 
 }
 
-bool PersonModel::deletePerson(QSqlTableModel *model, QString name, QString family)
+bool PersonModel::deletePerson(const QString &name, const QString &family)
 {
-    this->findPerson(model, "", name, family);
-    if(model->removeRow(0))
+    int row = this->findPerson("", name, family);
+    if(this->removeRow(row))
     {
-        qDebug() << name + " " + family + " deleted!";
-
+        return true;
     }
     else
     {
-        qDebug("Can't delete row 0!");
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Failed to delete row " + row;
         return false;
     }
-    return true;
 }
 
-bool PersonModel::updatePerson(QSqlTableModel *model, QString code, QString name, QString family, QString email)
+int PersonModel::personID(const QString &code) const
 {
-    QSqlRecord record = model->record(0);
-    this->createRecord(&record, code, name, family, email);
-    qDebug() << " record value is : "<< record.value(2);
-    if(model->setRecord(0, record))
+    for(int i = 0; i < this->rowCount(); ++i )
     {
-        qDebug("record updated!");
+        if(this->record(i).value("code").toString() == code)
+            return this->record(i).value("id").toInt();
     }
-    else
-    {
-        qDebug("ERROR");
-        qDebug() << model->lastError().text();
-        qDebug("record not updated in updatePerson");
-        return false;
-    }
-    return true;
-}
-
-int PersonModel::personID(QString code)
-{
-    QSqlTableModel *model = new QSqlTableModel();
-    model->setTable("person");
-    QString filter = createFilters(code,0,0,0);
-    model->setFilter(filter);
-    if(filter.isEmpty())
-    {
-        qDebug() << "filter is empty";
-        return 0;
-    }
-    model->select();
-    QSqlRecord record = model->record(0);
-    int result = record.value(QString("id")).toInt();
-    return result;
-}
-
-QString PersonModel::createFilters(QString code, QString name, QString family, QString email)
-{
-    QString filter;
-    QStringList filterList;
-    if(code != "")
-    {
-        code = QString("code = '%1'").arg(code);
-        filterList.append(code);
-    }
-    if(name != "")
-    {
-        name = QString("firstName = '%1'").arg(name);
-        filterList.append(name);
-    }
-    if(family != "")
-    {
-        family = QString("lastName = '%1'").arg(family);
-        filterList.append(family);
-    }
-    if(email != "")
-    {
-        email = QString("email = '%1'").arg(email);
-        filterList.append(email);
-    }
-    if(filterList.isEmpty())
-    {
-        return "";  //if all data was empty
-    }
-    else
-    {
-        filter = filterList.join(" and ");
-        return filter;
-    }
-}
-
-void PersonModel::createRecord(QSqlRecord *record, QString code, QString name, QString family, QString email)
-{
-    if(!code.isEmpty())
-    {
-        record->setValue(QString("code"), QVariant(code));
-    }
-    if(!name.isEmpty())
-    {
-        record->setValue(QString("firstName"), QVariant(name));
-    }
-    if(!family.isEmpty())
-    {
-        record->setValue(QString("lastName"), QVariant(family));
-    }
-    if(!email.isEmpty())
-    {
-        record->setValue(QString("email"), QVariant(email));
-    }
+    return -1;
 }

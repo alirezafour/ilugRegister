@@ -10,31 +10,35 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LugRegister
 TEMPLATE = app
+include($$PWD/src/src.pri)
+INCLUDEPATH += /src
 
+SOURCES += $$PWD/src/main.cpp
+#        $$PWD/src/mainwindow.cpp\
+#    $$PWD/src/database_export.cpp \
+#    $$PWD/src/configfile.cpp \
+#    $$PWD/src/database/mydatabase.cpp \
+#    $$PWD/src/model/personmodel.cpp \
+#    $$PWD/src/model/attendantmodel.cpp \
+#    $$PWD/src/model/duedaymodel.cpp \
+#    $$PWD/src/model/reportmodel.cpp \
+#    $$PWD/src/controllers/ilugapicontroller.cpp \
+#    $$PWD/src/model/person.cpp
 
-SOURCES += $$PWD/src/main.cpp\
-        $$PWD/src/mainwindow.cpp\
-    $$PWD/src/database_export.cpp \
-    $$PWD/src/configfile.cpp \
-    $$PWD/src/database/mydatabase.cpp \
-    $$PWD/src/model/personmodel.cpp \
-    $$PWD/src/model/attendantmodel.cpp \
-    $$PWD/src/model/duedaymodel.cpp \
-    $$PWD/src/model/reportmodel.cpp \
-    $$PWD/src/controllers/ilugapicontroller.cpp \
-    $$PWD/src/model/person.cpp
+#HEADERS  += $$PWD/src/mainwindow.h\
+#    $$PWD/src/database_export.h \
+#    $$PWD/src/configfile.h \
+#    $$PWD/src/database/mydatabase.h \
+#    $$PWD/src/model/personmodel.h \
+#    $$PWD/src/model/attendantmodel.h \
+#    $$PWD/src/model/duedaymodel.h \
+#    $$PWD/src/model/reportmodel.h \
+#    $$PWD/src/controllers/ilugapicontroller.h \
+#    $$PWD/src/model/person.h
 
-HEADERS  += $$PWD/src/mainwindow.h\
-    $$PWD/src/database_export.h \
-    $$PWD/src/configfile.h \
-    $$PWD/src/database/mydatabase.h \
-    $$PWD/src/model/personmodel.h \
-    $$PWD/src/model/attendantmodel.h \
-    $$PWD/src/model/duedaymodel.h \
-    $$PWD/src/model/reportmodel.h \
-    $$PWD/src/controllers/ilugapicontroller.h \
-    $$PWD/src/model/person.h
+#FORMS    += $$PWD/ui/mainwindow.ui
 
-FORMS    += $$PWD/ui/mainwindow.ui
+#RESOURCES += $$PWD//rsc.qrc
 
-RESOURCES += $$PWD//rsc.qrc
+DISTFILES += \
+    src/src.pri

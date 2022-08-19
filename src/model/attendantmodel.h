@@ -3,35 +3,23 @@
 
 #include <QObject>
 #include <QSqlTableModel>
-#include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlError>
 #include <QString>
-#include "personmodel.h"
-#include "duedaymodel.h"
+#include <QDebug>
+#include <QDate>
 
-
-class AttendantModel : public QObject
+class AttendantModel : public QSqlTableModel
 {
     Q_OBJECT
 public:
     explicit AttendantModel(QObject *parent = 0);
-    bool setModel(QSqlTableModel *model);
-    bool addAttendant(QSqlTableModel *model, QString personCode, QString date);
-    bool deleteAttendant(QSqlTableModel *model, QString personCode);
-    //bool updateAttendant(QSqlTableModel *model, QString personId);
-    bool findAttendant(QSqlTableModel *model, int personId, int dueDayId);
-    bool findAttendant(QSqlTableModel *model, QString personCode, QString date);
-
-signals:
-
-public slots:
-
-private:
-    QString createFilters(int personId, int dueDayId);
-
-private:
-    PersonModel personModel;
-    DueDayModel dateModel;
+    ~AttendantModel();
+    void setHeaders();
+    int findAttendant(int id);
+    int findAttendant(int personId, int dueDayId);
+    int addAttendant(int personId, int dueDayId);
+    bool deleteAttendant(int personId, int dueDayId);
 
 };
 

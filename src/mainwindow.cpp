@@ -17,13 +17,15 @@
 
 #include "src/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "src/database_export.h"
+
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlTableModel>
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QValidator>
+
+#include "src/database_export.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     voteImage(":/pic/build/Image/question.jpg");
 
     //inputMask of line edit Config
-    QValidator *v = new QIntValidator(0, 9999999999, this); //the input code from mage page can be between these numbers
+    std::unique_ptr<QValidator> v = std::make_unique<QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
     ui->Code_Line->setValidator(v);
     ui->Code_Line2_Registertab->setValidator(v);
     ui->Code_Line3_Selecttab->setValidator(v);

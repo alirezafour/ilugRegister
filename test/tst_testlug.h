@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QtTest>
 #include <QSqlTableModel>
+#include <QFile>
 #include "../src/database/mydatabase.h"
 #include "../src/model/personmodel.h"
 #include "../src/model/duedaymodel.h"
@@ -13,11 +14,11 @@ class TestLug : public QObject
     Q_OBJECT
 
     MyDatabase database;
-    QSqlTableModel *model;
-    PersonModel personModel;
-    DueDayModel dueDayModel;
-    AttendantModel attendantModel;
-    QTime myTimer;
+
+    std::unique_ptr<PersonModel> personModel;
+    std::unique_ptr<DueDayModel> dueDayModel;
+    std::unique_ptr<AttendantModel> attendantModel;
+    //QTime myTimer;
 
 public:
     TestLug();
@@ -30,15 +31,13 @@ private Q_SLOTS:
     void databaseTest();
     void addPersonModel();
     void findPersonModel();
-    void updatePersonModel();
     void deletePersonModel();
     void addDayDueDayModel();
     void findDayDueDayModel();
+    void deleteDayDUeDayModel();
     void addAttendantModel();
     void findAttendantModel();
-    void findAttendantModelByPersonCode();
-    void findAttendantModelByDate();
-    void deleteAttendantModelByPersonCode();
+    void deleteAttendantModel();
 
     void cleanupTestCase();
 

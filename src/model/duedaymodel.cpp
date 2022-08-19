@@ -1,99 +1,98 @@
 #include "duedaymodel.h"
 #include <QDebug>
 
-DueDayModel::DueDayModel(QObject *parent) : QObject(parent)
+DueDayModel::DueDayModel(QObject *parent) : QSqlTableModel(parent)
 {
-    m_date = QDate::currentDate().toString(Qt::ISODate);
 
 }
 
-bool DueDayModel::setModel(QSqlTableModel *model)
+DueDayModel::~DueDayModel()
 {
-    model->setTable("dueDay");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-    return true;
+
 }
 
-void DueDayModel::setDate(QString &date)
+void DueDayModel::setHeaders()
 {
-    m_date = date;
+    this->clear();
+
+    this->setTable("dueDay");
+    this->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->select();
+    this->setHeaderData(0, Qt::Horizontal, tr("ID"));
+    this->setHeaderData(1, Qt::Horizontal, tr("Day"));
+    this->setHeaderData(2, Qt::Horizontal, tr("Day Number"));
+    this->setHeaderData(3, Qt::Horizontal, tr("Persian Day"));
 }
 
-bool DueDayModel::findDate(QSqlTableModel *model, QString date)
+int DueDayModel::findDueDay(const QString &day) const
 {
-    QString filter = createFilter(date);
-    if(filter.isEmpty())
+    for(int i = 0; i < this->rowCount(); ++i)
     {
-        qDebug("No filter seted for method!");
-        return false;
+        const QString &inDay = this->record(i).value("day").toString();
+        if(day == inDay)
+        {
+            return i;
+        }
     }
-    model->setFilter(filter);
-    model->select();
-    qDebug("filter set to model!");
-    if(model->rowCount() == 0)
-    {
-        return false;
-    }
-    return true;
+    //if it didn't find the they it return -1
+    return -1;
 }
 
-bool DueDayModel::addNewDay(QSqlTableModel *model, QString date)
+int DueDayModel::addNewDay(const QString &day, const QString &dayNumber, const QString &persianDay)
 {
     //check day exist or not
-    if(this->findDate(model, date))
+    int row = this->findDueDay(day);
+    if(row != -1)
     {
-        qDebug() << "Day Exist.";
-        return false;
+        if(this->lastError().isValid())
+            qDebug() << this->lastError().text();
+        else
+            qDebug() << "Error adding new day : " << day;
+        return row;
     }
 
     //if day is not exist add new day
-    QSqlRecord record = model->record();
-    record.setValue(QString("date"), QVariant(date));
-
-    if(model->insertRecord(-1, record))
+    QSqlRecord record = this->record();
+    record.setValue(QString("day"), QVariant(day));
+    record.setValue(QString("dayNumber"), dayNumber);
+    record.setValue(QString("persianDay"), persianDay);
+    if(this->insertRecord(-1, record))
     {
-        qDebug("Record Inserted!");
+        return this->rowCount() - 1;
     }
     else
     {
-        qDebug("Inserting record failed!");
-        qDebug() << model->lastError().text();
+        if(this->lastError().isValid())
+            qDebug() <<  this->lastError().text();
+        else
+            qDebug() << "Insert record to dueDay failed.";
+        return row;
+    }
+}
+
+bool DueDayModel::deleteDueDay(const QString &day, const QString &dayNumber, const QString &persianDay)
+{
+    int row = this->findDueDay(day);
+    if(row == -1)
+    {
+        qDebug() << "failed to find dueDay = " << day << " for deleting.";
         return false;
     }
-    return true;
-}
 
-int DueDayModel::dateID(QString &date)
-{
-    int result;
-    QSqlTableModel *model = new QSqlTableModel();
-    model->setTable("dueDay");
-    QString filter = createFilter(date);
-    if(filter.isEmpty())
+    if(this->removeRow(row))
     {
-        qDebug("No filter seted for method!");
-        return 0;
+        return true;
     }
-    model->setFilter(filter);
-    model->select();
-    QSqlRecord record = model->record(0);
-    result = record.value(QString("id")).toInt();
-    qDebug() << QString::number(result) + " its result from dateID (dueDay)";
-    return result;
-}
-
-QString DueDayModel::createFilter(QString &date)
-{
-    QString filter;
-    if(!date.isEmpty())
+    else
     {
-        filter = QString("date = '%1'").arg(date);
+        if(this->lastError().isValid())
+        {
+            qDebug() << this->lastError().text();
+        }
+        else
+        {
+            qDebug() << "Failed to delete row " << row << " to delete in dueDay.";
+        }
     }
-    return filter;
-}
-
-QString DueDayModel::date() const
-{
-    return m_date;
+    return false;
 }

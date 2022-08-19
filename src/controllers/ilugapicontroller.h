@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDate>
+
 #include "src/model/duedaymodel.h"
 #include "src/model/personmodel.h"
 #include "src/model/attendantmodel.h"

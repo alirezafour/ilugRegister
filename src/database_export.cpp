@@ -29,7 +29,7 @@ bool database_Export::insertToFile(const QString &name, const QString &family)
     QString textLine;
     textLine = QString(name + " " + family);
     QTextStream fileOut(&file);
-    fileOut<< endl;
+    fileOut<< "\n";
     fileOut<< textLine;
     return true;
 }
@@ -41,7 +41,7 @@ bool database_Export::docuExport(const QString &name, const QString &family)
     textLine = QString("[[صفحات شخصی:" + name + " " + family + ":]]\\\\");
     //textLine = QString(name + " " + family + "\\\\");
     QTextStream fileOut(&file);
-    fileOut<< endl;
+    fileOut<< "\n";
     fileOut<< textLine;
     return true;
 }
@@ -51,7 +51,7 @@ bool database_Export::addToFile(const QString &text)
     file.seek(0);
     QTextStream fileOut(&file);
     fileOut<< text;
-    fileOut<< endl;
+    fileOut<< "\n";
     return true;
 }
 
