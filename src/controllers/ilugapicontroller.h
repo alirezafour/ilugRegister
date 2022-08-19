@@ -13,9 +13,6 @@
 class ILugApiController : public QObject
 {
     Q_OBJECT
-    MyDatabase m_db;
-    QDate curentDate;
-    QString curentDate_Str;
 public:
     explicit ILugApiController(QObject *parent = 0);
     bool openDatabase();
@@ -31,6 +28,13 @@ public:
 signals:
 
 public slots:
+private:
+    std::unique_ptr<PersonModel> m_PersonModel;
+    std::unique_ptr<AttendantModel> m_AttendantModel;
+    std::unique_ptr<DueDayModel> m_DueDayModel;
+    MyDatabase m_db;
+    QDate curentDate;
+    QString curentDate_Str;
 };
 
 #endif // ILUGAPICONTROLLER_H

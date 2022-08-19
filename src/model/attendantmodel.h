@@ -20,6 +20,8 @@ public:
     int findAttendant(int personId, int dueDayId);
     int addAttendant(int personId, int dueDayId);
     bool deleteAttendant(int personId, int dueDayId);
+    /* delete every record of the person */
+    bool deleteAttendant(int personId);
 
 };
 

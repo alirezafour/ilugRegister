@@ -53,7 +53,7 @@ int PersonModel::findPerson(const QString &code, const QString &name,
 {
     for(int i = 0; i < this->rowCount(); ++i)
     {
-        const QString &inCode = this->record(i).value("code").toString();
+        const QString &inCode = record(i).value("code").toString();
         if(code == inCode)
         {
             return i;
@@ -62,9 +62,9 @@ int PersonModel::findPerson(const QString &code, const QString &name,
         {
             continue;
         }
-        const QString &inName = this->record(i).value("firstName").toString();
-        const QString &inFamily = this->record(i).value("lastName").toString();
-        const QString &inEmail = this->record(i).value("email").toString();
+        const QString &inName = record(i).value("firstName").toString();
+        const QString &inFamily = record(i).value("lastName").toString();
+        const QString &inEmail = record(i).value("email").toString();
         if((name.isEmpty() || name == inName) && (family.isEmpty() || family == inFamily) && (email.isEmpty() || email == inEmail))
         {
             return i;
@@ -79,8 +79,8 @@ int PersonModel::addPerson(const QString &code, const QString &name,
     int row = findPersonAndIncreaseSection(code);
     if(row != -1)
     {
-        if(this->lastError().isValid())
-            qDebug() << this->lastError().text();
+        if(lastError().isValid())
+            qDebug() << lastError().text();
         else
             qDebug() << "Error to add person by code " << code;
         return row;
@@ -92,14 +92,14 @@ int PersonModel::addPerson(const QString &code, const QString &name,
     record.setValue(QString("sessionCounter"), QVariant(0));
     record.setValue(QString("email"), QVariant(email));
     record.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
-    if(this->insertRecord(-1, record))
+    if(insertRecord(-1, record))
     {
-        return this->rowCount() - 1;
+        return rowCount();
     }
     else
     {
-        if(this->lastError().isValid())
-            qDebug() <<  this->lastError().text();
+        if(lastError().isValid())
+            qDebug() <<  lastError().text();
         else
             qDebug() << "Insert record to person failed.";
         return row;
@@ -108,20 +108,20 @@ int PersonModel::addPerson(const QString &code, const QString &name,
 
 bool PersonModel::deletePerson(const QString &code)
 {
-    int row = this->findPerson(code, 0);
+    int row = findPerson(code, 0);
     if(row == -1)
     {
         qDebug() << "Failed to find person with " << code << " for deleting it.";
         return false;
     }
-    if(this->removeRow(row))
+    if(removeRow(row))
     {
         return true;
     }
     else
     {
-        if(this->lastError().isValid())
-            qDebug() << this->lastError().text();
+        if(lastError().isValid())
+            qDebug() << lastError().text();
         else
             qDebug() << "Failed to delete row " << row << " from person table.";
         return false;
@@ -130,27 +130,42 @@ bool PersonModel::deletePerson(const QString &code)
 
 bool PersonModel::deletePerson(const QString &name, const QString &family)
 {
-    int row = this->findPerson("", name, family);
-    if(this->removeRow(row))
+    int row = findPerson("", name, family);
+    if(removeRow(row))
     {
         return true;
     }
     else
     {
-        if(this->lastError().isValid())
-            qDebug() << this->lastError().text();
+        if(lastError().isValid())
+            qDebug() << lastError().text();
         else
-            qDebug() << "Failed to delete row " + row;
+            qDebug() << "Failed to delete row " << row;
         return false;
     }
 }
 
 int PersonModel::personID(const QString &code) const
 {
-    for(int i = 0; i < this->rowCount(); ++i )
+    for(int i = 0; i < rowCount(); ++i )
     {
-        if(this->record(i).value("code").toString() == code)
-            return this->record(i).value("id").toInt();
+        if(record(i).value("code").toString() == code)
+            return record(i).value("id").toInt();
     }
     return -1;
+}
+
+bool PersonModel::updatePerson(const QString& code, const QString& firstName, const QString& lastName, const QString& email)
+{
+    int row = findPerson(code, 0);
+    if(row == -1)
+        return false;
+
+    QSqlRecord record = this->record(row);
+    record.setValue(QString("code"), QVariant(code));
+    record.setValue(QString("firstName"), QVariant(firstName));
+    record.setValue(QString("lastName"), QVariant(lastName));
+    record.setValue(QString("email"), QVariant(email));
+
+    return updateRowInTable(row, record);
 }

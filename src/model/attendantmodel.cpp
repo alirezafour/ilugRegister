@@ -103,3 +103,18 @@ bool AttendantModel::deleteAttendant(int personId, int dueDayId)
         return false;
     }
 }
+
+bool AttendantModel::deleteAttendant(int personId)
+{
+    bool found = false;
+    for(int i = 0; i < this->rowCount(); ++i)
+    {
+        int inPersonId = record(i).value("personId").toInt();
+        if(personId == inPersonId)
+        {
+            found = true;
+            removeRow(i);
+        }
+    }
+    return found;
+}

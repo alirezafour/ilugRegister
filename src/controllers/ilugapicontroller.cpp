@@ -14,22 +14,76 @@ ILugApiController::ILugApiController(QObject *parent) : QObject(parent)
 
 bool ILugApiController::openDatabase()
 {
-    if(m_db.open())
-        return true;
-    return false;
+    if(!m_db.open())
+        return false;
+
+    m_PersonModel = std::make_unique<PersonModel>();
+    m_PersonModel->setHeaders();
+
+    m_AttendantModel = std::make_unique<AttendantModel>();
+    m_AttendantModel->setHeaders();
+
+    m_DueDayModel = std::make_unique<DueDayModel>();
+    m_DueDayModel->setHeaders();
+
+    return true;
 }
 
 //Find data From Database by Code Function
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    return Person();
+    if(!m_PersonModel->findPersonAndIncreaseSection(code))
+    {
+        m_PersonModel->revertAll();
+        return Person();
+    }
+
+    QSqlRecord record = m_PersonModel->record(0);
+    QString name = record.value(QString("firstName")).toString();
+    QString lastname = record.value(QString("lastName")).toString();
+    QString email = record.value(QString("email")).toString();
+
+    Person person;
+    person.setFirstName(name);
+    person.setLastName(lastname);
+    person.setEmail(email);
+
+    int id = m_DueDayModel->addNewDay();
+    m_DueDayModel->submitAll();
+
+
+    if(!m_AttendantModel->addAttendant(code.toInt(), id))
+    {
+        m_AttendantModel->revertAll();
+    }
+    m_db.dbCommit();
+
+    return person;
 }
 
 //Add data to Database Function
 //**************
 bool ILugApiController::addPerson(const Person &person)
 {
+    QString code = person.getCode();
+    QString firstName = person.getFirstName();
+    QString lastName = person.getLastName();
+    QString email = person.getEmail();
+
+
+    //check fileds is empty make error
+    if(code.toInt() == 0 || firstName == "" || lastName == "")
+        return false;
+    if(!m_PersonModel->addPerson(code, firstName, lastName, email))
+    {
+        qDebug() << "failed to add person.";
+        m_PersonModel->revertAll();
+        return false;
+    }
+    m_PersonModel->submitAll();
+    m_db.dbCommit();
+
     return true;
 }
 
@@ -37,6 +91,25 @@ bool ILugApiController::addPerson(const Person &person)
 //*******************
 bool ILugApiController::deletePerson(const QString &personCode)
 {
+    if(personCode.isEmpty())
+        return false;
+
+    if(!m_PersonModel->deletePerson(personCode))
+    {
+        m_PersonModel->revertAll();
+        return false;
+    }
+    if(!m_AttendantModel->deleteAttendant(personCode.toInt()))
+    {
+        m_PersonModel->revertAll();
+        m_AttendantModel->revertAll();
+        qDebug() << "Faild to delete person\n";
+        return false;
+    }
+
+    m_PersonModel->submitAll();
+    m_AttendantModel->submitAll();
+    m_db.dbCommit();
     return true;
 }
 
@@ -44,6 +117,17 @@ bool ILugApiController::deletePerson(const QString &personCode)
 //*******************
 bool ILugApiController::updatePerson(const Person &person)
 {
+    //make error is code, name or family is empty
+    if(person.getCode().isEmpty() || person.getFirstName().isEmpty() || person.getLastName().isEmpty())
+        return false;
+    if(!m_PersonModel->updatePerson(person.getCode(), person.getFirstName(), person.getLastName(), person.getEmail()))
+    {
+        m_PersonModel->revertAll();
+        return false;
+    }
+
+    m_PersonModel->submitAll();
+    m_db.dbCommit();
     return true;
 }
 

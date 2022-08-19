@@ -26,12 +26,12 @@ void DueDayModel::setHeaders()
 
 int DueDayModel::findDueDay(const QString &day) const
 {
-    for(int i = 0; i < this->rowCount(); ++i)
+    for(int i = 0; i < rowCount(); ++i)
     {
-        const QString &inDay = this->record(i).value("day").toString();
+        const QString &inDay = record(i).value("day").toString();
         if(day == inDay)
         {
-            return i;
+            return record(i).value("id").toInt();
         }
     }
     //if it didn't find the they it return -1
@@ -41,14 +41,14 @@ int DueDayModel::findDueDay(const QString &day) const
 int DueDayModel::addNewDay(const QString &day, const QString &dayNumber, const QString &persianDay)
 {
     //check day exist or not
-    int row = this->findDueDay(day);
-    if(row != -1)
+    int id = findDueDay(day);
+    if(id != -1)
     {
         if(this->lastError().isValid())
             qDebug() << this->lastError().text();
         else
             qDebug() << "Error adding new day : " << day;
-        return row;
+        return id;
     }
 
     //if day is not exist add new day
@@ -56,38 +56,38 @@ int DueDayModel::addNewDay(const QString &day, const QString &dayNumber, const Q
     record.setValue(QString("day"), QVariant(day));
     record.setValue(QString("dayNumber"), dayNumber);
     record.setValue(QString("persianDay"), persianDay);
-    if(this->insertRecord(-1, record))
+    if(insertRecord(-1, record))
     {
-        return this->rowCount() - 1;
+        return rowCount() - 1;
     }
     else
     {
-        if(this->lastError().isValid())
-            qDebug() <<  this->lastError().text();
+        if(lastError().isValid())
+            qDebug() <<  lastError().text();
         else
             qDebug() << "Insert record to dueDay failed.";
-        return row;
+        return findDueDay(day);
     }
 }
 
 bool DueDayModel::deleteDueDay(const QString &day, const QString &dayNumber, const QString &persianDay)
 {
-    int row = this->findDueDay(day);
+    int row = findDueDay(day);
     if(row == -1)
     {
         qDebug() << "failed to find dueDay = " << day << " for deleting.";
         return false;
     }
 
-    if(this->removeRow(row))
+    if(removeRow(row))
     {
         return true;
     }
     else
     {
-        if(this->lastError().isValid())
+        if(lastError().isValid())
         {
-            qDebug() << this->lastError().text();
+            qDebug() << lastError().text();
         }
         else
         {

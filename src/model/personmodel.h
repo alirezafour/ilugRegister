@@ -25,7 +25,7 @@ public:
     bool deletePerson(const QString &code);
 
     bool deletePerson(const QString &name, const QString &family);
-    int updatePerson(const QString &code, const QString &name = "", const QString &family = "",
+    bool updatePerson(const QString &code, const QString &name = "", const QString &family = "",
                       const QString &email = "");
     int personID(const QString &code) const;
 };
