@@ -16,14 +16,23 @@ class PersonModel : public QSqlTableModel
 public:
     explicit PersonModel(QObject *parent = 0);
     ~PersonModel();
+
+    /**
+     * @brief set table view headers name and model
+     */
     void setHeaders();
-    int findPersonAndIncreaseSection(const QString &code);
-    int findPerson(const QString &code, const QString &name,
+    bool addSessionCount(const QString &code);
+
+    /**
+     * @brief find Person
+     * @param string of Person code, name , family, email
+     * @return row number that added if failed return -1
+     */
+    int findPerson(const QString &code, const QString &name = "",
                     const QString &family = "", const QString &email = "") const;
-    int addPerson(const QString &code, const QString &name, const QString &family,
+    bool addPerson(const QString &code, const QString &name, const QString &family,
                    const QString &email);
     bool deletePerson(const QString &code);
-
     bool deletePerson(const QString &name, const QString &family);
     bool updatePerson(const QString &code, const QString &name = "", const QString &family = "",
                       const QString &email = "");

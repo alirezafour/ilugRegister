@@ -25,6 +25,9 @@ public:
     bool searchPersonByLastName(const QString &lastName, QSqlTableModel *model);
     bool countForElection(const QString &code, QSqlQueryModel *model);
 
+    inline QSqlTableModel* GetPersonModel() const { return m_PersonModel.get(); }
+    inline QSqlTableModel* GetAttendantModel() const { return m_AttendantModel.get(); }
+
 signals:
 
 public slots:

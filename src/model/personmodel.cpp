@@ -12,46 +12,45 @@ PersonModel::~PersonModel()
 
 void PersonModel::setHeaders()
 {
-    this->clear();
+    clear();
 
-    this->setTable("person");
-    this->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    this->select();
-    this->setHeaderData(0, Qt::Horizontal, tr("ID"));
-    this->setHeaderData(1, Qt::Horizontal, tr("Code"));
-    this->setHeaderData(2, Qt::Horizontal, tr("First Name"));
-    this->setHeaderData(3, Qt::Horizontal, tr("Last Name"));
-    this->setHeaderData(4, Qt::Horizontal, tr("Sesstion Counter"));
-    this->setHeaderData(5, Qt::Horizontal, tr("Email"));
+    setTable("person");
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
+    select();
+    setHeaderData(0, Qt::Horizontal, tr("ID"));
+    setHeaderData(1, Qt::Horizontal, tr("Code"));
+    setHeaderData(2, Qt::Horizontal, tr("First Name"));
+    setHeaderData(3, Qt::Horizontal, tr("Last Name"));
+    setHeaderData(4, Qt::Horizontal, tr("Sesstion Counter"));
+    setHeaderData(5, Qt::Horizontal, tr("Email"));
 }
 
-int PersonModel::findPersonAndIncreaseSection(const QString &code)
+bool PersonModel::addSessionCount(const QString &code)
 {
-    int row = this->findPerson(code, 0, 0, 0);
+    int row = findPerson(code);
     if(row == -1)
     {
-        return row;
+        return false;
     }
-    QSqlRecord record = this->record(row);
-    int sc = record.value("sessionCounter").toInt();
+    QSqlRecord sqlRecord = record(row);
+    int sc = sqlRecord.value("sessionCounter").toInt();
     sc++;
-    record.setValue("sessionCounter", QVariant(sc));
-    if(!this->setRecord(row, record))
+    sqlRecord.setValue("sessionCounter", QVariant(sc));
+    if(!setRecord(row, sqlRecord))
     {
-        //throw something
-        if(this->lastError().isValid())
-            qDebug() << this->lastError().text();
+        if(lastError().isValid())
+            qDebug() << lastError().text();
         else
             qDebug() << "Error updating session counter in person table.";
-        return row;
+        return false;
     }
-    return row;
+    return true;
 }
 
 int PersonModel::findPerson(const QString &code, const QString &name,
                              const QString &family, const QString &email) const
 {
-    for(int i = 0; i < this->rowCount(); ++i)
+    for(int i = 0; i < rowCount(); ++i)
     {
         const QString &inCode = record(i).value("code").toString();
         if(code == inCode)
@@ -73,37 +72,30 @@ int PersonModel::findPerson(const QString &code, const QString &name,
     return -1;
 }
 
-int PersonModel::addPerson(const QString &code, const QString &name,
+bool PersonModel::addPerson(const QString &code, const QString &name,
                             const QString &family, const QString &email)
 {
-    int row = findPersonAndIncreaseSection(code);
-    if(row != -1)
+    if(findPerson(code))
     {
-        if(lastError().isValid())
-            qDebug() << lastError().text();
-        else
-            qDebug() << "Error to add person by code " << code;
-        return row;
+        qDebug() << "this person with " << code << " already exist.";
+        return false;
     }
-    QSqlRecord record = this->record();
-    record.setValue(QString("code"), QVariant(code));
-    record.setValue(QString("firstName"), QVariant(name));
-    record.setValue(QString("lastName"), QVariant(family));
-    record.setValue(QString("sessionCounter"), QVariant(0));
-    record.setValue(QString("email"), QVariant(email));
-    record.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
-    if(insertRecord(-1, record))
+    QSqlRecord sqlRecord = record();
+    sqlRecord.setValue(QString("code"), QVariant(code));
+    sqlRecord.setValue(QString("firstName"), QVariant(name));
+    sqlRecord.setValue(QString("lastName"), QVariant(family));
+    sqlRecord.setValue(QString("sessionCounter"), QVariant(0));
+    sqlRecord.setValue(QString("email"), QVariant(email));
+    sqlRecord.setValue(QString("registerDay"), QDate::currentDate().toString(Qt::ISODate));
+    if(insertRecord(-1, sqlRecord))
     {
-        return rowCount();
+        return true;
     }
-    else
-    {
-        if(lastError().isValid())
+    if(lastError().isValid())
             qDebug() <<  lastError().text();
-        else
-            qDebug() << "Insert record to person failed.";
-        return row;
-    }
+    else
+        qDebug() << "Insert record to person failed.";
+    return false;
 }
 
 bool PersonModel::deletePerson(const QString &code)
@@ -161,11 +153,11 @@ bool PersonModel::updatePerson(const QString& code, const QString& firstName, co
     if(row == -1)
         return false;
 
-    QSqlRecord record = this->record(row);
-    record.setValue(QString("code"), QVariant(code));
-    record.setValue(QString("firstName"), QVariant(firstName));
-    record.setValue(QString("lastName"), QVariant(lastName));
-    record.setValue(QString("email"), QVariant(email));
+    QSqlRecord sqlRecord = record(row);
+    sqlRecord.setValue(QString("code"), QVariant(code));
+    sqlRecord.setValue(QString("firstName"), QVariant(firstName));
+    sqlRecord.setValue(QString("lastName"), QVariant(lastName));
+    sqlRecord.setValue(QString("email"), QVariant(email));
 
-    return updateRowInTable(row, record);
+    return updateRowInTable(row, sqlRecord);
 }

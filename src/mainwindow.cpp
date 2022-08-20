@@ -25,8 +25,6 @@
 #include <QMessageBox>
 #include <QValidator>
 
-#include "src/database_export.h"
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -41,9 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->todayDay_lbl_SelectTab->setText(curentDate_Str);
 
     //  Picture User Config
-    loadImage(":/pic/build/Image/empty.jpg");
-    BrowsingImage(":/pic/build/Image/empty.jpg");
-    voteImage(":/pic/build/Image/question.jpg");
+    loadImage("Image/empty.jpg");
+    BrowsingImage("Image/empty.jpg");
+    voteImage("Image/question.jpg");
 
     //inputMask of line edit Config
     std::unique_ptr<const QValidator> v = std::make_unique<const QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
@@ -59,20 +57,29 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // [Conncet buttons to Slots]
+    // main tab
     connect(ui->SearchButton, SIGNAL(clicked()), SLOT(on_search_button_clicked()));
-    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
     connect(ui->SelectButton, SIGNAL(clicked()), SLOT(on_select_button_clicked()));
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(on_delete_button_clicked()));
     connect(ui->updateButton, SIGNAL(clicked()), SLOT(on_update_button_clicked()));
+
+    // register tab
+    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
     connect(ui->addPicture_Button, SIGNAL(clicked()), SLOT(browsingImage()));
     connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
     connect(ui->selectDate_dateTable_button, SIGNAL(clicked()), SLOT(selectByDate()));
     connect(ui->selectAll_Button, SIGNAL(clicked()), SLOT(selectDateSlot()));
+    connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
+
+    //export tab
     connect(ui->ExportButton, SIGNAL(clicked()), SLOT(on_export_button_clicked()));
+    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(on_docu_export_button_clicked()));
+
+    // search tab
     connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
     connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
-    connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
-    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(on_docu_export_button_clicked()));
+
+    // vote tab
     connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
 
     //  [Connect LineEdits to Slots]

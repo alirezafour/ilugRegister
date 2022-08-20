@@ -33,7 +33,7 @@ bool ILugApiController::openDatabase()
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    if(!m_PersonModel->findPersonAndIncreaseSection(code))
+    if(!m_PersonModel->addSessionCount(code))
     {
         m_PersonModel->revertAll();
         return Person();
@@ -51,7 +51,6 @@ Person ILugApiController::findPersonByCode(const QString &code)
 
     int id = m_DueDayModel->addNewDay();
     m_DueDayModel->submitAll();
-
 
     if(!m_AttendantModel->addAttendant(code.toInt(), id))
     {
@@ -75,7 +74,7 @@ bool ILugApiController::addPerson(const Person &person)
     //check fileds is empty make error
     if(code.toInt() == 0 || firstName == "" || lastName == "")
         return false;
-    if(!m_PersonModel->addPerson(code, firstName, lastName, email))
+    if(m_PersonModel->addPerson(code, firstName, lastName, email) == -1) // if return -1 means it failed
     {
         qDebug() << "failed to add person.";
         m_PersonModel->revertAll();
