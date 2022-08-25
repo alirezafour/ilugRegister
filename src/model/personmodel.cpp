@@ -137,7 +137,7 @@ bool PersonModel::deletePerson(const QString &name, const QString &family)
     }
 }
 
-int PersonModel::personID(const QString &code) const
+int PersonModel::getPersonId(const QString &code) const
 {
     for(int i = 0; i < rowCount(); ++i )
     {

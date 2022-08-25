@@ -36,7 +36,7 @@ public:
     bool deletePerson(const QString &name, const QString &family);
     bool updatePerson(const QString &code, const QString &name = "", const QString &family = "",
                       const QString &email = "");
-    int personID(const QString &code) const;
+    int getPersonId(const QString &code) const;
 };
 
 #endif // PERSONMODEL_H

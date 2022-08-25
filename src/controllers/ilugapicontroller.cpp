@@ -33,9 +33,8 @@ bool ILugApiController::openDatabase()
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    if(!m_PersonModel->addSessionCount(code))
+    if(m_PersonModel->findPerson(code) == -1)
     {
-        m_PersonModel->revertAll();
         return Person();
     }
 
@@ -56,7 +55,20 @@ Person ILugApiController::findPersonByCode(const QString &code)
     {
         m_AttendantModel->revertAll();
     }
-    m_db.dbCommit();
+    else
+    {
+        if (m_PersonModel->addSessionCount(code))
+        {
+            m_AttendantModel->submitAll();
+            m_PersonModel->submitAll();
+            m_db.dbCommit();
+        }
+        else
+        {
+            m_AttendantModel->revertAll();
+            m_PersonModel->revertAll();
+        }
+    }
 
     return person;
 }
@@ -102,7 +114,7 @@ bool ILugApiController::deletePerson(const QString &personCode)
     {
         m_PersonModel->revertAll();
         m_AttendantModel->revertAll();
-        qDebug() << "Faild to delete person\n";
+        qDebug() << "Failed to delete person\n";
         return false;
     }
 

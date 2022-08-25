@@ -50,7 +50,7 @@ int AttendantModel::findAttendant(int personId, int dueDayId)
     return -1;
 }
 
-int AttendantModel::addAttendant(int personId, int dueDayId)
+bool AttendantModel::addAttendant(int personId, int dueDayId)
 {
     int row = findAttendant(personId, dueDayId);
     if( row != -1)
@@ -59,14 +59,14 @@ int AttendantModel::addAttendant(int personId, int dueDayId)
             qDebug() << this->lastError().text();
         else
             qDebug() << "Error to add attendant.";
-        return row;
+        return false;
     }
     QSqlRecord record = this->record();
     record.setValue(QString("personId"), QVariant(personId));
     record.setValue(QString("dueDayId"), QVariant(dueDayId));
     if(this->insertRecord(-1, record))
     {
-        return this->rowCount() - 1;
+        return true;
     }
     else
     {
@@ -74,7 +74,7 @@ int AttendantModel::addAttendant(int personId, int dueDayId)
             qDebug() <<  this->lastError().text();
         else
             qDebug() << "Insert record to attendant failed.";
-        return row;
+        return false;
     }
 }
 

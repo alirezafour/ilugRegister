@@ -76,3 +76,10 @@ build-*
 
 #extrafile
 .directory
+
+#vs
+.vs/*
+out/*
+
+#cmake
+CMakeLists.txt.user

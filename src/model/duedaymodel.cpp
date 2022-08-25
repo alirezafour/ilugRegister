@@ -96,3 +96,13 @@ bool DueDayModel::deleteDueDay(const QString &day, const QString &dayNumber, con
     }
     return false;
 }
+
+int DueDayModel::GetDateId(const QString& day) const
+{
+	for (int i = 0; i < rowCount(); ++i)
+	{
+		if (record(i).value("day").toString() == day)
+			return record(i).value("id").toInt();
+	}
+	return -1;
+}
