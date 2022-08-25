@@ -75,7 +75,7 @@ int PersonModel::findPerson(const QString &code, const QString &name,
 bool PersonModel::addPerson(const QString &code, const QString &name,
                             const QString &family, const QString &email)
 {
-    if(findPerson(code))
+    if(findPerson(code) != -1)
     {
         qDebug() << "this person with " << code << " already exist.";
         return false;
@@ -149,7 +149,7 @@ int PersonModel::personID(const QString &code) const
 
 bool PersonModel::updatePerson(const QString& code, const QString& firstName, const QString& lastName, const QString& email)
 {
-    int row = findPerson(code, 0);
+    int row = findPerson(code);
     if(row == -1)
         return false;
 

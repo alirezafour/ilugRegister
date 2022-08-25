@@ -31,7 +31,7 @@ int DueDayModel::findDueDay(const QString &day) const
         const QString &inDay = record(i).value("day").toString();
         if(day == inDay)
         {
-            return record(i).value("id").toInt();
+            return i;
         }
     }
     //if it didn't find the they it return -1

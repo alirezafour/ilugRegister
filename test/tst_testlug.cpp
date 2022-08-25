@@ -27,31 +27,44 @@ void TestLug::databaseTest()
 
 void TestLug::addPersonModel()
 {
-    bool result = personModel->addPerson("12222233", "alireza", "hor", "a2l22i2ael222i@lkfdj.com");
-
-    QCOMPARE(0, result);
-    personModel->submitAll();
-    database.dbCommit();
+    // should be able to add since table is empty
+    QCOMPARE(true, personModel->addPerson("12222233", "alireza", "hor", "a2l22i2ael222i@lkfdj.com"));
+    personModel->revertAll(); // discard changes
 }
 
 void TestLug::findPersonModel()
 {
-    int row = personModel->findPerson("12222233");
-    QCOMPARE(0, row);
-
-    QString name = personModel->record(row).value("firstName").toString();
-    QCOMPARE(name, QString("alireza"));
-
-    QCOMPARE(true, personModel->addSessionCount("12222233"));
+    // should be added to row 0 since table is empty
+    personModel->addPerson("1222332233", "aalireza", "hor", "a2l22i2ael222i@lkfdj.com");
     personModel->submitAll();
-    int count = personModel->record(row).value("sessionCount").toInt();
-    QCOMPARE(count, 1);
+    int row = personModel->findPerson("1222332233");
 
+    // when not find it return -1
+    QCOMPARE(-1, personModel->findPerson("1"));
+
+    // name of the row should match of what we set
+    QString name = personModel->record(row).value("firstName").toString();
+    QCOMPARE(name, QString("aalireza"));
+}
+
+void TestLug::addPersonSession()
+{
+	personModel->addPerson("33", "aalireza", "hor", "a2l22i2ael222i@lkfdj.com");
+	personModel->submitAll();
+	int row = personModel->findPerson("33");
+
+	QCOMPARE(true, personModel->addSessionCount("33"));
+	personModel->submitAll();
+	int count = personModel->record(row).value("sessionCounter").toInt();
+	QCOMPARE(count, 1);
 }
 
 void TestLug::deletePersonModel()
 {
-    Q_ASSERT_X(personModel->deletePerson("12222233"), "deleting person", "failed to delete person");
+	personModel->addPerson("2222", "aalireza1", "hor2", "a2l22i2ael222i@lkfdj.com");
+	personModel->submitAll();
+
+    QCOMPARE(true, personModel->deletePerson("2222"));
     personModel->submitAll();
 }
 
@@ -70,7 +83,7 @@ void TestLug::findDayDueDayModel()
     dueDayModel->submitAll();
 
     int row = dueDayModel->findDueDay("2016-12-12");
-    QCOMPARE(row, dueDayModel->rowCount() - 1);
+    QCOMPARE(row, 2);
 
 }
 
@@ -79,15 +92,14 @@ void TestLug::deleteDayDUeDayModel()
     dueDayModel->addNewDay("2011-12-1");
     dueDayModel->submitAll();
 
-    Q_ASSERT_X( dueDayModel->deleteDueDay("2011-12-1"), "day deleted.", "failed to delete day.");
+    bool result = dueDayModel->deleteDueDay("2011-12-1");
+    QCOMPARE(true, result);
 }
 
 void TestLug::addAttendantModel()
 {
     // adding persons first
-    int oldpRow = personModel->rowCount() - 1;
-    int row = personModel->addPerson("1222234233", "a22lirezds2222a32", "hosgdfd222dsr", "a2lw22i2ael222i@lkfdj.com");
-    QCOMPARE(oldpRow+1, row);
+    QCOMPARE(true, personModel->addPerson("1222234233", "a22lirezds2222a32", "hosgdfd222dsr", "a2lw22i2ael222i@lkfdj.com"));
     personModel->submitAll();
 
     //adding a dueDay
@@ -106,9 +118,7 @@ void TestLug::addAttendantModel()
 void TestLug::findAttendantModel()
 {
     // adding persons first
-    int oldpRow = personModel->rowCount() - 1;
-    int row = personModel->addPerson("56565656", "a212li2a32", "rrghjere", "a2lw2rdtggl222i@lkfdj.com");
-    QCOMPARE(oldpRow+1, row);
+    QCOMPARE(true, personModel->addPerson("56565656", "a212li2a32", "rrghjere", "a2lw2rdtggl222i@lkfdj.com"));
     personModel->submitAll();
 
     //adding a dueDay
@@ -128,16 +138,12 @@ void TestLug::findAttendantModel()
 
     int theRow = attendantModel->findAttendant(personId, dueDayId);
     QCOMPARE(theRow, 0);
-
-
 }
 
 void TestLug::deleteAttendantModel()
 {
     // adding persons first
-    int oldpRow = personModel->rowCount() - 1;
-    int row = personModel->addPerson("56511156", "a111li2a32", "rrghj11ere", "a2l1111dtggl222i@lkfdj.com");
-    QCOMPARE(oldpRow+1, row);
+    QCOMPARE(true, personModel->addPerson("56511156", "a111li2a32", "rrghj11ere", "a2l1111dtggl222i@lkfdj.com"));
     personModel->submitAll();
 
     //adding a dueDay
@@ -156,13 +162,13 @@ void TestLug::deleteAttendantModel()
     attendantModel->submitAll();
 
     bool ok = attendantModel->deleteAttendant(personId, dueDayId);
-    Q_ASSERT_X(ok, "deleting from attendantModel was successful.", "failed deleting from attendantModel.");
+    QCOMPARE(true, ok);
 }
 
 void TestLug::cleanupTestCase()
 {
     database.close();
-    Q_ASSERT_X(QFile::remove("lug.db"), "deleting database", "delete failed");
+    QFile::remove("lug.db");
 }
 
 

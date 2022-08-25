@@ -18,6 +18,7 @@ private Q_SLOTS:
     void databaseTest();
     void addPersonModel();
     void findPersonModel();
+    void addPersonSession();
     void deletePersonModel();
     void addDayDueDayModel();
     void findDayDueDayModel();
