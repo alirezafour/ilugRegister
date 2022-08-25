@@ -39,7 +39,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 include_directories(src)
 
 set(PROJECT_SOURCES
-        src/main.cpp
         src/database_export.cpp
         src/configfile.cpp
         src/database/mydatabase.cpp
@@ -49,7 +48,6 @@ set(PROJECT_SOURCES
         src/model/reportmodel.cpp
         src/controllers/ilugapicontroller.cpp
         src/model/person.cpp
-        src/UI/widgetui.cpp
         src/mainwindow.cpp
 
         src/database_export.h
@@ -61,13 +59,13 @@ set(PROJECT_SOURCES
         src/model/reportmodel.h
         src/controllers/ilugapicontroller.h
         src/model/person.h
-        src/UI/widgetui.h
         src/mainwindow.h
 
         ui/mainwindow.ui
 )
 
 add_executable(${TARGET_NAME}
+        src/main.cpp
         ${PROJECT_SOURCES})
 
 target_link_libraries(${TARGET_NAME} PRIVATE Qt6::Sql)
@@ -86,3 +84,7 @@ install(TARGETS ${TARGET_NAME}
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${TARGET_NAME})
 endif()
+
+# Tests
+enable_testing()
+add_subdirectory( test )

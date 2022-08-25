@@ -15,7 +15,7 @@ class PersonModel : public QSqlTableModel
 
 public:
     explicit PersonModel(QObject *parent = 0);
-    ~PersonModel();
+    virtual ~PersonModel();
 
     /**
      * @brief set table view headers name and model

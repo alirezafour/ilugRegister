@@ -2,27 +2,14 @@
 #include <QtTest>
 #include <QSqlTableModel>
 #include <QFile>
-#include "../src/database/mydatabase.h"
-#include "../src/model/personmodel.h"
-#include "../src/model/duedaymodel.h"
-#include "../src/model/attendantmodel.h"
-
-class QTime;
+#include "database/mydatabase.h"
+#include "model/personmodel.h"
+#include "model/duedaymodel.h"
+#include "model/attendantmodel.h"
 
 class TestLug : public QObject
 {
     Q_OBJECT
-
-    MyDatabase database;
-
-    std::unique_ptr<PersonModel> personModel;
-    std::unique_ptr<DueDayModel> dueDayModel;
-    std::unique_ptr<AttendantModel> attendantModel;
-    //QTime myTimer;
-
-public:
-    TestLug();
-
 
 private Q_SLOTS:
     void initTestCase();
@@ -41,6 +28,12 @@ private Q_SLOTS:
 
     void cleanupTestCase();
 
+private:
+    MyDatabase database;
+
+    std::unique_ptr<PersonModel> personModel;
+    std::unique_ptr<DueDayModel> dueDayModel;
+    std::unique_ptr<AttendantModel> attendantModel;
 };
 
 

@@ -21,7 +21,7 @@ void PersonModel::setHeaders()
     setHeaderData(1, Qt::Horizontal, tr("Code"));
     setHeaderData(2, Qt::Horizontal, tr("First Name"));
     setHeaderData(3, Qt::Horizontal, tr("Last Name"));
-    setHeaderData(4, Qt::Horizontal, tr("Sesstion Counter"));
+    setHeaderData(4, Qt::Horizontal, tr("Session Counter"));
     setHeaderData(5, Qt::Horizontal, tr("Email"));
 }
 
@@ -100,7 +100,7 @@ bool PersonModel::addPerson(const QString &code, const QString &name,
 
 bool PersonModel::deletePerson(const QString &code)
 {
-    int row = findPerson(code, 0);
+    int row = findPerson(code);
     if(row == -1)
     {
         qDebug() << "Failed to find person with " << code << " for deleting it.";

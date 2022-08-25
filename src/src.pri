@@ -5,10 +5,7 @@ SOURCES += $$PWD/database_export.cpp \
     $$PWD/model/attendantmodel.cpp \
     $$PWD/model/duedaymodel.cpp \
     $$PWD/model/reportmodel.cpp \
-    $$PWD/controllers/ilugapicontroller.cpp \
-    $$PWD/model/person.cpp \
-    $$PWD/UI/widgetui.cpp \
-    $$PWD/UI/Component/myqpushbutton.cpp
+    $$PWD/controllers/ilugapicontroller.cpp
 
 HEADERS  += \ $$PWD/database_export.h \
     $$PWD/configfile.h \
@@ -17,10 +14,7 @@ HEADERS  += \ $$PWD/database_export.h \
     $$PWD/model/attendantmodel.h \
     $$PWD/model/duedaymodel.h \
     $$PWD/model/reportmodel.h \
-    $$PWD/controllers/ilugapicontroller.h \
-    $$PWD/model/person.h \
-    $$PWD/UI/widgetui.h \
-    $$PWD/UI/Component/myqpushbutton.h
+    $$PWD/controllers/ilugapicontroller.h
 
 FORMS    += $$PWD/../ui/mainwindow.ui
 

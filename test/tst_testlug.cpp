@@ -1,12 +1,8 @@
 #include "tst_testlug.h"
 
-TestLug::TestLug()
-{
-}
-
 void TestLug::initTestCase()
 {
-
+    QFile::remove("lug.db");
 }
 
 void TestLug::testCase1()
@@ -17,69 +13,59 @@ void TestLug::testCase1()
 void TestLug::databaseTest()
 {
     Q_ASSERT_X(database.open(), "opening database", "failed to open");
+
+    personModel = std::make_unique<PersonModel>();
+    personModel->setHeaders();
+
+    attendantModel = std::make_unique<AttendantModel>();
+    attendantModel->setHeaders();
+
+    dueDayModel = std::make_unique<DueDayModel>();
+    dueDayModel->setHeaders();
+
 }
 
 void TestLug::addPersonModel()
 {
-    personModel = std::make_unique<PersonModel>();
-    personModel->setHeaders();
+    bool result = personModel->addPerson("12222233", "alireza", "hor", "a2l22i2ael222i@lkfdj.com");
 
-    //myTimer.start();
-    database.dbTransaction();
-    int row = personModel->addPerson("12222233", "a22lirez2222a32", "hosd222dsr", "a2l22i2ael222i@lkfdj.com");
-    personModel->submitAll();
-    personModel->addPerson("1111", "alieaza", "allbkbklabjk", "alireza@lkfdj.com");
-    personModel->submitAll();
-    personModel->addPerson("23546434", "mohamad", "silver", "silveri@lkfdj.com");
-    personModel->submitAll();
-    personModel->addPerson("333333333", "reza", "bagher", "saghari@lkfdj.com");
-    personModel->submitAll();
-    personModel->addPerson("22221342222", "javad", "sorayayi", "soraya@lkfdj.com");
+    QCOMPARE(0, result);
     personModel->submitAll();
     database.dbCommit();
-
-    QCOMPARE(0, row);
 }
 
 void TestLug::findPersonModel()
 {
-    int testAdd = personModel->addPerson("12345678", "javad", "sorayayi", "soraya@lkfdj.com");
+    int row = personModel->findPerson("12222233");
+    QCOMPARE(0, row);
+
+    QString name = personModel->record(row).value("firstName").toString();
+    QCOMPARE(name, QString("alireza"));
+
+    QCOMPARE(true, personModel->addSessionCount("12222233"));
     personModel->submitAll();
-    QCOMPARE(testAdd, personModel->rowCount() - 1);
+    int count = personModel->record(row).value("sessionCount").toInt();
+    QCOMPARE(count, 1);
 
-    int row = personModel->findPersonAndIncreaseSection("12345678");
-    QCOMPARE(row, personModel->rowCount() - 1);
-
-    QString a = personModel->record(row).value("firstName").toString();
-    QCOMPARE(a, QString("javad"));
 }
 
 void TestLug::deletePersonModel()
 {
-    database.dbTransaction();
-    Q_ASSERT(personModel->addPerson("122233", "alieasd", "falskdjf", "alskdjf@dklsfaj.com"));
+    Q_ASSERT_X(personModel->deletePerson("12222233"), "deleting person", "failed to delete person");
     personModel->submitAll();
-
-    Q_ASSERT_X(personModel->deletePerson("122233"), "deleting person", "failed to delete person");
-    personModel->submitAll();
-    database.dbCommit();
 }
 
 void TestLug::addDayDueDayModel()
 {
-    dueDayModel = std::make_unique<DueDayModel>();
-    dueDayModel->setHeaders();
     int curRow = dueDayModel->addNewDay();
     QCOMPARE(curRow, 0);
     int row = dueDayModel->addNewDay("2014-12-12");
     QCOMPARE(row , 1);
     dueDayModel->submitAll();
-
 }
 
 void TestLug::findDayDueDayModel()
 {
-
     dueDayModel->addNewDay("2016-12-12");
     dueDayModel->submitAll();
 
@@ -110,20 +96,15 @@ void TestLug::addAttendantModel()
     QCOMPARE(oldRow+1, newRow);
     dueDayModel->submitAll();
 
-    //adding them in attendant
-    attendantModel = std::make_unique<AttendantModel>();
-    attendantModel->setHeaders();
     int personId = personModel->record(0).value("id").toInt();
     int dueDayId = dueDayModel->record(0).value("id").toInt();
     int attRow = attendantModel->addAttendant(personId, dueDayId);
     QCOMPARE(attRow, 0);
     attendantModel->submitAll();
-
 }
 
 void TestLug::findAttendantModel()
 {
-
     // adding persons first
     int oldpRow = personModel->rowCount() - 1;
     int row = personModel->addPerson("56565656", "a212li2a32", "rrghjere", "a2lw2rdtggl222i@lkfdj.com");

@@ -74,7 +74,7 @@ bool ILugApiController::addPerson(const Person &person)
     //check fileds is empty make error
     if(code.toInt() == 0 || firstName == "" || lastName == "")
         return false;
-    if(m_PersonModel->addPerson(code, firstName, lastName, email) == -1) // if return -1 means it failed
+    if(!m_PersonModel->addPerson(code, firstName, lastName, email)) // if return -1 means it failed
     {
         qDebug() << "failed to add person.";
         m_PersonModel->revertAll();
