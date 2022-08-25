@@ -12,4 +12,5 @@ I wrote this program for isfahan Lug(ILug) because they had a paper that people 
  * Run make: `make`  
  * Run make install: `make install`  
  or
- * User Qt Creator/Visual studio and open project and build
+ * User Qt Creator/Visual studio and open project and build  
+ * Copy everything in build directory to the application directory  
