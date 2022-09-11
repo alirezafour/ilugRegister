@@ -8,9 +8,7 @@ I wrote this program for isfahan Lug(ILug) because they had a paper that people 
 
 ### Inistalling  
  * clone the repo: `git clone https://github.com/alirezafour/ilugRegister.git`  
- * run cmake: `cd build; cmake ../`  
- * Run make: `make`  
- * Run make install: `make install`  
+ * Update CMakeLists path to Qt  
+ * run cmake: `cd build; cmake ..`  
  or
- * User Qt Creator/Visual studio and open project and build  
- * Copy everything in build directory to the application directory  
+ * User Qt Creator/Visual studio and open CMakeLists.txt project and build  
