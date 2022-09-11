@@ -91,7 +91,7 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="Family_Line">
+                 <widget class="QLineEdit" name="Line_Family_Main">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -108,7 +108,7 @@
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QLineEdit" name="Email_Line">
+                 <widget class="QLineEdit" name="Line_Email_Main">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -118,7 +118,7 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="Name_Line">
+                 <widget class="QLineEdit" name="Line_Name_Main">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -128,7 +128,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="Code_Line">
+                 <widget class="QLineEdit" name="Line_Code_Main">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -238,7 +238,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QPushButton" name="deleteButton">
+               <widget class="QPushButton" name="B_Delete_Main">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -251,7 +251,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="updateButton">
+               <widget class="QPushButton" name="B_Update_Main">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -264,7 +264,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="SelectButton">
+               <widget class="QPushButton" name="B_ShowAll_Main">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -290,7 +290,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="SearchButton">
+               <widget class="QPushButton" name="B_Search_Main">
                 <property name="text">
                  <string>S&amp;earch</string>
                 </property>
@@ -357,7 +357,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="Code_Line2_Registertab">
+                 <widget class="QLineEdit" name="Line_Code_Register">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -374,7 +374,7 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="Name_Line2_Registertab">
+                 <widget class="QLineEdit" name="Line_Name_Register">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -391,7 +391,7 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="Family_Line2_Registertab">
+                 <widget class="QLineEdit" name="Line_Family_Register">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -401,7 +401,7 @@
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QLineEdit" name="Email_Line2_Register"/>
+                 <widget class="QLineEdit" name="Line_Email_Register"/>
                 </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="Email_Label2">
@@ -415,7 +415,7 @@
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
-                 <widget class="QCheckBox" name="FirstTime_Checkbox_Register">
+                 <widget class="QCheckBox" name="CB_FirstTime_Register">
                   <property name="text">
                    <string>First time</string>
                   </property>
@@ -437,7 +437,7 @@
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <item>
-                   <widget class="QPushButton" name="AddButton_Registertab">
+                   <widget class="QPushButton" name="B_Add_Register">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -469,7 +469,7 @@
              </layout>
             </item>
             <item row="1" column="3">
-             <widget class="QPushButton" name="addPicture_Button">
+             <widget class="QPushButton" name="B_BrowsePicture_Register">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -603,7 +603,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="Code_Line3_Selecttab">
+               <widget class="QLineEdit" name="Line_Code_Export">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -620,7 +620,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLineEdit" name="Date_Line">
+               <widget class="QLineEdit" name="Line_Date_Export">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -689,7 +689,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <widget class="QPushButton" name="selectCode_dateTable_button">
+                 <widget class="QPushButton" name="B_SelectByCode_Export">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -702,7 +702,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="selectDate_dateTable_button">
+                 <widget class="QPushButton" name="B_SelectByDate_Export">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -715,7 +715,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="selectAll_Button">
+                 <widget class="QPushButton" name="B_SelectAll_Export">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -728,7 +728,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="ExportButton">
+                 <widget class="QPushButton" name="B_Export_Export">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -744,14 +744,14 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="docuExportButton">
+                 <widget class="QPushButton" name="B_DocuExport_Export">
                   <property name="text">
                    <string>Duco Export</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="report_btn">
+                 <widget class="QPushButton" name="B_Report_Export">
                   <property name="text">
                    <string>Report</string>
                   </property>
@@ -833,12 +833,12 @@
                  <string>Name :</string>
                 </property>
                 <property name="buddy">
-                 <cstring>Name_Line3_SearchTab</cstring>
+                 <cstring>Line_Name_Search</cstring>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="Name_Line3_SearchTab">
+               <widget class="QLineEdit" name="Line_Name_Search">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -853,12 +853,12 @@
                  <string>Family :</string>
                 </property>
                 <property name="buddy">
-                 <cstring>Family_Line3_SearchTab</cstring>
+                 <cstring>Line_Family_Search</cstring>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLineEdit" name="Family_Line3_SearchTab">
+               <widget class="QLineEdit" name="Line_Family_Search">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -903,14 +903,14 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <widget class="QPushButton" name="SearchName_Button">
+             <widget class="QPushButton" name="B_SearchName_Search">
               <property name="text">
                <string>Search Name</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="SearchFamily_Button">
+             <widget class="QPushButton" name="B_SearchFamily_Search">
               <property name="text">
                <string>Search Family</string>
               </property>
@@ -1016,7 +1016,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="codeLine_VoteTab">
+               <widget class="QLineEdit" name="Line_Code_Vote">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1086,7 +1086,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <item>
-                 <widget class="QPushButton" name="Ok_Button_VoteTab">
+                 <widget class="QPushButton" name="B_Ok_Vote">
                   <property name="text">
                    <string>OK</string>
                   </property>
@@ -1229,12 +1229,12 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>Code_Line</tabstop>
-  <tabstop>Name_Line</tabstop>
-  <tabstop>Family_Line</tabstop>
-  <tabstop>deleteButton</tabstop>
-  <tabstop>updateButton</tabstop>
-  <tabstop>SelectButton</tabstop>
+  <tabstop>Line_Code_Main</tabstop>
+  <tabstop>Line_Name_Main</tabstop>
+  <tabstop>Line_Family_Main</tabstop>
+  <tabstop>B_Delete_Main</tabstop>
+  <tabstop>B_Update_Main</tabstop>
+  <tabstop>B_ShowAll_Main</tabstop>
   <tabstop>Table_view</tabstop>
  </tabstops>
  <resources/>

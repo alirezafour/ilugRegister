@@ -25,9 +25,9 @@
 #include <QMessageBox>
 #include <QValidator>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) 
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -45,61 +45,65 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //inputMask of line edit Config
     std::unique_ptr<const QValidator> v = std::make_unique<const QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
-    ui->Code_Line->setValidator(v.get());
-    ui->Code_Line2_Registertab->setValidator(v.get());
-    ui->Code_Line3_Selecttab->setValidator(v.get());
-    ui->codeLine_VoteTab->setValidator(v.get());
-    ui->Date_Line->setInputMask("0000-00-00;_");
+    ui->Line_Code_Main->setValidator(v.get());
+    ui->Line_Code_Register->setValidator(v.get());
+    ui->Line_Code_Export->setValidator(v.get());
+    ui->Line_Code_Vote->setValidator(v.get());
+    ui->Line_Date_Export->setInputMask("0000-00-00;_");
 
     //default set
-    ui->Date_Line->setText(curentDate_Str);
+    ui->Line_Date_Export->setText(curentDate_Str);
 
 
 
     // [Conncet buttons to Slots]
     // main tab
-    connect(ui->SearchButton, SIGNAL(clicked()), SLOT(on_search_button_clicked()));
-    connect(ui->SelectButton, SIGNAL(clicked()), SLOT(on_select_button_clicked()));
-    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(on_delete_button_clicked()));
-    connect(ui->updateButton, SIGNAL(clicked()), SLOT(on_update_button_clicked()));
+    connect(ui->B_Search_Main, SIGNAL(clicked()), SLOT(On_B_Search_Main_Clicked()));
+    connect(ui->B_ShowAll_Main, SIGNAL(clicked()), SLOT(On_B_ShowAll_Main_Clicked()));
+    connect(ui->B_Delete_Main, SIGNAL(clicked()), SLOT(On_B_Delete_Main_Clicked()));
+    connect(ui->B_Update_Main, SIGNAL(clicked()), SLOT(On_B_Update_Main_Clicked()));
+    // lines
+    connect(ui->Line_Code_Main, SIGNAL(returnPressed()), SLOT(On_B_Search_Main_Clicked()));
 
     // register tab
-    connect(ui->AddButton_Registertab, SIGNAL(clicked()), SLOT(on_add_button_registerTab_clicked()));
-    connect(ui->addPicture_Button, SIGNAL(clicked()), SLOT(browsingImage()));
-    connect(ui->selectCode_dateTable_button, SIGNAL(clicked()), SLOT(findCodeFromAttendant()));
-    connect(ui->selectDate_dateTable_button, SIGNAL(clicked()), SLOT(selectByDate()));
-    connect(ui->selectAll_Button, SIGNAL(clicked()), SLOT(selectDateSlot()));
-    connect(ui->FirstTime_Checkbox_Register, SIGNAL(pressed()), SLOT(generateCode()));
+    connect(ui->B_Add_Register, SIGNAL(clicked()), SLOT(On_B_Add_Register_Clicked()));
+    connect(ui->B_BrowsePicture_Register, SIGNAL(clicked()), SLOT(On_B_BrawsePicture_Clicked()));
+    connect(ui->CB_FirstTime_Register, SIGNAL(pressed()), SLOT(On_CB_FirstTime_Register_Pressed()));
 
     //export tab
-    connect(ui->ExportButton, SIGNAL(clicked()), SLOT(on_export_button_clicked()));
-    connect(ui->docuExportButton, SIGNAL(pressed()), SLOT(on_docu_export_button_clicked()));
+    // Buttons
+    connect(ui->B_SelectByCode_Export, SIGNAL(clicked()), SLOT(On_B_SelectCodeByCode_Export_Clicked()));
+    connect(ui->B_SelectByDate_Export, SIGNAL(clicked()), SLOT(On_B_SelectByDate_Export_Clicked()));
+    connect(ui->B_SelectAll_Export, SIGNAL(clicked()), SLOT(On_B_SelectAll_Export_Clicked()));
+    connect(ui->B_Export_Export, SIGNAL(clicked()), SLOT(On_B_Export_Export_Clicked()));
+
+    connect(ui->B_DocuExport_Export, SIGNAL(pressed()), SLOT(On_B_DocuExport_Export_Pressed()));
+    // Line
+	connect(ui->Line_Code_Export, SIGNAL(returnPressed()), SLOT(On_B_SelectCodeByCode_Export_Clicked()));
+	connect(ui->Line_Date_Export, SIGNAL(returnPressed()), SLOT(On_B_SelectByDate_Export_Clicked()));
 
     // search tab
-    connect(ui->SearchName_Button, SIGNAL(clicked()), SLOT(searchNameSlot()));
-    connect(ui->SearchFamily_Button, SIGNAL(clicked()), SLOT(searchFamilySlot()));
+    connect(ui->B_SearchName_Search, SIGNAL(clicked()), SLOT(On_B_SearchName_Search_Clicked()));
+    connect(ui->B_SearchFamily_Search, SIGNAL(clicked()), SLOT(On_B_SearchFamily_Search_Clicked()));
+    // Line
+	connect(ui->Line_Name_Search, SIGNAL(returnPressed()), SLOT(On_B_SearchName_Search_Clicked()));
+	connect(ui->Line_Family_Search, SIGNAL(returnPressed()), SLOT(On_B_SearchFamily_Search_Clicked()));
+	connect(ui->Line_Name_Search, SIGNAL(textChanged(QString)), SLOT(On_B_SearchName_Search_Clicked()));
+	connect(ui->Line_Family_Search, SIGNAL(textChanged(QString)), SLOT(On_B_SearchFamily_Search_Clicked()));
 
     // vote tab
-    connect(ui->Ok_Button_VoteTab, SIGNAL(pressed()), SLOT(reportForVoteSlot()));
+    connect(ui->B_Ok_Vote, SIGNAL(pressed()), SLOT(On_B_Ok_Vote_Pressed()));
+    // Line
+    connect(ui->Line_Code_Vote, SIGNAL(returnPressed()), SLOT(On_B_Ok_Vote_Pressed()));
 
-    //  [Connect LineEdits to Slots]
-    connect(ui->Code_Line, SIGNAL(returnPressed()), SLOT(on_search_button_clicked()));
-    connect(ui->Code_Line3_Selecttab, SIGNAL(returnPressed()), SLOT(findCodeFromAttendant()));
-    connect(ui->Date_Line, SIGNAL(returnPressed()), SLOT(selectByDate()));
-    connect(ui->Name_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchNameSlot()));
-    connect(ui->Family_Line3_SearchTab, SIGNAL(returnPressed()), SLOT(searchFamilySlot()));
-    connect(ui->Name_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchNameSlot()));
-    connect(ui->Family_Line3_SearchTab, SIGNAL(textChanged(QString)), SLOT(searchFamilySlot()));
-    connect(ui->codeLine_VoteTab, SIGNAL(returnPressed()), SLOT(reportForVoteSlot()));
-
-    // [ Connect actions to Slots]
+    // Menu actions
     connect(ui->actionE_xit, SIGNAL(triggered()), this ,SLOT(close()));
     connect(ui->action_Connect, SIGNAL(triggered()), this ,SLOT(databaseConnectSlot()));
     connect(ui->actionExport_Today, SIGNAL(triggered()), this , SLOT(on_export_today_action_triggered()));
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(on_ducoWiki_export_action_triggered()));
 
     databaseConnectSlot();
-    ui->Code_Line->setFocus();
+    ui->Line_Code_Main->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -129,7 +133,7 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     ui->imageLabel_RegisterTab->setPixmap(QPixmap::fromImage(image));
     ui->imageLabel_RegisterTab->setFixedSize(size);
 
-    image.save("Image/" + ui->Code_Line2_Registertab->text() +".jpg");
+    image.save("Image/" + ui->Line_Code_Register->text() +".jpg");
     return true;
 }
 
@@ -146,7 +150,7 @@ bool MainWindow::voteImage(const QString &fileName)
     return true;
 }
 
-//this Function for loa image and show in Main tab
+//this Function for load image and show in Main tab
 //**************************
 bool MainWindow::loadImage(const QString &fileName)
 {
@@ -167,12 +171,9 @@ bool MainWindow::loadImage(const QString &fileName)
 //*******************
 void MainWindow::ViewTable(QString table,QTableView &tableview)
 {
-
-    QSqlTableModel *model = new QSqlTableModel(this);
-    model->setTable(table);
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-    tableview.setModel(model);
+    QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+    personModel->setFilter("");
+    tableview.setModel(personModel);
     tableview.setWindowTitle(table);
     tableview.resizeColumnsToContents();
     tableview.resizeRowsToContents();
@@ -184,12 +185,10 @@ void MainWindow::ViewTable(QString table,QTableView &tableview)
 //********************
 void MainWindow::filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview)
 {
-    QSqlTableModel *model = new QSqlTableModel(this);
-    model->setTable(table);
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-    model->setFilter(Column + " = " + RecordFilter);
-    tableview.setModel(model);
+    QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+    
+    personModel->setFilter(Column + " = " + RecordFilter);
+    tableview.setModel(personModel);
     tableview.setWindowTitle(table);
     tableview.resizeColumnsToContents();
     tableview.resizeRowsToContents();
@@ -201,7 +200,7 @@ void MainWindow::databaseConnectSlot()
 {
     if(!m_iLAController.openDatabase())
     {
-        QMessageBox::critical(0, tr("Error to Connect"), tr("ERROR!!! Conection Failed"));
+        QMessageBox::critical(0, tr("Error to Connect"), tr("ERROR!!! Connection Failed"));
         ui->db_status->setText(tr("Connect to Database Failed."));
     }
     else
@@ -209,51 +208,50 @@ void MainWindow::databaseConnectSlot()
         ui->db_status->setText(tr("Connect to database Successful."));
         ViewTable("person", *ui->Table_view);
         ui->statusBar->showMessage(tr("Database Connected!"),3000);
-        ui->Code_Line->setFocus();
+        ui->Line_Code_Main->setFocus();
     }
 }
 
 //this Slot for Select Data From Database by Click the Search Button or Enter in Code text line
 //*****************
-void MainWindow::on_search_button_clicked()
+void MainWindow::On_B_Search_Main_Clicked()
 {
-    ui->Code_Line->selectAll();     //select all Code in Code Line
-    ui->Name_Line->setText("");
-    ui->Family_Line->setText("");
-    ui->Email_Line->setText("");
+    ui->Line_Code_Main->selectAll();     //select all Code in Code Line
+    ui->Line_Name_Main->setText("");
+    ui->Line_Family_Main->setText("");
+    ui->Line_Email_Main->setText("");
 
-    if(ui->Code_Line->text().isEmpty()) //if there is no code on the code line
+    if(ui->Line_Code_Main->text().isEmpty()) //if there is no code on the code line
     {
         QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
-        ui->Code_Line->setFocus();
+        ui->Line_Code_Main->setFocus();
     }
-    QString  code = ui->Code_Line->text();
+    QString  code = ui->Line_Code_Main->text();
     //call the method and get the data
     Person person = m_iLAController.findPersonByCode(code);
 
     //set data for Ui
-    ui->Name_Line->setText(person.getFirstName());
-    ui->Family_Line->setText(person.getLastName());
-    ui->Email_Line->setText(person.getEmail());
+    ui->Line_Name_Main->setText(person.getFirstName());
+    ui->Line_Family_Main->setText(person.getLastName());
+    ui->Line_Email_Main->setText(person.getEmail());
 
-    //TODO : manage photo outside of the Controller
     if(!loadImage("Image/" + code +".jpg"))
         loadImage(":/pic/build/Image/empty.jpg");
 
     //TODO : change View Table System
     filterView("person","Code", code, *ui->Table_view);
-    ui->Code_Line->setFocus();
+    ui->Line_Code_Main->setFocus();
 }
 
 //this Slot for add Data to Databade by Click to Add Button
 //*****************
-void MainWindow::on_add_button_registerTab_clicked()
+void MainWindow::On_B_Add_Register_Clicked()
 {
     Person person;
-    person.setCode(ui->Code_Line2_Registertab->text());
-    person.setFirstName(ui->Name_Line2_Registertab->text());
-    person.setLastName(ui->Family_Line2_Registertab->text());
-    person.setEmail(ui->Email_Line2_Register->text());
+    person.setCode(ui->Line_Code_Register->text());
+    person.setFirstName(ui->Line_Name_Register->text());
+    person.setLastName(ui->Line_Family_Register->text());
+    person.setEmail(ui->Line_Email_Register->text());
 
     if(!m_iLAController.addPerson(person))
     {
@@ -263,25 +261,25 @@ void MainWindow::on_add_button_registerTab_clicked()
     {
         //TODO : change View Table System
         //show persion data in tableview
-        filterView("person","Code", ui->Code_Line2_Registertab->text(), *ui->Table_view_2);
+        //filterView("person","Code", ui->Line_Code_Main2_Registertab->text(), *ui->Table_view_2);
         ui->db_status->setText(tr("Data Added to Database"));
     }
 
     //clear the field for next user
-    ui->Name_Line2_Registertab->setText("");
-    ui->Family_Line2_Registertab->setText("");
-    ui->Email_Line2_Register->setText("");
+    ui->Line_Name_Register->setText("");
+    ui->Line_Family_Register->setText("");
+    ui->Line_Email_Register->setText("");
 
     ui->statusBar->showMessage("Data Added!",3000);
-    ui->Code_Line2_Registertab->selectAll();  //select all Code in Code Line
-    ui->Code_Line2_Registertab->setFocus();
+    ui->Line_Code_Register->selectAll();  //select all Code in Code Line
+    ui->Line_Code_Register->setFocus();
 }
 
 //this Slot for delete Data from Databade by Click to Delete Button
 //*****************
-void MainWindow::on_delete_button_clicked()
+void MainWindow::On_B_Delete_Main_Clicked()
 {
-    if(!m_iLAController.deletePerson(ui->Code_Line->text()))
+    if(!m_iLAController.deletePerson(ui->Line_Code_Main->text()))
     {
         QMessageBox::critical(0, tr("Error to Delete data"), tr("ERROR!!! Delete Data Failed"));
     }
@@ -289,32 +287,32 @@ void MainWindow::on_delete_button_clicked()
     {
         //show table
         //TODO : change the view System
-        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+        filterView("person","Code", ui->Line_Code_Main->text(), *ui->Table_view);
 
-        ui->Name_Line->setText("");
-        ui->Family_Line->setText("");
-        ui->Email_Line->setText("");
+        ui->Line_Name_Main->setText("");
+        ui->Line_Family_Main->setText("");
+        ui->Line_Email_Main->setText("");
         ui->db_status->setText(tr("Data Deleted!"));
         ui->statusBar->showMessage(tr("Data Deleted!"), 3000);
     }
 
-    ui->Code_Line->selectAll();  //select all Code in Code Line
-    ui->Code_Line->setFocus();
+    ui->Line_Code_Main->selectAll();  //select all Code in Code Line
+    ui->Line_Code_Main->setFocus();
 }
 
 //this Slot for select Data from Databade by Click to Select Button
 //*****************
-void MainWindow::on_select_button_clicked()
+void MainWindow::On_B_ShowAll_Main_Clicked()
 {
     ViewTable("person", *ui->Table_view);
     ui->db_status->setText(tr("Data Selected!"));
-    ui->Code_Line->selectAll();
-    ui->Code_Line->setFocus();
+    ui->Line_Code_Main->selectAll();
+    ui->Line_Code_Main->setFocus();
 }
 
 //this Slot for Select Data From attendant Table
 //**********************
-void MainWindow::selectDateSlot()
+void MainWindow::On_B_SelectAll_Export_Clicked()
 {
     QSqlQueryModel *model = new QSqlQueryModel(this);
     model->setQuery("Select firstName, lastName, date "
@@ -328,13 +326,13 @@ void MainWindow::selectDateSlot()
 
 //this Slot for update Data to Databade by Click to Update Button
 //*****************
-void MainWindow::on_update_button_clicked()
+void MainWindow::On_B_Update_Main_Clicked()
 {
     Person person;
-    person.setCode(ui->Code_Line->text());
-    person.setFirstName(ui->Name_Line->text());
-    person.setLastName(ui->Family_Line->text());
-    person.setEmail(ui->Email_Line->text());
+    person.setCode(ui->Line_Code_Main->text());
+    person.setFirstName(ui->Line_Name_Main->text());
+    person.setLastName(ui->Line_Family_Main->text());
+    person.setEmail(ui->Line_Email_Main->text());
     if(!m_iLAController.updatePerson(person))
     {
         QMessageBox::critical(0, tr("Error to Update data"), tr("ERROR!!! Update Data Failed"));
@@ -344,22 +342,22 @@ void MainWindow::on_update_button_clicked()
         ui->db_status->setText(tr("Data Updated!"));
         //show person image
         //TODO : change show Picture system
-        loadImage("Image/" + ui->Code_Line->text() +".jpg");
+        loadImage("Image/" + ui->Line_Code_Main->text() +".jpg");
 
         //TODO : change view system
-        filterView("person","Code", ui->Code_Line->text(), *ui->Table_view);
+        filterView("person","Code", ui->Line_Code_Main->text(), *ui->Table_view);
     }
 
     ui->statusBar->showMessage(tr("Data Updated!"), 3000);
-    ui->Code_Line->selectAll();  //select all Code in Code Line
-    ui->Code_Line->setFocus();
+    ui->Line_Code_Main->selectAll();  //select all Code in Code Line
+    ui->Line_Code_Main->setFocus();
 }
 
 //this function for searching and finding code in attendent table in database and show to table in Select tab
 //***********************
-void MainWindow::findCodeFromAttendant()
+void MainWindow::On_B_SelectCodeByCode_Export_Clicked()
 {
-    QString code = ui->Code_Line3_Selecttab->text();
+    QString code = ui->Line_Code_Export->text();
     QSqlQueryModel *model = new QSqlQueryModel(this);
     model->setQuery("Select firstName, lastName, date "
                     "FROM person, attendant, dueDay "
@@ -367,15 +365,15 @@ void MainWindow::findCodeFromAttendant()
                     "AND dueDay.id = attendant.dateId "
                     "AND person.code = " + code + ";");
     ui->Table_view_5->setModel(model);
-    ui->Code_Line3_Selecttab->selectAll();
-    ui->Code_Line3_Selecttab->setFocus();
+    ui->Line_Code_Export->selectAll();
+    ui->Line_Code_Export->setFocus();
 }
 
 //this function for searching and show on table by Date in Select tab
 //********************
-void MainWindow::selectByDate()
+void MainWindow::On_B_SelectByDate_Export_Clicked()
 {
-    QString date = ui->Date_Line->text();
+    QString date = ui->Line_Date_Export->text();
     QSqlQueryModel *model = new QSqlQueryModel(this);
     model->setQuery("Select firstName, lastName, date "
                     "FROM person, attendant, dueDay "
@@ -388,9 +386,9 @@ void MainWindow::selectByDate()
 
 //this Slot for Add Image
 //************************
-void MainWindow::browsingImage()
+void MainWindow::On_B_BrawsePicture_Clicked()
 {
-    if(ui->Code_Line2_Registertab->text()=="")
+    if(ui->Line_Code_Register->text()=="")
     {
         QMessageBox::information(this,tr("Empty Code Line Edit."), tr("Enter Code First Please."));
         return;
@@ -413,9 +411,9 @@ void MainWindow::browsingImage()
 
 //this slot for use exportToTextFile function and alarm for success or not
 //************************
-void MainWindow::on_export_button_clicked()
+void MainWindow::On_B_Export_Export_Clicked()
 {
-    if(!(m_iLAController.exportToTextByDate(ui->Date_Line->text())))
+    if(!(m_iLAController.exportToTextByDate(ui->Line_Date_Export->text())))
         QMessageBox::critical(0,tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0,tr("Export File Saved!"), tr("Export File Saved!"));
@@ -437,9 +435,9 @@ void MainWindow::on_ducoWiki_export_action_triggered()
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
-void MainWindow::on_docu_export_button_clicked()
+void MainWindow::On_B_DocuExport_Export_Pressed()
 {
-    if(!(m_iLAController.exportToTextByDate(ui->Date_Line->text(), true)))
+    if(!(m_iLAController.exportToTextByDate(ui->Line_Date_Export->text(), true)))
         QMessageBox::critical(0, tr("Error Open File"), tr("Open File Failed."));
     else
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
@@ -447,10 +445,10 @@ void MainWindow::on_docu_export_button_clicked()
 
 //yhis Slot for use searchName Function
 //*************************
-void MainWindow::searchNameSlot()
+void MainWindow::On_B_SearchName_Search_Clicked()
 {
     static QSqlTableModel *model = new QSqlTableModel(this);
-    m_iLAController.searchPersonByFirstName(ui->Name_Line3_SearchTab->text(), model);
+    m_iLAController.searchPersonByFirstName(ui->Line_Name_Search->text(), model);
     ui->Table_view_SearchTab->setModel(model);
     ui->Table_view_SearchTab->resizeColumnsToContents();
     ui->Table_view_SearchTab->resizeRowsToContents();
@@ -458,33 +456,33 @@ void MainWindow::searchNameSlot()
 
 //this Slot for use searchfamily Function
 //************************
-void MainWindow::searchFamilySlot()
+void MainWindow::On_B_SearchFamily_Search_Clicked()
 {
     static QSqlTableModel *model = new QSqlTableModel(this);
-    m_iLAController.searchPersonByLastName(ui->Family_Line3_SearchTab->text(), model);
+    m_iLAController.searchPersonByLastName(ui->Line_Family_Search->text(), model);
     ui->Table_view_SearchTab->setModel(model);
     ui->Table_view_SearchTab->resizeColumnsToContents();
     ui->Table_view_SearchTab->resizeRowsToContents();
 }
 
-void MainWindow::generateCode()
+void MainWindow::On_CB_FirstTime_Register_Pressed()
 {
-    ui->Code_Line2_Registertab->setText("100");
+    ui->Line_Code_Register->setText("100");
 }
 
-void MainWindow::reportForVoteSlot()
+void MainWindow::On_B_Ok_Vote_Pressed()
 {
-    ui->codeLine_VoteTab->selectAll();     //select all Code in Code Line in Report Tab
+    ui->Line_Code_Vote->selectAll();     //select all Code in Code Line in Report Tab
 
-    if(ui->codeLine_VoteTab->text().isEmpty())
+    if(ui->Line_Code_Vote->text().isEmpty())
     {
         QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First."));
-        ui->codeLine_VoteTab->setFocus();
+        ui->Line_Code_Vote->setFocus();
     }
     else
     {
         static QSqlQueryModel *model = new QSqlQueryModel(this);
-        QString code = ui->codeLine_VoteTab->text();
+        QString code = ui->Line_Code_Vote->text();
         if(m_iLAController.countForElection(code, model))
         {
             voteImage(":/pic/build/Image/true.jpg");
@@ -499,8 +497,8 @@ void MainWindow::reportForVoteSlot()
                         "AND dueDay.id = attendant.dateId "
                         "AND person.code = " + code + ";");
         ui->Table_view_VoteTab->setModel(model);
-        ui->codeLine_VoteTab->setFocus();
-        ui->codeLine_VoteTab->selectAll();
+        ui->Line_Code_Vote->setFocus();
+        ui->Line_Code_Vote->selectAll();
     }
 }
 
