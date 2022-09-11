@@ -33,12 +33,13 @@ bool ILugApiController::openDatabase()
 //**************
 Person ILugApiController::findPersonByCode(const QString &code)
 {
-    if(m_PersonModel->findPerson(code) == -1)
+    int row = m_PersonModel->findPerson(code);
+    if(row == -1)
     {
         return Person();
     }
 
-    QSqlRecord record = m_PersonModel->record(0);
+    QSqlRecord record = m_PersonModel->record(row);
     QString name = record.value(QString("firstName")).toString();
     QString lastname = record.value(QString("lastName")).toString();
     QString email = record.value(QString("email")).toString();
