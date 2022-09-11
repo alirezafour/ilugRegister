@@ -10,9 +10,7 @@ message( STATUS " -- Begining cmake build for LugRegister --")
 project(LugRegister)
 cmake_minimum_required(VERSION 3.5)
 
-set(TARGET_NAME "LugRegister") # set variable
-
-message( STATUS " -- Set target ${TARGET_NAME} --")
+message( STATUS " -- Set target ${PROJECT_NAME} --")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -38,38 +36,26 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 include_directories(src)
 
-set(PROJECT_SOURCES
-        src/database_export.cpp
-        src/configfile.cpp
-        src/database/mydatabase.cpp
-        src/model/personmodel.cpp
-        src/model/attendantmodel.cpp
-        src/model/duedaymodel.cpp
-        src/model/reportmodel.cpp
-        src/controllers/ilugapicontroller.cpp
-        src/model/person.cpp
-        src/mainwindow.cpp
+file(GLOB SOURCES
+     "src/*.cpp"
+     "src/*/*.cpp"
 
-        src/database_export.h
-        src/configfile.h
-        src/database/mydatabase.h
-        src/model/personmodel.h
-        src/model/attendantmodel.h
-        src/model/duedaymodel.h
-        src/model/reportmodel.h
-        src/controllers/ilugapicontroller.h
-        src/model/person.h
-        src/mainwindow.h
+     "src/*.h"
+     "src/*/*.h"
 
-        ui/mainwindow.ui
+     "ui/*.ui"
 )
 
-add_executable(${TARGET_NAME}
-        src/main.cpp
-        ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME}
+        ${SOURCES})
 
-target_link_libraries(${TARGET_NAME} PRIVATE Qt6::Sql)
-target_link_libraries(${TARGET_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
+        Qt6::Sql
+        Qt6::Widgets
+)
+
+
 set_target_properties(${TARGET_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     WIN32_EXECUTABLE ON
@@ -77,13 +63,23 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 )
 
 
-install(TARGETS ${TARGET_NAME}
+install(TARGETS ${PROJECT_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(${TARGET_NAME})
+    qt_finalize_executable(${PROJECT_NAME})
 endif()
+
+add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/build/Export
+                ${CMAKE_CURRENT_BINARY_DIR}/Export)
+
+add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/build/Image
+                ${CMAKE_CURRENT_BINARY_DIR}/Image)
 
 # Tests
 enable_testing()
