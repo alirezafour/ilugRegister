@@ -154,9 +154,7 @@ bool MainWindow::voteImage(const QString &fileName)
 //**************************
 bool MainWindow::loadImage(const QString &fileName)
 {
-    QSize size;
-    size.setHeight(150);
-    size.setWidth(150);
+    QSize size(150, 150);
     QImage image(fileName);
     if (image.isNull()) return false;
     image = image.scaled(size, Qt::KeepAspectRatio);
@@ -171,7 +169,7 @@ bool MainWindow::loadImage(const QString &fileName)
 //*******************
 void MainWindow::ViewTable(QString table,QTableView &tableview)
 {
-    QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+    QSqlTableModel* personModel = m_iLAController.getPersonModel();
     personModel->setFilter("");
     tableview.setModel(personModel);
     tableview.setWindowTitle(table);
@@ -185,7 +183,7 @@ void MainWindow::ViewTable(QString table,QTableView &tableview)
 //********************
 void MainWindow::filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview)
 {
-    QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+    QSqlTableModel* personModel = m_iLAController.getPersonModel();
     
     personModel->setFilter(QString(" %1 = '%2'").arg(Column, RecordFilter));
     tableview.setModel(personModel);
@@ -196,7 +194,7 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
 
 void MainWindow::filterViewLike(QString table, QString Column, QString RecordFilter, QTableView& tableview)
 {
-	QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+	QSqlTableModel* personModel = m_iLAController.getPersonModel();
 
 	personModel->setFilter(QString(" %1 LIKE '%2'").arg(Column, RecordFilter));
 	tableview.setModel(personModel);
@@ -367,13 +365,8 @@ void MainWindow::On_B_Update_Main_Clicked()
 void MainWindow::On_B_SelectCodeByCode_Export_Clicked()
 {
     QString code = ui->Line_Code_Export->text();
-    QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("Select firstName, lastName, date "
-                    "FROM person, attendant, dueDay "
-                    "WHERE person.id = attendant.personId "
-                    "AND dueDay.id = attendant.dateId "
-                    "AND person.code = " + code + ";");
-    ui->Table_view_5->setModel(model);
+
+    ui->Table_view_5->setModel(m_iLAController.getExportModel());
     ui->Line_Code_Export->selectAll();
     ui->Line_Code_Export->setFocus();
 }
@@ -383,13 +376,8 @@ void MainWindow::On_B_SelectCodeByCode_Export_Clicked()
 void MainWindow::On_B_SelectByDate_Export_Clicked()
 {
     QString date = ui->Line_Date_Export->text();
-    QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("Select firstName, lastName, date "
-                    "FROM person, attendant, dueDay "
-                    "WHERE person.id = attendant.personId "
-                    "AND dueDay.id = attendant.dateId "
-                    "AND dueDay.date = '" + date + "';");
-    ui->Table_view_5->setModel(model);
+
+    ui->Table_view_5->setModel(m_iLAController.getExportModel());
     ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 

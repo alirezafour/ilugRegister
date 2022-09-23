@@ -26,6 +26,9 @@ bool ILugApiController::openDatabase()
     m_DueDayModel = std::make_unique<DueDayModel>();
     m_DueDayModel->setHeaders();
 
+    m_ExportModel = std::make_unique<ExportModel>();
+    m_ExportModel->setHeaders();
+
     return true;
 }
 
@@ -49,10 +52,12 @@ Person ILugApiController::findPersonByCode(const QString &code)
     person.setLastName(lastname);
     person.setEmail(email);
 
-    int id = m_DueDayModel->addNewDay();
+    int dayRow = m_DueDayModel->addNewDay();
     m_DueDayModel->submitAll();
 
-    if(!m_AttendantModel->addAttendant(code.toInt(), id))
+    int todayId = m_DueDayModel->GetDateId(curentDate_Str);
+    int personId = m_PersonModel->getPersonId(code);
+    if(!m_AttendantModel->addAttendant(personId, todayId))
     {
         m_AttendantModel->revertAll();
     }

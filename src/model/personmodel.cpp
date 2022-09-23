@@ -1,11 +1,7 @@
 #include "personmodel.h"
 
-PersonModel::PersonModel(QObject *parent) : QSqlTableModel(parent)
-{
-
-}
-
-PersonModel::~PersonModel()
+PersonModel::PersonModel(QObject *parent) 
+    : QSqlTableModel(parent)
 {
 
 }
@@ -25,7 +21,7 @@ void PersonModel::setHeaders()
     setHeaderData(5, Qt::Horizontal, tr("Email"));
 }
 
-bool PersonModel::addSessionCount(const QString &code)
+bool PersonModel::addSessionCount(const QString& code)
 {
     int row = findPerson(code);
     if(row == -1)

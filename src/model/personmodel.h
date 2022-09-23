@@ -15,13 +15,12 @@ class PersonModel : public QSqlTableModel
 
 public:
     explicit PersonModel(QObject *parent = 0);
-    virtual ~PersonModel();
 
     /**
      * @brief set table view headers name and model
      */
     void setHeaders();
-    bool addSessionCount(const QString &code);
+    bool addSessionCount(const QString& code);
 
     /**
      * @brief find Person

@@ -8,13 +8,14 @@
 #include "src/model/personmodel.h"
 #include "src/model/attendantmodel.h"
 #include "src/database/mydatabase.h"
+#include "src/model/exportmodel.h"
 #include "src/model/person.h"
 
 class ILugApiController : public QObject
 {
     Q_OBJECT
 public:
-    explicit ILugApiController(QObject *parent = 0);
+    explicit ILugApiController(QObject* parent = nullptr);
     bool openDatabase();
     Person findPersonByCode(const QString& code);
     bool addPerson(const Person& person);
@@ -25,8 +26,9 @@ public:
     bool searchPersonByLastName(const QString& lastName);
     bool countForElection(const QString& code);
 
-    inline QSqlTableModel* GetPersonModel() const { return m_PersonModel.get(); }
-    inline QSqlTableModel* GetAttendantModel() const { return m_AttendantModel.get(); }
+    inline QSqlTableModel* getPersonModel() const { return m_PersonModel.get(); }
+    inline QSqlTableModel* getAttendantModel() const { return m_AttendantModel.get(); }
+    inline QSqlQueryModel* getExportModel() const { return m_ExportModel.get(); }
 
 signals:
 
@@ -35,6 +37,7 @@ private:
     std::unique_ptr<PersonModel> m_PersonModel;
     std::unique_ptr<AttendantModel> m_AttendantModel;
     std::unique_ptr<DueDayModel> m_DueDayModel;
+    std::unique_ptr<ExportModel> m_ExportModel;
     MyDatabase m_db;
     QDate curentDate;
     QString curentDate_Str;
