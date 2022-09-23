@@ -47,12 +47,12 @@ bool PersonModel::addSessionCount(const QString &code)
     return true;
 }
 
-int PersonModel::findPerson(const QString &code, const QString &name,
-                             const QString &family, const QString &email) const
+int PersonModel::findPerson(const QString& code, const QString& name,
+                             const QString& family, const QString& email) const
 {
     for(int i = 0; i < rowCount(); ++i)
     {
-        const QString &inCode = record(i).value("code").toString();
+        const QString& inCode = record(i).value("code").toString();
         if(code == inCode)
         {
             return i;
@@ -61,15 +61,64 @@ int PersonModel::findPerson(const QString &code, const QString &name,
         {
             continue;
         }
-        const QString &inName = record(i).value("firstName").toString();
-        const QString &inFamily = record(i).value("lastName").toString();
-        const QString &inEmail = record(i).value("email").toString();
+        const QString& inName = record(i).value("firstName").toString();
+        const QString& inFamily = record(i).value("lastName").toString();
+        const QString& inEmail = record(i).value("email").toString();
         if((name.isEmpty() || name == inName) && (family.isEmpty() || family == inFamily) && (email.isEmpty() || email == inEmail))
         {
             return i;
         }
     }
     return -1;
+}
+
+int PersonModel::findPersonByName(const QString& firstName, const QString& lastName /*= ""*/) const
+{
+	// if both set
+	if (!firstName.isEmpty() && !lastName.isEmpty())
+	{
+		for (int i = 0; i < rowCount(); ++i)
+		{
+			const QString& inFirstName = record(i).value("firstName").toString();
+			const QString& inLastName = record(i).value("lastName").toString();
+			if (firstName == inFirstName && lastName == inLastName)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// if name set
+	if (!firstName.isEmpty())
+	{
+		for (int i = 0; i < rowCount(); ++i)
+		{
+			const QString& inFirstName = record(i).value("firstName").toString();
+			if (firstName == inFirstName)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// if last name set
+	if (!lastName.isEmpty())
+	{
+		for (int i = 0; i < rowCount(); ++i)
+		{
+			const QString& inLastName = record(i).value("lastName").toString();
+			if (lastName == inLastName)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// if nothing is set
+	return -1;
 }
 
 bool PersonModel::addPerson(const QString &code, const QString &name,
@@ -143,6 +192,15 @@ int PersonModel::getPersonId(const QString &code) const
     {
         if(record(i).value("code").toString() == code)
             return record(i).value("id").toInt();
+    }
+    return -1;
+}
+
+int PersonModel::getSessionCount(const QString& code) const
+{
+    if (int row = findPerson(code); row != -1)
+    {
+        return record(row).value("sessionCounter").toInt();
     }
     return -1;
 }

@@ -187,11 +187,22 @@ void MainWindow::filterView(QString table, QString Column, QString RecordFilter,
 {
     QSqlTableModel* personModel = m_iLAController.GetPersonModel();
     
-    personModel->setFilter(Column + " = " + RecordFilter);
+    personModel->setFilter(QString(" %1 = '%2'").arg(Column, RecordFilter));
     tableview.setModel(personModel);
     tableview.setWindowTitle(table);
     tableview.resizeColumnsToContents();
     tableview.resizeRowsToContents();
+}
+
+void MainWindow::filterViewLike(QString table, QString Column, QString RecordFilter, QTableView& tableview)
+{
+	QSqlTableModel* personModel = m_iLAController.GetPersonModel();
+
+	personModel->setFilter(QString(" %1 LIKE '%2'").arg(Column, RecordFilter));
+	tableview.setModel(personModel);
+	tableview.setWindowTitle(table);
+	tableview.resizeColumnsToContents();
+	tableview.resizeRowsToContents();
 }
 
 //this Slot for Connect to Database by Click the Connect button
@@ -259,9 +270,7 @@ void MainWindow::On_B_Add_Register_Clicked()
     }
     else
     {
-        //TODO : change View Table System
-        //show persion data in tableview
-        //filterView("person","Code", ui->Line_Code_Main2_Registertab->text(), *ui->Table_view_2);
+        filterView("person","Code", ui->Line_Code_Register->text(), *ui->Table_view_2);
         ui->db_status->setText(tr("Data Added to Database"));
     }
 
@@ -447,22 +456,18 @@ void MainWindow::On_B_DocuExport_Export_Pressed()
 //*************************
 void MainWindow::On_B_SearchName_Search_Clicked()
 {
-    static QSqlTableModel *model = new QSqlTableModel(this);
-    m_iLAController.searchPersonByFirstName(ui->Line_Name_Search->text(), model);
-    ui->Table_view_SearchTab->setModel(model);
-    ui->Table_view_SearchTab->resizeColumnsToContents();
-    ui->Table_view_SearchTab->resizeRowsToContents();
+    QString name = ui->Line_Name_Search->text();
+    name += "%";
+	filterViewLike("person", "firstName", name, *ui->Table_view_SearchTab);
 }
 
 //this Slot for use searchfamily Function
 //************************
 void MainWindow::On_B_SearchFamily_Search_Clicked()
 {
-    static QSqlTableModel *model = new QSqlTableModel(this);
-    m_iLAController.searchPersonByLastName(ui->Line_Family_Search->text(), model);
-    ui->Table_view_SearchTab->setModel(model);
-    ui->Table_view_SearchTab->resizeColumnsToContents();
-    ui->Table_view_SearchTab->resizeRowsToContents();
+	QString lastname = ui->Line_Family_Search->text();
+    lastname += "%";
+    filterViewLike("person", "lastName", lastname, *ui->Table_view_SearchTab);
 }
 
 void MainWindow::On_CB_FirstTime_Register_Pressed()
@@ -481,9 +486,8 @@ void MainWindow::On_B_Ok_Vote_Pressed()
     }
     else
     {
-        static QSqlQueryModel *model = new QSqlQueryModel(this);
         QString code = ui->Line_Code_Vote->text();
-        if(m_iLAController.countForElection(code, model))
+        if(m_iLAController.countForElection(code))
         {
             voteImage(":/pic/build/Image/true.jpg");
         }
@@ -491,12 +495,8 @@ void MainWindow::On_B_Ok_Vote_Pressed()
         {
             voteImage(":/pic/build/Image/false.jpg");
         }
-        model->setQuery("Select firstName, lastName, date "
-                        "FROM person, attendant, dueDay "
-                        "WHERE person.id = attendant.personId "
-                        "AND dueDay.id = attendant.dateId "
-                        "AND person.code = " + code + ";");
-        ui->Table_view_VoteTab->setModel(model);
+
+        filterView("person", "Code", code, *ui->Table_view_VoteTab);
         ui->Line_Code_Vote->setFocus();
         ui->Line_Code_Vote->selectAll();
     }

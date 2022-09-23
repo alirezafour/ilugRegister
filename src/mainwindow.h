@@ -46,6 +46,7 @@ private:
 private:
     void ViewTable(QString table, QTableView &tableview);
     void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
+    void filterViewLike(QString table, QString Column, QString RecordFilter, QTableView &tableview);
     bool databaseConnect(); //database Connection Function
     bool loadImage(const QString &);
     bool BrowsingImage(const QString &);

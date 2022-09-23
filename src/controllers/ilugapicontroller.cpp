@@ -193,44 +193,28 @@ bool ILugApiController::exportToTextByDate(const QString &date, bool toDocu)
 
 //this function for searching name in database and show to table in search tab
 //****************************
-bool ILugApiController::searchPersonByFirstName(const QString &firstName, QSqlTableModel *model)
+bool ILugApiController::searchPersonByFirstName(const QString& firstName)
 {
-    return true;
+    if(m_PersonModel->findPersonByName(firstName) != -1)
+        return true;
+    return false;
 }
 
 //this function for searching family in database and show to table in search tab
 //***********************************
-bool ILugApiController::searchPersonByLastName(const QString &lastName, QSqlTableModel *model)
+bool ILugApiController::searchPersonByLastName(const QString& lastName)
 {
-    return true;
+	if (m_PersonModel->findPersonByName("", lastName) != -1)
+		return true;
+	return false;
 }
 
-bool ILugApiController::countForElection(const QString &code, QSqlQueryModel *model)
+bool ILugApiController::countForElection(const QString& code)
 {
-    int count = 0; //count the number of session he/she was present
-    QSqlQuery query;    //query
-    QSqlQuery query2;   //query
-    QString date;
-    query.exec("SELECT date FROM dueDay ORDER BY date(Date) DESC Limit 15");
-    while(query.next())
-    {
-        date = query.value(0).toString();
-    }
-    qDebug() << date;
-
-    query2.exec("select firstName, lastName, dueDay.date "
-                "From person, dueDay, attendant "
-                "WHERE attendant.personId = person.id "
-                  "and attendant.dateId = dueDay.id "
-                  "and code = " + code + " "
-                  "AND date(date) >= '" + date + "';");
-
-    while(query2.next())
-    {
-        count++;
-    }
-    model->setQuery(std::move(query2));
-    if(count >= 10)
+    // if -1 means couldn't find that person
+    int count = m_PersonModel->getSessionCount(code);
+    
+    if(count >= m_MinimumSessionForVote)
     {
         return true;
     }

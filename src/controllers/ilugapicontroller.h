@@ -16,14 +16,14 @@ class ILugApiController : public QObject
 public:
     explicit ILugApiController(QObject *parent = 0);
     bool openDatabase();
-    Person findPersonByCode(const QString &code);
-    bool addPerson(const Person &person);
-    bool deletePerson(const QString &personCode);
-    bool updatePerson(const Person &person);
-    bool exportToTextByDate(const QString &date, bool toDocu = false);
-    bool searchPersonByFirstName(const QString &name, QSqlTableModel *model);
-    bool searchPersonByLastName(const QString &lastName, QSqlTableModel *model);
-    bool countForElection(const QString &code, QSqlQueryModel *model);
+    Person findPersonByCode(const QString& code);
+    bool addPerson(const Person& person);
+    bool deletePerson(const QString& personCode);
+    bool updatePerson(const Person& person);
+    bool exportToTextByDate(const QString& date, bool toDocu = false);
+    bool searchPersonByFirstName(const QString& name);
+    bool searchPersonByLastName(const QString& lastName);
+    bool countForElection(const QString& code);
 
     inline QSqlTableModel* GetPersonModel() const { return m_PersonModel.get(); }
     inline QSqlTableModel* GetAttendantModel() const { return m_AttendantModel.get(); }
@@ -38,6 +38,7 @@ private:
     MyDatabase m_db;
     QDate curentDate;
     QString curentDate_Str;
+    int m_MinimumSessionForVote = 10;
 };
 
 #endif // ILUGAPICONTROLLER_H
