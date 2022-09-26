@@ -17,6 +17,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+ 
+private:
+    void ResetPersonTable(const QString& title, QTableView& tableview);
+    void ResetExportTable(const QString& title, QTableView& tableview);
+    void SetFilterOnPerson(const QString& column, const QString& filter);
+    void SetFilterOnExport(const QString& column, const QString& filter);
+    void SetFilterOnPersonStartWith(const QString& column, const QString& filterStart);
+    bool LoadImage(const QString& path);
+    bool BrowsingImage(const QString& path);
+    bool VoteImage(const QString& path);
 
 private slots:
     void databaseConnectSlot();
@@ -37,20 +47,10 @@ private slots:
     void On_B_SearchFamily_Search_Clicked();
     void On_CB_FirstTime_Register_Pressed();
     void On_B_Ok_Vote_Pressed();
-    
+
 private:
     ILugApiController m_iLAController{};
     QDate curentDate;
     QString curentDate_Str;
-
-private:
-    void ViewTable(QString table, QTableView &tableview);
-    void filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview);
-    void filterViewLike(QString table, QString Column, QString RecordFilter, QTableView &tableview);
-    bool databaseConnect(); //database Connection Function
-    bool loadImage(const QString &);
-    bool BrowsingImage(const QString &);
-    bool voteImage(const QString &);
-
     Ui::MainWindow *ui;
 };

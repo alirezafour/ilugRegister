@@ -1,7 +1,7 @@
 #pragma once
-#include <QSqlQueryModel>
+#include <QSqlTableModel>
 
-class ExportModel : public QSqlQueryModel
+class ExportModel : public QSqlTableModel
 {
 public:
 	ExportModel(QObject* parent = nullptr);

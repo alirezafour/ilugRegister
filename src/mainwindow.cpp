@@ -39,9 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->todayDay_lbl_SelectTab->setText(curentDate_Str);
 
     //  Picture User Config
-    loadImage("Image/empty.jpg");
+    LoadImage("Image/empty.jpg");
     BrowsingImage("Image/empty.jpg");
-    voteImage("Image/question.jpg");
+    VoteImage("Image/question.jpg");
 
     //inputMask of line edit Config
     std::unique_ptr<const QValidator> v = std::make_unique<const QIntValidator>(0, 9999999999, this); //the input code from mage page can be between these numbers
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    // [Conncet buttons to Slots]
+    // [Connect buttons to Slots]
     // main tab
     connect(ui->B_Search_Main, SIGNAL(clicked()), SLOT(On_B_Search_Main_Clicked()));
     connect(ui->B_ShowAll_Main, SIGNAL(clicked()), SLOT(On_B_ShowAll_Main_Clicked()));
@@ -103,6 +103,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->action_DucoWiki_Export_Today, SIGNAL(triggered()), this, SLOT(on_ducoWiki_export_action_triggered()));
 
     databaseConnectSlot();
+
+    ResetPersonTable("person", *ui->Table_View_Main);
+    ResetPersonTable("person", *ui->Table_View_Register);
+    ResetPersonTable("person", *ui->Table_view_SearchTab);
+    ResetPersonTable("person", *ui->Table_view_VoteTab);
+
+    ResetExportTable("export", *ui->Table_View_Export);
+
     ui->Line_Code_Main->setFocus();
 }
 
@@ -111,9 +119,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//this Function for load Image and show in Register tab
-//***********************
-//TODO : change show Picture system
 bool MainWindow::BrowsingImage(const QString &fileName)
 {
     QSize size;
@@ -137,7 +142,7 @@ bool MainWindow::BrowsingImage(const QString &fileName)
     return true;
 }
 
-bool MainWindow::voteImage(const QString &fileName)
+bool MainWindow::VoteImage(const QString &fileName)
 {
     QSize size;
     size.setHeight(150);
@@ -150,9 +155,7 @@ bool MainWindow::voteImage(const QString &fileName)
     return true;
 }
 
-//this Function for load image and show in Main tab
-//**************************
-bool MainWindow::loadImage(const QString &fileName)
+bool MainWindow::LoadImage(const QString &fileName)
 {
     QSize size(150, 150);
     QImage image(fileName);
@@ -163,48 +166,52 @@ bool MainWindow::loadImage(const QString &fileName)
     return true;
 }
 
-
-
-//this Function for view all Data from table
-//*******************
-void MainWindow::ViewTable(QString table,QTableView &tableview)
+void MainWindow::ResetPersonTable(const QString& title, QTableView &tableview)
 {
     QSqlTableModel* personModel = m_iLAController.getPersonModel();
+    personModel->select();
     personModel->setFilter("");
     tableview.setModel(personModel);
-    tableview.setWindowTitle(table);
+    tableview.setWindowTitle(title);
     tableview.resizeColumnsToContents();
     tableview.resizeRowsToContents();
 
     ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
-//this Function for viewed by rule
-//********************
-void MainWindow::filterView(QString table, QString Column, QString RecordFilter, QTableView &tableview)
+void MainWindow::ResetExportTable(const QString& title, QTableView& tableview)
 {
-    QSqlTableModel* personModel = m_iLAController.getPersonModel();
-    
-    personModel->setFilter(QString(" %1 = '%2'").arg(Column, RecordFilter));
-    tableview.setModel(personModel);
-    tableview.setWindowTitle(table);
-    tableview.resizeColumnsToContents();
-    tableview.resizeRowsToContents();
-}
-
-void MainWindow::filterViewLike(QString table, QString Column, QString RecordFilter, QTableView& tableview)
-{
-	QSqlTableModel* personModel = m_iLAController.getPersonModel();
-
-	personModel->setFilter(QString(" %1 LIKE '%2'").arg(Column, RecordFilter));
-	tableview.setModel(personModel);
-	tableview.setWindowTitle(table);
+	QSqlTableModel* exportModel = m_iLAController.getExportModel();
+    exportModel->setFilter("");
+	tableview.setModel(exportModel);
+	tableview.setWindowTitle(title);
 	tableview.resizeColumnsToContents();
 	tableview.resizeRowsToContents();
+
+	ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
-//this Slot for Connect to Database by Click the Connect button
-//******************
+void MainWindow::SetFilterOnPerson(const QString& column, const QString& filter)
+{
+    m_iLAController.getPersonModel()->setFilter(QString(" %1 = '%2'").arg(column, filter));
+    if(m_iLAController.getPersonModel()->lastError().isValid())
+        QMessageBox::critical(0, tr("SQL Error"), m_iLAController.getPersonModel()->lastError().text());
+}
+
+void MainWindow::SetFilterOnExport(const QString& column, const QString& filter)
+{
+    m_iLAController.getExportModel()->setFilter(QString(" %1 = '%2'").arg(column, filter));
+	if (m_iLAController.getExportModel()->lastError().isValid())
+		QMessageBox::critical(0, tr("SQL Error"), m_iLAController.getExportModel()->lastError().text());
+}
+
+void MainWindow::SetFilterOnPersonStartWith(const QString& column, const QString& filter)
+{
+    m_iLAController.getPersonModel()->setFilter(QString(" %1 LIKE '%2'").arg(column, filter));
+	if (m_iLAController.getPersonModel()->lastError().isValid())
+		QMessageBox::critical(0, tr("SQL Error"), m_iLAController.getPersonModel()->lastError().text());
+}
+
 void MainWindow::databaseConnectSlot()
 {
     if(!m_iLAController.openDatabase())
@@ -215,17 +222,15 @@ void MainWindow::databaseConnectSlot()
     else
     {
         ui->db_status->setText(tr("Connect to database Successful."));
-        ViewTable("person", *ui->Table_view);
+        ResetPersonTable("person", *ui->Table_View_Main);
         ui->statusBar->showMessage(tr("Database Connected!"),3000);
         ui->Line_Code_Main->setFocus();
     }
 }
 
-//this Slot for Select Data From Database by Click the Search Button or Enter in Code text line
-//*****************
 void MainWindow::On_B_Search_Main_Clicked()
 {
-    ui->Line_Code_Main->selectAll();     //select all Code in Code Line
+    ui->Line_Code_Main->selectAll();
     ui->Line_Name_Main->setText("");
     ui->Line_Family_Main->setText("");
     ui->Line_Email_Main->setText("");
@@ -235,25 +240,20 @@ void MainWindow::On_B_Search_Main_Clicked()
         QMessageBox::critical(0, tr("Enter Code"), tr("Please First type Code \n Type Code First"));
         ui->Line_Code_Main->setFocus();
     }
-    QString  code = ui->Line_Code_Main->text();
-    //call the method and get the data
-    Person person = m_iLAController.findPersonByCode(code);
 
-    //set data for Ui
+    Person person = m_iLAController.findPersonByCode(ui->Line_Code_Main->text());
+
     ui->Line_Name_Main->setText(person.getFirstName());
     ui->Line_Family_Main->setText(person.getLastName());
     ui->Line_Email_Main->setText(person.getEmail());
 
-    if(!loadImage("Image/" + code +".jpg"))
-        loadImage(":/pic/build/Image/empty.jpg");
+    if(!LoadImage("Image/" + ui->Line_Code_Main->text() +".jpg"))
+        LoadImage(":/pic/build/Image/empty.jpg");
 
-    //TODO : change View Table System
-    filterView("person","Code", code, *ui->Table_view);
+    SetFilterOnPerson("Code", ui->Line_Code_Main->text());
     ui->Line_Code_Main->setFocus();
 }
 
-//this Slot for add Data to Databade by Click to Add Button
-//*****************
 void MainWindow::On_B_Add_Register_Clicked()
 {
     Person person;
@@ -268,7 +268,7 @@ void MainWindow::On_B_Add_Register_Clicked()
     }
     else
     {
-        filterView("person","Code", ui->Line_Code_Register->text(), *ui->Table_view_2);
+        SetFilterOnPerson("Code", ui->Line_Code_Register->text());
         ui->db_status->setText(tr("Data Added to Database"));
     }
 
@@ -282,8 +282,6 @@ void MainWindow::On_B_Add_Register_Clicked()
     ui->Line_Code_Register->setFocus();
 }
 
-//this Slot for delete Data from Databade by Click to Delete Button
-//*****************
 void MainWindow::On_B_Delete_Main_Clicked()
 {
     if(!m_iLAController.deletePerson(ui->Line_Code_Main->text()))
@@ -292,9 +290,7 @@ void MainWindow::On_B_Delete_Main_Clicked()
     }
     else
     {
-        //show table
-        //TODO : change the view System
-        filterView("person","Code", ui->Line_Code_Main->text(), *ui->Table_view);
+        SetFilterOnPerson("person","Code");
 
         ui->Line_Name_Main->setText("");
         ui->Line_Family_Main->setText("");
@@ -307,32 +303,20 @@ void MainWindow::On_B_Delete_Main_Clicked()
     ui->Line_Code_Main->setFocus();
 }
 
-//this Slot for select Data from Databade by Click to Select Button
-//*****************
 void MainWindow::On_B_ShowAll_Main_Clicked()
 {
-    ViewTable("person", *ui->Table_view);
+    ResetPersonTable("person", *ui->Table_View_Main);
     ui->db_status->setText(tr("Data Selected!"));
     ui->Line_Code_Main->selectAll();
     ui->Line_Code_Main->setFocus();
 }
 
-//this Slot for Select Data From attendant Table
-//**********************
 void MainWindow::On_B_SelectAll_Export_Clicked()
 {
-    QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("Select firstName, lastName, date "
-                    "FROM person, attendant, dueDay "
-                    "WHERE person.id = attendant.personId "
-                    "AND dueDay.id = attendant.dateId;");
-    qDebug() << model->lastError().text();
-    ui->Table_view_5->setModel(model);
+    ResetExportTable("export", *ui->Table_View_Export);
     ui->db_status->setText(tr("Data Selected!"));
 }
 
-//this Slot for update Data to Databade by Click to Update Button
-//*****************
 void MainWindow::On_B_Update_Main_Clicked()
 {
     Person person;
@@ -349,10 +333,10 @@ void MainWindow::On_B_Update_Main_Clicked()
         ui->db_status->setText(tr("Data Updated!"));
         //show person image
         //TODO : change show Picture system
-        loadImage("Image/" + ui->Line_Code_Main->text() +".jpg");
+        LoadImage("Image/" + ui->Line_Code_Main->text() +".jpg");
 
         //TODO : change view system
-        filterView("person","Code", ui->Line_Code_Main->text(), *ui->Table_view);
+        SetFilterOnPerson("Code", ui->Line_Code_Main->text());
     }
 
     ui->statusBar->showMessage(tr("Data Updated!"), 3000);
@@ -360,13 +344,9 @@ void MainWindow::On_B_Update_Main_Clicked()
     ui->Line_Code_Main->setFocus();
 }
 
-//this function for searching and finding code in attendent table in database and show to table in Select tab
-//***********************
 void MainWindow::On_B_SelectCodeByCode_Export_Clicked()
 {
-    QString code = ui->Line_Code_Export->text();
-
-    ui->Table_view_5->setModel(m_iLAController.getExportModel());
+    SetFilterOnExport("Code", ui->Line_Code_Export->text());
     ui->Line_Code_Export->selectAll();
     ui->Line_Code_Export->setFocus();
 }
@@ -375,9 +355,7 @@ void MainWindow::On_B_SelectCodeByCode_Export_Clicked()
 //********************
 void MainWindow::On_B_SelectByDate_Export_Clicked()
 {
-    QString date = ui->Line_Date_Export->text();
-
-    ui->Table_view_5->setModel(m_iLAController.getExportModel());
+    SetFilterOnExport("day", ui->Line_Date_Export->text());
     ui->statusBar->showMessage(tr("Data Selected!"), 3000);
 }
 
@@ -406,8 +384,6 @@ void MainWindow::On_B_BrawsePicture_Clicked()
 
 }
 
-//this slot for use exportToTextFile function and alarm for success or not
-//************************
 void MainWindow::On_B_Export_Export_Clicked()
 {
     if(!(m_iLAController.exportToTextByDate(ui->Line_Date_Export->text())))
@@ -440,22 +416,18 @@ void MainWindow::On_B_DocuExport_Export_Pressed()
         QMessageBox::information(0, tr("Export File Saved!"), tr("Export File Saved!"));
 }
 
-//yhis Slot for use searchName Function
-//*************************
 void MainWindow::On_B_SearchName_Search_Clicked()
 {
     QString name = ui->Line_Name_Search->text();
     name += "%";
-	filterViewLike("person", "firstName", name, *ui->Table_view_SearchTab);
+	SetFilterOnPersonStartWith("firstName", name);
 }
 
-//this Slot for use searchfamily Function
-//************************
 void MainWindow::On_B_SearchFamily_Search_Clicked()
 {
 	QString lastname = ui->Line_Family_Search->text();
     lastname += "%";
-    filterViewLike("person", "lastName", lastname, *ui->Table_view_SearchTab);
+    SetFilterOnPersonStartWith("lastName", lastname);
 }
 
 void MainWindow::On_CB_FirstTime_Register_Pressed()
@@ -477,14 +449,14 @@ void MainWindow::On_B_Ok_Vote_Pressed()
         QString code = ui->Line_Code_Vote->text();
         if(m_iLAController.countForElection(code))
         {
-            voteImage(":/pic/build/Image/true.jpg");
+            VoteImage(":/pic/build/Image/true.jpg");
         }
         else
         {
-            voteImage(":/pic/build/Image/false.jpg");
+            VoteImage(":/pic/build/Image/false.jpg");
         }
 
-        filterView("person", "Code", code, *ui->Table_view_VoteTab);
+        SetFilterOnPerson( "Code", code);
         ui->Line_Code_Vote->setFocus();
         ui->Line_Code_Vote->selectAll();
     }

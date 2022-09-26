@@ -308,7 +308,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableView" name="Table_view">
+           <widget class="QTableView" name="Table_View_Main">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -551,7 +551,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTableView" name="Table_view_2">
+             <widget class="QTableView" name="Table_View_Register">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -786,7 +786,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTableView" name="Table_view_5">
+             <widget class="QTableView" name="Table_View_Export">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -1235,7 +1235,7 @@
   <tabstop>B_Delete_Main</tabstop>
   <tabstop>B_Update_Main</tabstop>
   <tabstop>B_ShowAll_Main</tabstop>
-  <tabstop>Table_view</tabstop>
+  <tabstop>Table_View_Main</tabstop>
  </tabstops>
  <resources/>
  <connections/>

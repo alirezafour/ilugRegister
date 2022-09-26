@@ -28,7 +28,7 @@ public:
 
     inline QSqlTableModel* getPersonModel() const { return m_PersonModel.get(); }
     inline QSqlTableModel* getAttendantModel() const { return m_AttendantModel.get(); }
-    inline QSqlQueryModel* getExportModel() const { return m_ExportModel.get(); }
+    inline QSqlTableModel* getExportModel() const { return m_ExportModel.get(); }
 
 signals:
 
